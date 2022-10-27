@@ -1,8 +1,7 @@
-<script lang="ts" context="module">
+<script lang="ts">
 	import "@brainandbones/skeleton/themes/theme-skeleton.css";
 	import "@brainandbones/skeleton/styles/all.css";
 	import "../app.postcss";
-	// import { selectedLanguagesStore } from "../stores";
 
 	import {
 		AppShell,
@@ -11,33 +10,25 @@
 		LightSwitch,
 		ListBox,
 		ListBoxItem,
+		Drawer,
 	} from "@brainandbones/skeleton";
 	import { writable, type Writable } from "svelte/store";
+	import SideBarContents from "../common/sideBarContents.svelte";
 
-	const languages =
-		"https://raw.githubusercontent.com/GibreelAbdullah/hadith-api/2/04-Languages/languages.json";
-
-	let languagePromise = getData(languages);
-
-	async function getData(url: string) {
-		console.log(url);
-		return await fetch(url).then((response) => {
-			return response.json();
-		});
-	}
-
-	const selectedLanguagesStore: Writable<Array<string>> = writable([
-		"ara",
-		"eng",
-		"ben",
-	]);
-	export { selectedLanguagesStore };
+	const storeDrawer: Writable<boolean> = writable(false);
+	const drawerOpen: any = () => {
+		storeDrawer.set(true);
+	};
 </script>
 
-<AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4 hidden md:block">
+<Drawer open={storeDrawer} position="left"><SideBarContents/></Drawer>
+
+<AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4 hidden md:block" >
 	<svelte:fragment slot="header">
 		<AppBar>
 			<svelte:fragment slot="lead">
+				<button on:click={drawerOpen} class="lg:hidden mr-2 p-1 cursor-pointer text-3xl">≡
+				</button>
 				<a href="/"
 					><GradientHeading
 						tag="h1"
@@ -53,21 +44,7 @@
 		</AppBar>
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
-		<nav class="list-nav">
-			<ListBox selected={selectedLanguagesStore} label="Languages">
-				{#await languagePromise}
-					LOADING...
-				{:then data}
-					{#each Object.keys(data) as languageObject}
-						<ListBoxItem value={data[languageObject]["Prefix"]}>
-							{data[languageObject]["Name"]}
-						</ListBoxItem>
-					{/each}
-				{:catch data}
-					Error...Could Not Load Data
-				{/await}
-			</ListBox>
-		</nav>
+		<SideBarContents/>
 	</svelte:fragment>
 	<slot />
 </AppShell>

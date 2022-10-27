@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from "$app/stores";
-	import Topbar from "../../common/topbarOld.svelte";
 	import ChapterContainer from "../../components/chapterContainer.svelte";
 	import BookLogo from "../../common/bookLogo.svelte";
 
@@ -20,7 +19,6 @@
 	}
 </script>
 
-<Topbar />
 <BookLogo bookName={$page.params["book"]} />
 <!-- <LeftSidePanelScaffold /> -->
 
