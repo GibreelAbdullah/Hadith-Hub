@@ -1,9 +1,11 @@
-<script lang=ts>
+<script lang="ts">
+	import { Divider } from "@brainandbones/skeleton";
+
 	export let allHadiths: any[] = [];
 	let languageCount = allHadiths.length;
 </script>
 
-{#if allHadiths[0] == 'Loading...'}
+{#if allHadiths[0] == "Loading..."}
 	<div class="card card-body m-4">
 		<div class="hadithGroup">
 			<div class="hadith">Loading...</div>
@@ -15,15 +17,20 @@
 			<div class="card card-body m-4 flex-wrap">
 				<div class="hadithGroup">
 					{#each { length: languageCount } as _, j}
-						<div class="hadith">{allHadiths[j].hadiths[i].text}</div>
+						<div class="hadith">
+							{allHadiths[j].hadiths[i].text}
+						</div>
 					{/each}
 				</div>
-				<hr />
+				<Divider borderWidth="border-l" />
 				<div class="hadithDetails">
-					<p>{allHadiths[0].metadata.name} {allHadiths[0].hadiths[i].arabicnumber}</p>
 					<p>
-						Book {allHadiths[0].hadiths[i].reference.book}, Hadith {allHadiths[0].hadiths[i]
-							.reference.hadith}
+						{allHadiths[0].metadata.name}
+						{allHadiths[0].hadiths[i].arabicnumber}
+					</p>
+					<p>
+						Book {allHadiths[0].hadiths[i].reference.book}, Hadith {allHadiths[0]
+							.hadiths[i].reference.hadith}
 					</p>
 				</div>
 			</div>
@@ -46,7 +53,6 @@
 	}
 	.hadithDetails {
 		word-wrap: break-word;
-		/* line-height: 30px; */
 		border: none;
 		padding: 10px;
 		margin-left: 10px;
