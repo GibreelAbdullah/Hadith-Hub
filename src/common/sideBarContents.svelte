@@ -27,8 +27,8 @@
 
 </script>
 <nav class="list-nav">
-    <div class="text-primary-500 text-sm font-bold uppercase py-4">Languages</div>
-    <ListBox selected={selectedLanguagesStore}>
+    <div class="text-primary-500 text-sm font-bold uppercase px-4 pt-8">Languages</div>
+    <ListBox selected={selectedLanguagesStore} class="p-4">
         {#await languagePromise}
             LOADING...
         {:then data}

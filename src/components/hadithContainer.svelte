@@ -42,7 +42,7 @@
 					{/each}
 				</div>
 				<Divider borderWidth="border-l" />
-				<div class="flex justify-between">
+				<div class="flex justify-between px-4">
 					<div class="my-4">
 						{allHadiths[0].metadata.name}
 						{allHadiths[0].hadiths[i].arabicnumber}
@@ -52,7 +52,7 @@
 					</div>
 
 					<button
-						class="btn bg-primary-500 btn-sm text-white w-40 my-4 align-top"
+						class="btn bg-primary-500 btn-sm text-white w-40 my-4 px-4"
 						on:click={clickHandler}
 						use:clipboard={"hadithhub.com/" +
 							book +
