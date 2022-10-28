@@ -38,7 +38,7 @@
 		{#await Promise.all(allHadithPromises)}
 			<HadithContainer allHadiths={["Loading..."]} />
 		{:then data}
-			<HadithContainer allHadiths={data} />
+			<HadithContainer allHadiths={data} book={$page.params["book"]} />
 		{:catch data}
 			Error...
 		{/await}

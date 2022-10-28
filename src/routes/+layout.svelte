@@ -29,14 +29,14 @@
 			<svelte:fragment slot="lead">
 				<button on:click={drawerOpen} class="lg:hidden mr-2 p-1 cursor-pointer text-3xl">≡
 				</button>
-				<a href="/"
-					><GradientHeading
+				<a href="/">
+					<GradientHeading
 						tag="h1"
 						direction="bg-gradient-to-r"
 						from="from-primary-500"
-						to="to-accent-500">HadithHub</GradientHeading
-					></a
-				>
+						to="to-accent-500">HadithHub
+					</GradientHeading>
+				</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<LightSwitch />

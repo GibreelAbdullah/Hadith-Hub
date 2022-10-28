@@ -27,12 +27,13 @@
 
 </script>
 <nav class="list-nav">
-    <ListBox selected={selectedLanguagesStore} class="text-primary-500 text-sm font-bold uppercase p-4" label="Languages">
+    <div class="text-primary-500 text-sm font-bold uppercase py-4">Languages</div>
+    <ListBox selected={selectedLanguagesStore}>
         {#await languagePromise}
             LOADING...
         {:then data}
             {#each Object.keys(data) as languageObject}
-                <ListBoxItem class= "text-primary-500 text-sm font-normal normal-case p-5" value={data[languageObject]["Prefix"]}>
+                <ListBoxItem value={data[languageObject]["Prefix"]}>
                     {data[languageObject]["Name"]}
                 </ListBoxItem>
             {/each}
