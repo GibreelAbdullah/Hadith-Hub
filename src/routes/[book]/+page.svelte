@@ -44,11 +44,8 @@
 		return await fetch(url).then((response) => {
 			return response.json();
 		});
-		// return Promise.resolve(obj);
 	}
 </script>
-
-<!-- <LeftSidePanelScaffold /> -->
 
 <main>
 	{#if $page.params["book"].includes(":")}
