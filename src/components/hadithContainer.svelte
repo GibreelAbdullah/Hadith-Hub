@@ -1,18 +1,33 @@
 <script lang="ts">
-	import {
-		clipboard,
-		Divider,
-	} from "@brainandbones/skeleton";
+	import { clipboard, Divider } from "@brainandbones/skeleton";
 	export let book: string = "";
 	export let allHadiths: any[] = [];
 	let languageCount = allHadiths.length;
 	let permalinkText = "Copy Permalink";
-
+	let gradingColorClass = "";
 	function clickHandler() {
 		permalinkText = "Copied";
 		setTimeout(function () {
 			permalinkText = "Copy Permalink";
 		}, 2000);
+	}
+	function gradingColor(grade: String) {
+		if (["hasan", "mursal"].some((i) => grade.toLowerCase().includes(i))) {
+			gradingColorClass = "bg-blue-500";
+		} else if (grade.toLowerCase().includes("sahih")) {
+			gradingColorClass = "bg-green-500";
+		} else if (
+			["mawdu", "batil", "munkar"].some((i) =>
+				grade.toLowerCase().includes(i)
+			)
+		) {
+			gradingColorClass = "bg-red-500";
+		} else if (grade.toLowerCase().includes("daif")) {
+			gradingColorClass = "bg-orange-500";
+		} else {
+			gradingColorClass = "bg-gray-500";
+		}
+		return gradingColorClass;
 	}
 </script>
 
@@ -34,10 +49,27 @@
 					{/each}
 				</div>
 				<Divider borderWidth="border-l" />
-				<div class="gradingGroup font-medium p-2 grid">
+				<div class="hadithGroup font-medium p-2 grid">
 					{#each allHadiths[0].hadiths[i].grades as grade}
-						<div class="break-words leading-7 m-3">
-							{grade["name"]} : {grade["grade"]}
+						<!-- {#if grade["grade"].toLowerCase().some("hasan","mursal")}
+							{gradingColorClass = "bg-lime-500"}
+						{:else if grade["grade"].toLowerCase().includes("sahih")}
+							{gradingColorClass = "bg-green-500"}
+						{:else if grade["grade"].toLowerCase().some("mawdu","batil","munkar")}
+							{gradingColorClass = "bg-red-500"}
+						{:else if grade["grade"].toLowerCase().includes("daif")}
+							{gradingColorClass = "bg-orange-500"}
+						{:else}
+							{gradingColorClass = "bg-gray-500"}
+						{/if} -->
+						<div
+							class="flex leading-7 p-2 rounded text-center bg-red m-2 {gradingColor(
+								grade['grade']
+							)}"
+						>
+							<div class="m-auto">
+								{grade["name"]} : {grade["grade"]}
+							</div>
 						</div>
 					{/each}
 				</div>

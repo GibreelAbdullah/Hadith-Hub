@@ -1,5 +1,5 @@
-docker build -t gcr.io/hadith-hub/hadith-hub:6 .
+docker build -t gcr.io/hadith-hub/hadith-hub:7 .
 
-docker push gcr.io/hadith-hub/hadith-hub:6
+docker push gcr.io/hadith-hub/hadith-hub:7
 
-gcloud beta run deploy demo-app --image gcr.io/hadith-hub/hadith-hub:6 --region us-central1 --platform managed --allow-unauthenticated --quiet
+gcloud beta run deploy hadith-hub --image gcr.io/hadith-hub/hadith-hub:7 --region us-central1 --platform managed --allow-unauthenticated --quiet
