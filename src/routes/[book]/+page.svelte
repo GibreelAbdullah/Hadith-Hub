@@ -4,6 +4,7 @@
 	import HadithContainer from "../../components/hadithContainer.svelte";
 	import { selectedLanguagesStore } from "../../common/sideBarContents.svelte";
 	import { browser } from "$app/environment";
+    import { urlPrefix } from "../../common/constants.svelte";
 
 	let collectionPromise: Promise<any>;
 	let hadithGroupPromise: Promise<any>[] = [];
@@ -20,7 +21,7 @@
 			}
 			for (const language in $selectedLanguagesStore) {
 				let hadith =
-					"https://raw.githubusercontent.com/GibreelAbdullah/hadith-api/2/editions/" +
+					urlPrefix+"editions/" +
 					$selectedLanguagesStore[language] +
 					"-" +
 					bookHadith[0] +
@@ -32,7 +33,7 @@
 			}
 		} else {
 			let collections =
-				"https://raw.githubusercontent.com/GibreelAbdullah/hadith-api/2/sections/" +
+				urlPrefix+"sections/" +
 				$page.params["book"] +
 				".json";
 
@@ -40,7 +41,6 @@
 		}
 	}
 	async function getData(url: string) {
-		console.log(url);
 		return await fetch(url).then((response) => {
 			return response.json();
 		});
@@ -51,22 +51,33 @@
 	{#if $page.params["book"].includes(":")}
 		{#if hadithGroupPromise.length != 0}
 			{#await Promise.all(hadithGroupPromise)}
-				<HadithContainer allHadiths={["Loading..."]} />
+				<div class="card card-body m-4">
+					<div class="hadithGroup font-medium p-2 grid">
+						<div class="break-words leading-7 m-3">LOADING...</div>
+					</div>
+				</div>
 			{:then data}
 				<HadithContainer
 					allHadiths={data}
 					book={$page.params["book"].split(":")[0]}
 				/>
 			{:catch data}
-				Error...
-			{/await}
+			<div class="card card-body m-4">
+				<div class="hadithGroup font-medium p-2 grid">
+					<div class="break-words leading-7 m-3">Error. Try clearing the cache.</div>
+				</div>
+			</div>			{/await}
 		{:else}
-			Select at least 1 language.
+		<div class="card card-body m-4">
+			<div class="hadithGroup font-medium p-2 grid">
+				<div class="break-words leading-7 m-3">Select at least 1 language.</div>
+			</div>
+		</div>
 		{/if}
 	{:else}
 		<ChapterContainer
 			dataPromise={collectionPromise}
-			bookName={$page.params["book"]}
+			bookURL={$page.params["book"]}
 		/>
 	{/if}
 </main>

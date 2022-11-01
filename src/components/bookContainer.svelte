@@ -7,7 +7,7 @@
 		<div class="bookCard hvr-reveal">LOADING...</div>
 	{:then data}
 		{#each data["collections"] as book}
-			<a class="card card-body text-center" href="/{book["name"]}">{book["englishName"]} <br> {book["arabicName"]}</a>
+			<a class="card card-body text-center" href="/{book["name"]}">{book["eng-name"]} <br> {book["ara-name"]}</a>
 		{/each}
 	{:catch data}
 		<div class="bookCard hvr-reveal">Error...Could Not Load Data</div>

@@ -3,10 +3,10 @@
 	import HadithContainer from "../../../components/hadithContainer.svelte";
 	import { selectedLanguagesStore } from "../../../common/sideBarContents.svelte";
 	import { browser } from "$app/environment";
+    import { urlPrefix } from "../../../common/constants.svelte";
 
 	let allHadithPromises: any[] = [];
 	async function getData(url: string) {
-		console.log(url);
 		return await fetch(url).then((response) => response.json());
 	}
 	$: {
@@ -19,7 +19,7 @@
 		}
 		for (const language in $selectedLanguagesStore) {
 			const url =
-				"https://cdn.jsdelivr.net/gh/GibreelAbdullah/hadith-api@2/editions/" +
+				urlPrefix+"editions/" +
 				$selectedLanguagesStore[language] +
 				"-" +
 				$page.params["book"] +
@@ -36,13 +36,27 @@
 <main>
 	{#if allHadithPromises.length != 0}
 		{#await Promise.all(allHadithPromises)}
-			<HadithContainer allHadiths={["Loading..."]} />
+			<div class="card card-body m-4">
+				<div class="hadithGroup font-medium p-2 grid">
+					<div class="break-words leading-7 m-3">LOADING...</div>
+				</div>
+			</div>
 		{:then data}
 			<HadithContainer allHadiths={data} book={$page.params["book"]} />
 		{:catch data}
-			Error...
+			<div class="card card-body m-4">
+				<div class="hadithGroup font-medium p-2 grid">
+					<div class="break-words leading-7 m-3">Error. Try clearing the cache.</div>
+				</div>
+			</div>
 		{/await}
 	{:else}
-		Select at least 1 language.
+		<div class="card card-body m-4">
+			<div class="hadithGroup font-medium p-2 grid">
+				<div class="break-words leading-7 m-3">
+					Select at least 1 language.
+				</div>
+			</div>
+		</div>
 	{/if}
 </main>

@@ -1,35 +1,3 @@
-<script context="module">
-  export const obj = {
-  "metadata": {
-    "name": "Sunan Abu Dawud",
-    "section": {
-      "2": "Prayer (Kitab Al-Salat)"
-    }
-  },
-  "hadiths": [
-    {
-      "hadithnumber": 1035,
-      "arabicnumber": 1035,
-      "text": "This tradition (mentioned above) has also been transmitted by al-Zuhri through a different chain of narrators to the same effect. This version adds:Some of us recited the Tashahhud while they were standing. Abu Dawud said: Ibn-Zubair made two prostrations before giving the salutation in a similar way when he stood up at the end of two rak’ahs. This is the opinion of al-Zuhrl",
-      "grades": [
-        {
-          "name": "Al-Albani",
-          "grade": "Sahih"
-        },
-        {
-          "name": "Muhammad Muhyi Al-Din Abdul Hamid",
-          "grade": "Sahih"
-        },
-        {
-          "name": "Zubair Ali Zai",
-          "grade": "Sahih Bukhari And Sahih Muslim"
-        }
-      ],
-      "reference": {
-        "book": 2,
-        "hadith": 646
-      }
-    }
-  ]
-};
+<script lang="ts" context="module">
+  export let urlPrefix:string = "https://raw.githubusercontent.com/GibreelAbdullah/hadith-api/3/";
 </script>

@@ -2,13 +2,13 @@
 	import "@brainandbones/skeleton/themes/theme-skeleton.css";
 	import "@brainandbones/skeleton/styles/all.css";
 	import "../app.postcss";
-
+	import { page } from "$app/stores";
 	import {
 		AppShell,
 		AppBar,
 		GradientHeading,
 		LightSwitch,
-		Drawer
+		Drawer,
 	} from "@brainandbones/skeleton";
 	import { writable, type Writable } from "svelte/store";
 	import SideBarContents from "../common/sideBarContents.svelte";
@@ -17,13 +17,14 @@
 	const drawerOpen: any = () => {
 		storeDrawer.set(true);
 	};
+
 </script>
 
 <Drawer open={storeDrawer} position="left"><SideBarContents /></Drawer>
 
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4 hidden md:block">
 	<svelte:fragment slot="header">
-		<AppBar>
+		<AppBar >
 			<svelte:fragment slot="lead">
 				<button
 					on:click={drawerOpen}
@@ -41,12 +42,22 @@
 				</a>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<LightSwitch />
+				<a href="/" class="hidden md:block">
+					<GradientHeading
+						tag="h1"
+						direction="bg-gradient-to-r"
+						from="from-primary-500"
+						to="to-accent-500"
+						>حديث حب
+					</GradientHeading>
+				</a>
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
+		
 		<SideBarContents />
+		
 	</svelte:fragment>
 	<slot />
 </AppShell>
