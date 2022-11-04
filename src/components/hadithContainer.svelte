@@ -44,7 +44,7 @@
 			<Crumb
 				>{allHadiths[0].metadata.section[
 					allHadiths[0].hadiths[0].reference.book
-				]}</Crumb
+				].englishName}</Crumb
 			>
 		</Breadcrumb>
 	</div>
@@ -88,7 +88,7 @@
 			<div class="flex justify-between px-4">
 				<div class="my-4">
 					{allHadiths[0].metadata.name}
-					{allHadiths[0].hadiths[i].arabicnumber}
+					{allHadiths[0].hadiths[i].hadithnumber}
 					<br />
 					Book {allHadiths[0].hadiths[i].reference.book}, Hadith {allHadiths[0]
 						.hadiths[i].reference.hadith}
@@ -100,7 +100,7 @@
 					use:clipboard={"hadithhub.com/" +
 						book +
 						":" +
-						allHadiths[0].hadiths[i].arabicnumber}
+						allHadiths[0].hadiths[i].hadithnumber}
 					>{permalinkText}
 				</button>
 			</div>
