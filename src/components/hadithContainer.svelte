@@ -5,9 +5,11 @@
 		Crumb,
 		Divider,
 	} from "@brainandbones/skeleton";
+    import Footer from "../common/footer.svelte";
 	export let book: string = "";
 	export let allHadiths: any[] = [];
 	let languageCount = allHadiths.length;
+	// let permalinkText = "Copy Permalink";
 	let permalinkText = "Copy Permalink";
 	let gradingColorClass = "";
 	function clickHandler() {
@@ -20,7 +22,7 @@
 		if (["hasan", "mursal"].some((i) => grade.toLowerCase().includes(i))) {
 			gradingColorClass = "bg-blue-500";
 		} else if (grade.toLowerCase().includes("sahih")) {
-			gradingColorClass = "bg-green-500";
+			gradingColorClass = "bg-emerald-500";
 		} else if (
 			["mawdu", "batil", "munkar"].some((i) =>
 				grade.toLowerCase().includes(i)
@@ -62,19 +64,8 @@
 			<Divider borderWidth="border-l" />
 			<div class="hadithGroup font-medium p-2 grid">
 				{#each allHadiths[0].hadiths[i].grades as grade}
-					<!-- {#if grade["grade"].toLowerCase().some("hasan","mursal")}
-							{gradingColorClass = "bg-lime-500"}
-						{:else if grade["grade"].toLowerCase().includes("sahih")}
-							{gradingColorClass = "bg-green-500"}
-						{:else if grade["grade"].toLowerCase().some("mawdu","batil","munkar")}
-							{gradingColorClass = "bg-red-500"}
-						{:else if grade["grade"].toLowerCase().includes("daif")}
-							{gradingColorClass = "bg-orange-500"}
-						{:else}
-							{gradingColorClass = "bg-gray-500"}
-						{/if} -->
 					<div
-						class="flex leading-7 p-2 rounded text-center bg-red m-2 {gradingColor(
+						class="flex leading-7 p-2 rounded-full text-center bg-red m-2 {gradingColor(
 							grade['grade']
 						)}"
 					>
@@ -107,7 +98,7 @@
 		</div>
 	{/if}
 {/each}
-
+<Footer/>
 <style>
 	.hadithGroup {
 		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

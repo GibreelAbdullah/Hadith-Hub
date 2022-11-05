@@ -31,6 +31,8 @@ declare module '$env/static/private' {
 	export const COLOR: string;
 	export const COLORTERM: string;
 	export const DBUS_SESSION_BUS_ADDRESS: string;
+	export const DBUS_STARTER_ADDRESS: string;
+	export const DBUS_STARTER_BUS_TYPE: string;
 	export const DESKTOP_SESSION: string;
 	export const DISPLAY: string;
 	export const EDITOR: string;
@@ -39,8 +41,6 @@ declare module '$env/static/private' {
 	export const GIO_LAUNCHED_DESKTOP_FILE: string;
 	export const GIO_LAUNCHED_DESKTOP_FILE_PID: string;
 	export const GIT_ASKPASS: string;
-	export const GJS_DEBUG_OUTPUT: string;
-	export const GJS_DEBUG_TOPICS: string;
 	export const GNOME_DESKTOP_SESSION_ID: string;
 	export const GNOME_SHELL_SESSION_MODE: string;
 	export const GPG_AGENT_INFO: string;
@@ -60,6 +60,7 @@ declare module '$env/static/private' {
 	export const MANAGERPID: string;
 	export const NODE: string;
 	export const ORIGINAL_XDG_CURRENT_DESKTOP: string;
+	export const PARENT_WINDOW_ID: string;
 	export const PATH: string;
 	export const PWD: string;
 	export const QT_ACCESSIBILITY: string;
@@ -161,6 +162,8 @@ declare module '$env/dynamic/private' {
 		COLOR: string;
 		COLORTERM: string;
 		DBUS_SESSION_BUS_ADDRESS: string;
+		DBUS_STARTER_ADDRESS: string;
+		DBUS_STARTER_BUS_TYPE: string;
 		DESKTOP_SESSION: string;
 		DISPLAY: string;
 		EDITOR: string;
@@ -169,8 +172,6 @@ declare module '$env/dynamic/private' {
 		GIO_LAUNCHED_DESKTOP_FILE: string;
 		GIO_LAUNCHED_DESKTOP_FILE_PID: string;
 		GIT_ASKPASS: string;
-		GJS_DEBUG_OUTPUT: string;
-		GJS_DEBUG_TOPICS: string;
 		GNOME_DESKTOP_SESSION_ID: string;
 		GNOME_SHELL_SESSION_MODE: string;
 		GPG_AGENT_INFO: string;
@@ -190,6 +191,7 @@ declare module '$env/dynamic/private' {
 		MANAGERPID: string;
 		NODE: string;
 		ORIGINAL_XDG_CURRENT_DESKTOP: string;
+		PARENT_WINDOW_ID: string;
 		PATH: string;
 		PWD: string;
 		QT_ACCESSIBILITY: string;
