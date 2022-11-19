@@ -1,8 +1,6 @@
 <script lang="ts">
 	import {
-		Breadcrumb,
 		clipboard,
-		Crumb,
 		Divider,
 	} from "@brainandbones/skeleton";
     import Footer from "../common/footer.svelte";
@@ -19,7 +17,10 @@
 		}, 2000);
 	}
 	function gradingColor(grade: String) {
-		if (["hasan", "mursal"].some((i) => grade.toLowerCase().includes(i))) {
+		if(!grade){
+			return
+		}
+		else if (["hasan", "mursal"].some((i) => grade.toLowerCase().includes(i))) {
 			gradingColorClass = "bg-blue-500";
 		} else if (grade.toLowerCase().includes("sahih")) {
 			gradingColorClass = "bg-emerald-500";
@@ -38,7 +39,7 @@
 	}
 </script>
 
-<div class="sticky top-0 card card-body m-4">
+<!-- <div class="sticky top-0 card card-body m-4">
 	<div class="hadithGroup text-xs grid px-5">
 		<Breadcrumb>
 			<Crumb href="/">Home</Crumb>
@@ -50,14 +51,14 @@
 			>
 		</Breadcrumb>
 	</div>
-</div>
+</div> -->
 {#each { length: allHadiths[0].hadiths.length } as _, i}
 	{#if allHadiths[0].hadiths[i].text}
 		<div class="card card-body m-4 flex-wrap">
 			<div class="hadithGroup font-medium p-2 grid">
 				{#each { length: languageCount } as _, j}
 					<div class="break-words leading-7 m-3">
-						{allHadiths[j].hadiths[i].text}
+						{@html allHadiths[j].hadiths[i].text}
 					</div>
 				{/each}
 			</div>
@@ -70,7 +71,7 @@
 						)}"
 					>
 						<div class="m-auto">
-							{grade["name"]} : {grade["grade"]}
+							{@html grade["name"]} : {@html grade["grade"]}
 						</div>
 					</div>
 				{/each}
@@ -78,10 +79,14 @@
 			<Divider borderWidth="border-l" />
 			<div class="flex justify-between px-4">
 				<div class="my-4">
-					{allHadiths[0].metadata.name}
-					{allHadiths[0].hadiths[i].hadithnumber}
+					{#if allHadiths[0].metadata}
+						{@html allHadiths[0].metadata.name}
+					{:else}
+						{@html allHadiths[0].hadiths[i].bookName}
+					{/if}
+					{@html allHadiths[0].hadiths[i].hadithnumber}
 					<br />
-					Book {allHadiths[0].hadiths[i].reference.book}, Hadith {allHadiths[0]
+					Book {@html allHadiths[0].hadiths[i].reference.book}, Hadith {@html allHadiths[0]
 						.hadiths[i].reference.hadith}
 				</div>
 
@@ -91,7 +96,7 @@
 					use:clipboard={"hadithhub.com/" +
 						book +
 						":" +
-						allHadiths[0].hadiths[i].hadithnumber}
+						allHadiths[0].hadiths[i].hadithnumber.toString().replace('<span style="color:red;">','').replace('</span>','')}
 					>{permalinkText}
 				</button>
 			</div>

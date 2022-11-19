@@ -2,12 +2,11 @@
 	import "@brainandbones/skeleton/themes/theme-skeleton.css";
 	import "@brainandbones/skeleton/styles/all.css";
 	import "../app.postcss";
-	import { page } from "$app/stores";
+	import { selectedLanguagesStore } from "../common/sideBarContents.svelte";
 	import {
 		AppShell,
 		AppBar,
 		GradientHeading,
-		LightSwitch,
 		Drawer,
 	} from "@brainandbones/skeleton";
 	import { writable, type Writable } from "svelte/store";
@@ -41,6 +40,20 @@
 					</GradientHeading>
 				</a>
 			</svelte:fragment>
+
+			<form action="/search" method="get">
+				<input
+					type="search"
+					placeholder="Search..."
+					class="max-w-[200px] px-5"
+					name="q"
+				/>
+				<input
+					type="hidden"
+					name="lang"
+					value={$selectedLanguagesStore}
+				/>
+			</form>
 			<svelte:fragment slot="trail">
 				<a href="/" class="hidden md:block">
 					<GradientHeading

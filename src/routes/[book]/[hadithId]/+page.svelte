@@ -3,7 +3,8 @@
 	import HadithContainer from "../../../components/hadithContainer.svelte";
 	import { selectedLanguagesStore } from "../../../common/sideBarContents.svelte";
 	import { browser } from "$app/environment";
-    import { urlPrefix } from "../../../common/constants.svelte";
+	import { urlPrefix } from "../../../common/constants.svelte";
+    import { Breadcrumb, Crumb } from "@brainandbones/skeleton";
 
 	let allHadithPromises: any[] = [];
 	async function getData(url: string) {
@@ -19,7 +20,8 @@
 		}
 		for (const language in $selectedLanguagesStore) {
 			const url =
-				urlPrefix+"editions/" +
+				urlPrefix +
+				"editions/" +
 				$selectedLanguagesStore[language] +
 				"-" +
 				$page.params["book"] +
@@ -42,11 +44,28 @@
 				</div>
 			</div>
 		{:then data}
+			<div class="sticky top-0 card card-body m-4">
+				<div class="hadithGroup text-xs grid px-5">
+					<Breadcrumb>
+						<Crumb href="/">Home</Crumb>
+						<Crumb href="/{$page.params["book"]}"
+							>{data[0].metadata.name}</Crumb
+						>
+						<Crumb
+							>{data[0].metadata.section[
+								data[0].hadiths[0].reference.book
+							].englishName}</Crumb
+						>
+					</Breadcrumb>
+				</div>
+			</div>
 			<HadithContainer allHadiths={data} book={$page.params["book"]} />
 		{:catch data}
 			<div class="card card-body m-4">
 				<div class="hadithGroup font-medium p-2 grid">
-					<div class="break-words leading-7 m-3">Error. Try clearing the cache.</div>
+					<div class="break-words leading-7 m-3">
+						Error. Try clearing the cache.
+					</div>
 				</div>
 			</div>
 		{/await}
@@ -60,3 +79,9 @@
 		</div>
 	{/if}
 </main>
+
+<style>
+.hadithGroup {
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+</style>
