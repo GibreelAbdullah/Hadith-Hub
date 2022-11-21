@@ -17,6 +17,7 @@
 		}, 2000);
 	}
 	function gradingColor(grade: String) {
+		console.log(grade)
 		if(!grade){
 			return
 		}
@@ -39,19 +40,6 @@
 	}
 </script>
 
-<!-- <div class="sticky top-0 card card-body m-4">
-	<div class="hadithGroup text-xs grid px-5">
-		<Breadcrumb>
-			<Crumb href="/">Home</Crumb>
-			<Crumb href="/{book}">{allHadiths[0].metadata.name}</Crumb>
-			<Crumb
-				>{allHadiths[0].metadata.section[
-					allHadiths[0].hadiths[0].reference.book
-				].englishName}</Crumb
-			>
-		</Breadcrumb>
-	</div>
-</div> -->
 {#each { length: allHadiths[0].hadiths.length } as _, i}
 	{#if allHadiths[0].hadiths[i].text}
 		<div class="card card-body m-4 flex-wrap">
