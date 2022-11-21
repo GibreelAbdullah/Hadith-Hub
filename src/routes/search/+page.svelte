@@ -21,8 +21,8 @@
 			let gradings: any[] = [];
 			for (const grading of hadithData[2].split(" && ")) {
 				gradings.push({
-					name: grading.split(":")[0],
-					grade: grading.split(":")[1],
+					name: grading.split("::")[0],
+					grade: grading.split("::")[1],
 				});
 			}
 			hadithDict.grades = gradings;

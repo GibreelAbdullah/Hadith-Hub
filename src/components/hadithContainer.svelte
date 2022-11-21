@@ -43,6 +43,7 @@
 {#each { length: allHadiths[0].hadiths.length } as _, i}
 	{#if allHadiths[0].hadiths[i].text}
 		<div class="card card-body m-4 flex-wrap">
+			<!-- HADITH TEXT -->
 			<div class="hadithGroup font-medium p-2 grid">
 				{#each { length: languageCount } as _, j}
 					<div class="break-words leading-7 m-3">
@@ -51,6 +52,7 @@
 				{/each}
 			</div>
 			<Divider borderWidth="border-l" />
+			<!-- GRADINGS -->
 			<div class="hadithGroup font-medium p-2 grid">
 				{#each allHadiths[0].hadiths[i].grades as grade}
 					<div
@@ -59,7 +61,7 @@
 						)}"
 					>
 						<div class="m-auto">
-							{@html grade["name"]} : {@html grade["grade"]}
+							{@html grade["name"] + " : " + grade["grade"]}
 						</div>
 					</div>
 				{/each}
