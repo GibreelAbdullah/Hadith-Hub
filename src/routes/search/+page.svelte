@@ -5,15 +5,13 @@
 	async function getData(url: string) {
 		return await fetch(url).then((response) => response.json());
 	}
-	// const url = "https://hadith-search-api-gibreelabdullah.koyeb.app/search" + $page.url.search;
-	const url = "http://0.0.0.0:5000/search" + $page.url.search;
+	const url = "https://hadith-search-api-gibreelabdullah.koyeb.app/search" + $page.url.search;
+	// const url = "http://0.0.0.0:5000/search" + $page.url.search;
 
 	const allHadithPromises = getData(url);
 
 	function formatData(data: [string[]]) {
 		let indiHadith: any[] = [];
-		console.log("data");
-		console.log(data);
 		for (const hadithData of data) {
 			let hadithDict: any = {};
 			hadithDict.hadithnumber = hadithData[0];
@@ -31,9 +29,9 @@
 				hadith: hadithData[4],
 			};
 			hadithDict.bookName = hadithData[5]
+			hadithDict.shortName = hadithData[7]
 			indiHadith.push(hadithDict);
 		}
-		console.log({hadiths: indiHadith });
 		return {hadiths: indiHadith };
 	}
 </script>

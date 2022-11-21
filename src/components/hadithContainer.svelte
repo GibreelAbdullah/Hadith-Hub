@@ -7,7 +7,6 @@
 	export let book: string = "";
 	export let allHadiths: any[] = [];
 	let languageCount = allHadiths.length;
-	// let permalinkText = "Copy Permalink";
 	let permalinkText = "Copy Permalink";
 	let gradingColorClass = "";
 	function clickHandler() {
@@ -17,7 +16,6 @@
 		}, 2000);
 	}
 	function gradingColor(grade: String) {
-		console.log(grade)
 		if(!grade){
 			return
 		}
@@ -84,7 +82,7 @@
 					class="btn bg-primary-500 btn-sm text-white w-40 my-4 px-4"
 					on:click={clickHandler}
 					use:clipboard={"hadithhub.com/" +
-						book +
+						(allHadiths[0].hadiths[i].shortName ?? book) +
 						":" +
 						allHadiths[0].hadiths[i].hadithnumber.toString().replace('<span style="color:red;">','').replace('</span>','')}
 					>{permalinkText}
