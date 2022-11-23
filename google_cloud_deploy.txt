@@ -3,4 +3,3 @@ docker build -t gcr.io/hadith-hub/hadith-hub:16 . &&
 docker push gcr.io/hadith-hub/hadith-hub:16 &&
 
 gcloud beta run deploy hadith-hub --project hadith-hub --image gcr.io/hadith-hub/hadith-hub:16 --region us-central1 --platform managed --allow-unauthenticated --quiet
-

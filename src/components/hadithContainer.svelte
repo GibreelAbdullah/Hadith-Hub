@@ -39,13 +39,16 @@
 </script>
 
 {#each { length: allHadiths[0].hadiths.length } as _, i}
-	{#if allHadiths[0].hadiths[i].text}
 		<div class="card card-body m-4 flex-wrap">
 			<!-- HADITH TEXT -->
 			<div class="hadithGroup font-medium p-2 grid">
 				{#each { length: languageCount } as _, j}
 					<div class="break-words leading-7 m-3">
-						{@html allHadiths[j].hadiths[i].text}
+						{#if allHadiths[j].hadiths[i]}
+							{@html allHadiths[j].hadiths[i].text}
+						{:else}
+							<code>Hadith translation not found</code>
+						{/if}
 					</div>
 				{/each}
 			</div>
@@ -89,7 +92,6 @@
 				</button>
 			</div>
 		</div>
-	{/if}
 {/each}
 <Footer/>
 <style>

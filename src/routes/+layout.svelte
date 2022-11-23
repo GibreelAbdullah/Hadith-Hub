@@ -2,6 +2,7 @@
 	import "@brainandbones/skeleton/themes/theme-skeleton.css";
 	import "@brainandbones/skeleton/styles/all.css";
 	import "../app.postcss";
+	import { page } from "$app/stores";
 	import { selectedLanguagesStore } from "../common/sideBarContents.svelte";
 	import {
 		AppShell,
@@ -42,9 +43,10 @@
 			</svelte:fragment>
 
 			<form action="/search" method="get">
-				<input
+				<input 
 					type="search"
-					placeholder="Search..."
+					placeholder=  "Search..."
+					value="{$page.url.searchParams.get('q')}"
 					class="max-w-[200px] px-5"
 					name="q"
 				/>
