@@ -3,7 +3,6 @@
 		clipboard,
 		Divider,
 	} from "@brainandbones/skeleton";
-    import Footer from "../common/footer.svelte";
 	export let book: string = "";
 	export let allHadiths: any[] = [];
 	let languageCount = allHadiths.length;
@@ -93,7 +92,7 @@
 			</div>
 		</div>
 {/each}
-<Footer/>
+
 <style>
 	.hadithGroup {
 		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
