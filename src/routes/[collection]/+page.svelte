@@ -5,7 +5,7 @@
 
   let collectionPromise: Promise<any>;
 
-  let collections = `${urlPrefix}sections/${$page.params.book}.json`;
+  let collections = `${urlPrefix}sections/${$page.params.collection}.json`;
   collectionPromise = getData(collections);
 
   async function getData(url: string) {
@@ -18,6 +18,6 @@
 <main>
   <ChapterContainer
     dataPromise={collectionPromise}
-    bookURL={$page.params.book}
+    bookURL={$page.params.collection}
   />
 </main>
