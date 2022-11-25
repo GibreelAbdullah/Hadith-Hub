@@ -15,6 +15,14 @@
   }
 </script>
 
+<svelte:head>
+  {#await collectionPromise}
+    <title>{$page.params.collection} | HadithHub</title>
+  {:then data}
+    <title>{data.name} | HadithHub</title>
+  {/await}
+</svelte:head>
+
 <main>
   <ChapterContainer
     dataPromise={collectionPromise}

@@ -38,6 +38,18 @@
   }
 </script>
 
+<svelte:head>
+  {#await Promise.all(hadithGroupPromise)}
+    <title
+      >{$page.params.collection}:{$page.params.hadithNumber} | HadithHub</title
+    >
+  {:then data}
+    <title
+      >{data[0].metadata.name} {$page.params.hadithNumber} | HadithHub</title
+    >
+  {/await}
+</svelte:head>
+
 {#if hadithGroupPromise.length != 0}
   {#await Promise.all(hadithGroupPromise)}
     <div class="card card-body m-4">

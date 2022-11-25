@@ -35,6 +35,19 @@
   }
 </script>
 
+<svelte:head>
+  {#await Promise.all(allHadithPromises)}
+    <title
+      >Book {$page.params.bookNumber} - {$page.params.collection} | HadithHub</title
+    >
+  {:then data}
+    <title
+      >{data[0].metadata.section[data[0].hadiths[0].reference.book].englishName}
+      - {data[0].metadata.name} | HadithHub</title
+    >
+  {/await}
+</svelte:head>
+
 <main>
   {#if allHadithPromises.length != 0}
     {#await Promise.all(allHadithPromises)}

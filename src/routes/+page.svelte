@@ -14,6 +14,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>HadithHub</title>
+</svelte:head>
+
 <main>
   <BookContainer dataPromise={collectionPromise} />
 </main>
