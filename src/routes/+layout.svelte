@@ -12,6 +12,7 @@
 	} from "@brainandbones/skeleton";
 	import { writable, type Writable } from "svelte/store";
 	import SideBarContents from "../common/sideBarContents.svelte";
+    import Footer from "../common/footer.svelte";
 
 	const storeDrawer: Writable<boolean> = writable(false);
 	const drawerOpen: any = () => {
@@ -74,4 +75,5 @@
 		<SideBarContents />
 	</svelte:fragment>
 	<slot />
+	<Footer />
 </AppShell>
