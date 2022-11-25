@@ -1,20 +1,19 @@
 <script lang="ts">
-	import "@brainandbones/skeleton/styles/all.css";
-	import BookContainer from "../components/bookContainer.svelte";
-	import {urlPrefix} from "../common/constants.svelte"
+  import "@brainandbones/skeleton/styles/all.css";
+  import BookContainer from "$lib/components/bookContainer.svelte";
+  import { urlPrefix } from "$lib/common/constants.svelte";
 
-	const collections =
-		urlPrefix+"01-Collections/collections.min.json";
+  const collections = urlPrefix + "01-Collections/collections.min.json";
 
-	let collectionPromise = getData(collections);
+  let collectionPromise = getData(collections);
 
-	async function getData(url: string) {
-		return await fetch(url).then((response) => {
-			return response.json();
-		});
-	}
+  async function getData(url: string) {
+    return await fetch(url).then((response) => {
+      return response.json();
+    });
+  }
 </script>
 
 <main>
-	<BookContainer dataPromise={collectionPromise} />
+  <BookContainer dataPromise={collectionPromise} />
 </main>
