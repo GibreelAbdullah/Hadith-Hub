@@ -5,7 +5,7 @@
 
   let collectionPromise: Promise<any>;
 
-  let collections = `${urlPrefix}sections/${$page.params.collection}.json`;
+  let collections = `${urlPrefix}/sections/${$page.params.collection}.json`;
   collectionPromise = getData(collections);
 
   async function getData(url: string) {

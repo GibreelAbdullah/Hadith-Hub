@@ -17,15 +17,7 @@
       );
     }
     for (const language in $selectedLanguagesStore) {
-      let hadith =
-        urlPrefix +
-        "editions/" +
-        $selectedLanguagesStore[language] +
-        "-" +
-        $page.params.collection +
-        "/" +
-        $page.params.hadithNumber +
-        ".json";
+      let hadith = `${urlPrefix}/editions/${$selectedLanguagesStore[language]}-${$page.params.collection}/${$page.params.hadithNumber}.json`;
       const hadithPromise = getData(hadith);
       hadithGroupPromise.push(hadithPromise);
     }

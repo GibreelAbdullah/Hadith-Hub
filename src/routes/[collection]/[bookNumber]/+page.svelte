@@ -19,16 +19,7 @@
       );
     }
     for (const language in $selectedLanguagesStore) {
-      const url =
-        urlPrefix +
-        "editions/" +
-        $selectedLanguagesStore[language] +
-        "-" +
-        $page.params.collection +
-        "/sections/" +
-        $page.params.bookNumber +
-        ".min.json";
-
+      const url = `${urlPrefix}/editions/${$selectedLanguagesStore[language]}-${$page.params.collection}/sections/${$page.params.bookNumber}.min.json`
       const hadithPromise = getData(url);
       allHadithPromises.push(hadithPromise);
     }
