@@ -38,6 +38,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>Search for "{$page.url.searchParams.get("q")}" | HadithHub</title>
+</svelte:head>
+
 <main>
   {#await allHadithPromises}
     <div class="card card-body m-4">
