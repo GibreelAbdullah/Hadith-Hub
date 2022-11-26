@@ -17,7 +17,7 @@
   </div>
   {#each Object.keys(data["books"]) as chapterNumber}
     {#if data["books"][chapterNumber]["englishName"] != ""}
-      <a href="./{bookURL}/{chapterNumber}" class="card">
+      <a href="/{bookURL}/{chapterNumber}" class="card">
         <div class="card card-body m-4 ">
           <div class="hadithGroup font-medium p-2 grid ">
             <div>
