@@ -19,7 +19,7 @@
     } else if (
       ["hasan", "mursal"].some((i) => grade.toLowerCase().includes(i))
     ) {
-      gradingColorClass = "bg-blue-500";
+      gradingColorClass = "bg-indigo-600";
     } else if (grade.toLowerCase().includes("sahih")) {
       gradingColorClass = "bg-emerald-500";
     } else if (
