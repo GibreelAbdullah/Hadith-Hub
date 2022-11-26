@@ -6,6 +6,8 @@
   import HadithContainer from "$lib/components/hadithContainer.svelte";
   import { Breadcrumb, Crumb } from "@brainandbones/skeleton";
 
+  let title = `${$page.params.collection}:${$page.params.hadithNumber} | HadithHub`;
+
   let hadithGroupPromise: Promise<any>[] = [];
 
   $: {
@@ -21,6 +23,10 @@
       const hadithPromise = getData(hadith);
       hadithGroupPromise.push(hadithPromise);
     }
+    hadithGroupPromise[0].then(
+      (data) =>
+        (title = `${data.metadata.name} ${$page.params.hadithNumber} | HadithHub`)
+    );
   }
 
   async function getData(url: string) {
@@ -31,15 +37,30 @@
 </script>
 
 <svelte:head>
-  {#await Promise.all(hadithGroupPromise)}
-    <title
-      >{$page.params.collection}:{$page.params.hadithNumber} | HadithHub</title
-    >
-  {:then data}
-    <title
-      >{data[0].metadata.name} {$page.params.hadithNumber} | HadithHub</title
-    >
-  {/await}
+  <!-- HTML Meta Tags -->
+  <title>{title}</title>
+  <meta name="description" content="A Multi Language collection of Hadith" />
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content={$page.url.toString()} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta
+    property="og:description"
+    content="A Multi Language collection of Hadith"
+  />
+  <meta property="og:image" content="/favicon.png" />
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="twitter:domain" content={$page.url.hostname} />
+  <meta property="twitter:url" content={$page.url.toString()} />
+  <meta name="twitter:title" content={title} />
+  <meta
+    name="twitter:description"
+    content="A Multi Language collection of Hadith"
+  />
+  <meta name="twitter:image" content="/favicon.png" />
 </svelte:head>
 
 {#if hadithGroupPromise.length != 0}
