@@ -3,6 +3,8 @@
   import HadithContainer from "$lib/components/hadithContainer.svelte";
   import { getData } from '$lib/common/utils'
 
+  const title = `Search for "${$page.url.searchParams.get("q")}" | HadithHub`;
+  
   const url =
     "https://hadith-search-api-gibreelabdullah.koyeb.app/search" +
     $page.url.search;

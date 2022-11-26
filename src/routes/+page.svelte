@@ -1,8 +1,9 @@
 <script lang="ts">
   import "@brainandbones/skeleton/styles/all.css";
   import BookContainer from "$lib/components/bookContainer.svelte";
-  import { urlPrefix } from "$lib/common/constants.svelte";
+  import { urlPrefix } from "$lib/common/constants";
   import { getData } from '$lib/common/utils'
+  import { page } from "$app/stores";
 
   const collections = `${urlPrefix}/01-Collections/collections.min.json`;
 
