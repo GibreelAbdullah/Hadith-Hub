@@ -7,13 +7,13 @@
   let languageCount = allHadiths.length;
   let permalinkText = "Copy Permalink";
   let gradingColorClass = "";
-  function clickHandler() {
+  const clickHandler = () => {
     permalinkText = "Copied";
-    setTimeout(function () {
+    setTimeout(() => {
       permalinkText = "Copy Permalink";
     }, 2000);
   }
-  function gradingColor(grade: string) {
+  const gradingColor = (grade: string) => {
     if (!grade) {
       return;
     } else if (

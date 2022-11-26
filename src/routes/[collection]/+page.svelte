@@ -2,6 +2,7 @@
   import { page } from "$app/stores";
   import { urlPrefix } from "$lib/common/constants";
   import ChapterContainer from "$lib/components/chapterContainer.svelte";
+  import { getData } from '$lib/common/utils'
 
   let title = `${$page.params.collection} | HadithHub`;
 
@@ -9,14 +10,6 @@
 
   let collections = `${urlPrefix}/sections/${$page.params.collection}.json`;
   collectionPromise = getData(collections);
-
-  async function getData(url: string) {
-    return await fetch(url).then((response) => {
-      return response.json();
-    });
-  }
-
-  collectionPromise.then((data) => (title = `${data.name} | HadithHub`));
 </script>
 
 <svelte:head>

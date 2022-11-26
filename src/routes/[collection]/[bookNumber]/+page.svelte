@@ -5,13 +5,11 @@
   import { browser } from "$app/environment";
   import { urlPrefix } from "$lib/common/constants";
   import { Breadcrumb, Crumb } from "@brainandbones/skeleton";
+  import { getData } from '$lib/common/utils'
 
   let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`;
 
   let allHadithPromises: any[] = [];
-  async function getData(url: string) {
-    return await fetch(url).then((response) => response.json());
-  }
   $: {
     allHadithPromises = [];
     if (browser) {
