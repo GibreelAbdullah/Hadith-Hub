@@ -1,7 +1,7 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { page } from "$app/stores";
-  import { urlPrefix } from "$lib/common/constants.svelte";
+  import { urlPrefix } from "$lib/common/constants";
   import { selectedLanguagesStore } from "$lib/common/sideBarContents.svelte";
   import HadithContainer from "$lib/components/hadithContainer.svelte";
   import { Breadcrumb, Crumb } from "@brainandbones/skeleton";
