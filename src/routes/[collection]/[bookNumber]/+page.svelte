@@ -24,9 +24,9 @@
         "editions/" +
         $selectedLanguagesStore[language] +
         "-" +
-        $page.params["book"] +
+        $page.params.collection +
         "/sections/" +
-        $page.params["hadithId"] +
+        $page.params.bookNumber +
         ".min.json";
 
       const hadithPromise = getData(url);
@@ -48,7 +48,8 @@
         <div class="hadithGroup text-xs grid px-5">
           <Breadcrumb>
             <Crumb href="/">Home</Crumb>
-            <Crumb href="/{$page.params['book']}">{data[0].metadata.name}</Crumb
+            <Crumb href="/{$page.params.collection}"
+              >{data[0].metadata.name}</Crumb
             >
             <Crumb
               >{data[0].metadata.section[data[0].hadiths[0].reference.book]
@@ -57,8 +58,8 @@
           </Breadcrumb>
         </div>
       </div>
-      <HadithContainer allHadiths={data} book={$page.params["book"]} />
-    {:catch data}
+      <HadithContainer allHadiths={data} book={$page.params.collection} />
+    {:catch _data}
       <div class="card card-body m-4">
         <div class="hadithGroup font-medium p-2 grid">
           <div class="break-words leading-7 m-3">
