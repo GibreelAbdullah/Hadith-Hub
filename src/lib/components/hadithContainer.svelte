@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { page } from "$app/stores";
+
   import { clipboard, Divider } from "@brainandbones/skeleton";
   export let book = "";
   export let allHadiths: any[] = [];
@@ -79,7 +81,7 @@
       <button
         class="btn bg-primary-500 btn-sm text-white w-40 my-4 px-4"
         on:click={clickHandler}
-        use:clipboard={"hadithhub.com/" +
+        use:clipboard={$page.url.host + "/" +
           (allHadiths[0].hadiths[i].shortName ?? book) +
           ":" +
           allHadiths[0].hadiths[i].hadithnumber

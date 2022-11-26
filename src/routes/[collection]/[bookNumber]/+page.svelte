@@ -3,9 +3,11 @@
   import HadithContainer from "$lib/components/hadithContainer.svelte";
   import { selectedLanguagesStore } from "$lib/common/sideBarContents.svelte";
   import { browser } from "$app/environment";
-  import { urlPrefix } from "$lib/common/constants.svelte";
+  import { urlPrefix } from "$lib/common/constants";
   import { Breadcrumb, Crumb } from "@brainandbones/skeleton";
   import { getData } from '$lib/common/utils'
+
+  let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`;
 
   let allHadithPromises: any[] = [];
   $: {
@@ -17,33 +19,44 @@
       );
     }
     for (const language in $selectedLanguagesStore) {
-      const url =
-        urlPrefix +
-        "editions/" +
-        $selectedLanguagesStore[language] +
-        "-" +
-        $page.params.collection +
-        "/sections/" +
-        $page.params.bookNumber +
-        ".min.json";
-
+      const url = `${urlPrefix}/editions/${$selectedLanguagesStore[language]}-${$page.params.collection}/sections/${$page.params.bookNumber}.min.json`
       const hadithPromise = getData(url);
       allHadithPromises.push(hadithPromise);
     }
+    allHadithPromises[0].then(
+      (data: any) =>
+        (title = `${
+          data.metadata.section[data.hadiths[0].reference.book].englishName
+        } - ${data.metadata.name} | HadithHub`)
+    );
   }
 </script>
 
 <svelte:head>
-  {#await Promise.all(allHadithPromises)}
-    <title
-      >Book {$page.params.bookNumber} - {$page.params.collection} | HadithHub</title
-    >
-  {:then data}
-    <title
-      >{data[0].metadata.section[data[0].hadiths[0].reference.book].englishName}
-      - {data[0].metadata.name} | HadithHub</title
-    >
-  {/await}
+  <!-- HTML Meta Tags -->
+  <title>{title}</title>
+  <meta name="description" content="A Multi Language collection of Hadith" />
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content={$page.url.toString()} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta
+    property="og:description"
+    content="A Multi Language collection of Hadith"
+  />
+  <meta property="og:image" content="/favicon.png" />
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="twitter:domain" content={$page.url.hostname} />
+  <meta property="twitter:url" content={$page.url.toString()} />
+  <meta name="twitter:title" content={title} />
+  <meta
+    name="twitter:description"
+    content="A Multi Language collection of Hadith"
+  />
+  <meta name="twitter:image" content="/favicon.png" />
 </svelte:head>
 
 <main>
