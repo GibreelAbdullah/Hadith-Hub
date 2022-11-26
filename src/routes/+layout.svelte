@@ -12,7 +12,7 @@
   } from "@brainandbones/skeleton";
   import { writable, type Writable } from "svelte/store";
   import SideBarContents from "$lib/common/sideBarContents.svelte";
-    import Footer from "$lib/common/footer.svelte";
+  import Footer from "$lib/common/footer.svelte";
 
   const storeDrawer: Writable<boolean> = writable(false);
   const drawerOpen: any = () => {
