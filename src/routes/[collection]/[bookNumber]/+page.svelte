@@ -3,7 +3,7 @@
   import HadithContainer from "$lib/components/hadithContainer.svelte";
   import { selectedLanguagesStore } from "$lib/common/sideBarContents.svelte";
   import { browser } from "$app/environment";
-  import { urlPrefix } from "$lib/common/constants.svelte";
+  import { urlPrefix } from "$lib/common/constants";
   import { Breadcrumb, Crumb } from "@brainandbones/skeleton";
 
   let allHadithPromises: any[] = [];
@@ -19,16 +19,7 @@
       );
     }
     for (const language in $selectedLanguagesStore) {
-      const url =
-        urlPrefix +
-        "editions/" +
-        $selectedLanguagesStore[language] +
-        "-" +
-        $page.params.collection +
-        "/sections/" +
-        $page.params.bookNumber +
-        ".min.json";
-
+      const url = `${urlPrefix}/editions/${$selectedLanguagesStore[language]}-${$page.params.collection}/sections/${$page.params.bookNumber}.min.json`
       const hadithPromise = getData(url);
       allHadithPromises.push(hadithPromise);
     }

@@ -1,11 +1,11 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { urlPrefix } from "$lib/common/constants.svelte";
+  import { urlPrefix } from "$lib/common/constants";
   import ChapterContainer from "$lib/components/chapterContainer.svelte";
 
   let collectionPromise: Promise<any>;
 
-  let collections = `${urlPrefix}sections/${$page.params.collection}.json`;
+  let collections = `${urlPrefix}/sections/${$page.params.collection}.json`;
   collectionPromise = getData(collections);
 
   async function getData(url: string) {

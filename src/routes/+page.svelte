@@ -1,9 +1,9 @@
 <script lang="ts">
   import "@brainandbones/skeleton/styles/all.css";
   import BookContainer from "$lib/components/bookContainer.svelte";
-  import { urlPrefix } from "$lib/common/constants.svelte";
+  import { urlPrefix } from "$lib/common/constants";
 
-  const collections = urlPrefix + "01-Collections/collections.min.json";
+  const collections = `${urlPrefix}/01-Collections/collections.min.json`;
 
   let collectionPromise = getData(collections);
 
