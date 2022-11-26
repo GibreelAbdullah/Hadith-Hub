@@ -2,6 +2,8 @@
   import { page } from "$app/stores";
   import HadithContainer from "$lib/components/hadithContainer.svelte";
 
+  const title = `Search for "${$page.url.searchParams.get("q")}" | HadithHub`;
+
   async function getData(url: string) {
     return await fetch(url).then((response) => response.json());
   }
@@ -39,7 +41,30 @@
 </script>
 
 <svelte:head>
-  <title>Search for "{$page.url.searchParams.get("q")}" | HadithHub</title>
+  <!-- HTML Meta Tags -->
+  <title>{title}</title>
+  <meta name="description" content="A Multi Language collection of Hadith" />
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content={$page.url.toString()} />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta
+    property="og:description"
+    content="A Multi Language collection of Hadith"
+  />
+  <meta property="og:image" content="/favicon.png" />
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="twitter:domain" content={$page.url.hostname} />
+  <meta property="twitter:url" content={$page.url.toString()} />
+  <meta name="twitter:title" content={title} />
+  <meta
+    name="twitter:description"
+    content="A Multi Language collection of Hadith"
+  />
+  <meta name="twitter:image" content="/favicon.png" />
 </svelte:head>
 
 <main>
