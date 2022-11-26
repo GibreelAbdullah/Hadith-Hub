@@ -1,6 +1,5 @@
 <script lang="ts">
   import { clipboard, Divider } from "@brainandbones/skeleton";
-  import Footer from "../common/footer.svelte";
   export let book = "";
   export let allHadiths: any[] = [];
   let languageCount = allHadiths.length;
@@ -92,7 +91,6 @@
     </div>
   </div>
 {/each}
-<Footer />
 
 <style>
   .hadithGroup {
