@@ -1,10 +1,8 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import HadithContainer from "$lib/components/hadithContainer.svelte";
+  import { getData } from '$lib/common/utils'
 
-  async function getData(url: string) {
-    return await fetch(url).then((response) => response.json());
-  }
   const url =
     "https://hadith-search-api-gibreelabdullah.koyeb.app/search" +
     $page.url.search;
@@ -12,7 +10,7 @@
 
   const allHadithPromises = getData(url);
 
-  function formatData(data: [string[]]) {
+  const formatData = (data: [string[]]) => {
     let indiHadith: any[] = [];
     for (const hadithData of data) {
       let hadithDict: any = {};

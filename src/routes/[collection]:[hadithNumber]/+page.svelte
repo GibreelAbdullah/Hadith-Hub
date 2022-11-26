@@ -5,6 +5,7 @@
   import { selectedLanguagesStore } from "$lib/common/sideBarContents.svelte";
   import HadithContainer from "$lib/components/hadithContainer.svelte";
   import { Breadcrumb, Crumb } from "@brainandbones/skeleton";
+  import { getData } from '$lib/common/utils'
 
   let hadithGroupPromise: Promise<any>[] = [];
 
@@ -29,12 +30,6 @@
       const hadithPromise = getData(hadith);
       hadithGroupPromise.push(hadithPromise);
     }
-  }
-
-  async function getData(url: string) {
-    return await fetch(url).then((response) => {
-      return response.json();
-    });
   }
 </script>
 

@@ -2,12 +2,8 @@
   import { browser } from "$app/environment";
   import { LightSwitch, ListBox, ListBoxItem } from "@brainandbones/skeleton";
   import { writable, type Writable } from "svelte/store";
+  import { getData } from '$lib/common/utils'
 
-  async function getData(url: string) {
-    return await fetch(url).then((response) => {
-      return response.json();
-    });
-  }
   const languages =
     "https://raw.githubusercontent.com/GibreelAbdullah/hadith-api/3/04-Languages/languages.json";
 
