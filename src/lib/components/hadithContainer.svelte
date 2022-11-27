@@ -41,10 +41,10 @@
     <div class="hadithGroup font-medium p-2 grid">
       {#each { length: languageCount } as _, j}
         <div class="break-words leading-7 m-3">
-          {#if allHadiths[j].hadiths[i]}
-            {@html allHadiths[j].hadiths[i].text}
+          {#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == '' }
+            <center><code>Hadith translation not found</code></center>
           {:else}
-            <code>Hadith translation not found</code>
+            {@html allHadiths[j].hadiths[i].text}
           {/if}
         </div>
       {/each}

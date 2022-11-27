@@ -24,10 +24,13 @@
       const hadithPromise = getData(hadith);
       hadithGroupPromise.push(hadithPromise);
     }
-    hadithGroupPromise[0].then(
-      (data) =>
-        (title = `${data.metadata.name} ${$page.params.hadithNumber} | HadithHub`)
-    );
+    if(hadithGroupPromise.length != 0){
+      hadithGroupPromise[0].then(
+        (data) =>
+          (title = `${data.metadata.name} ${$page.params.hadithNumber} | HadithHub`)
+      );
+    }
+
   }
 </script>
 
