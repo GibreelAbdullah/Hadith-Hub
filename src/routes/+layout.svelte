@@ -20,7 +20,7 @@
   };
 </script>
 
-<Drawer open={storeDrawer} position="left"><SideBarContents /></Drawer>
+<Drawer open={storeDrawer} position="left"><div class="px-4 pt-8"><SideBarContents /></div></Drawer>
 
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4 hidden md:block">
   <svelte:fragment slot="header">
