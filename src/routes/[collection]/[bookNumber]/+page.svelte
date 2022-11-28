@@ -23,12 +23,14 @@
       const hadithPromise = getData(url);
       allHadithPromises.push(hadithPromise);
     }
-    allHadithPromises[0].then(
-      (data: any) =>
-        (title = `${
-          data.metadata.section[data.hadiths[0].reference.book].englishName
-        } - ${data.metadata.name} | HadithHub`)
-    );
+    if(allHadithPromises.length != 0){
+      allHadithPromises[0].then(
+        (data: any) =>
+          (title = `${
+            data.metadata.section[data.hadiths[0].reference.book].englishName
+          } - ${data.metadata.name} | HadithHub`)
+      );
+    }
   }
 </script>
 
