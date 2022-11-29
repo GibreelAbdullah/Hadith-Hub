@@ -16,17 +16,17 @@
     </div>
   </div>
   {#each Object.keys(data["books"]) as chapterNumber}
-    {#if data["books"][chapterNumber]["englishName"] != ""}
+    {#if data["books"][chapterNumber]["eng-name"] != ""}
       <a href="/{bookURL}/{chapterNumber}" class="card">
         <div class="card card-body m-4 ">
           <div class="hadithGroup font-medium p-2 grid ">
             <div>
               {chapterNumber} -
-              {data["books"][chapterNumber]["englishName"]}
+              {data["books"][chapterNumber]["eng-name"]}
             </div>
 
             <div class="text-right ml-10">
-              {data["books"][chapterNumber]["arabicName"]}
+              {data["books"][chapterNumber]["ara-name"]}
             </div>
             <div class="hidden md:block text-right">
               <div class="badge bg-gray-500">

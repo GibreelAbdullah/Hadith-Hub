@@ -8,7 +8,7 @@
 
   let collectionPromise: Promise<any>;
 
-  let collections = `${urlPrefix}/sections/${$page.params.collection}.json`;
+  let collections = `${urlPrefix}/updates/sections/${$page.params.collection}.json`;
   collectionPromise = getData(collections);
 </script>
 

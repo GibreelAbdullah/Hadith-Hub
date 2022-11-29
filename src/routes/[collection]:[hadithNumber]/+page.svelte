@@ -77,8 +77,7 @@
             {data[0].metadata.name}
           </Crumb>
           <Crumb>
-            {data[0].metadata.section[data[0].hadiths[0].reference.book]
-              .englishName}
+            {data[0].metadata.section[data[0].hadiths[0].reference.book]["eng-name"]}
           </Crumb>
         </Breadcrumb>
       </div>

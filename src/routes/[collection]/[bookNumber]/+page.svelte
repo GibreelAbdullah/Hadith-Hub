@@ -5,7 +5,7 @@
   import { browser } from "$app/environment";
   import { urlPrefix } from "$lib/common/constants";
   import { Breadcrumb, Crumb } from "@brainandbones/skeleton";
-  import { getData } from '$lib/common/utils'
+  import { getData } from "$lib/common/utils";
 
   let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`;
 
@@ -19,15 +19,15 @@
       );
     }
     for (const language in $selectedLanguagesStore) {
-      const url = `${urlPrefix}/editions/${$selectedLanguagesStore[language]}-${$page.params.collection}/sections/${$page.params.bookNumber}.min.json`
+      const url = `${urlPrefix}/editions/${$selectedLanguagesStore[language]}-${$page.params.collection}/sections/${$page.params.bookNumber}.min.json`;
       const hadithPromise = getData(url);
       allHadithPromises.push(hadithPromise);
     }
-    if(allHadithPromises.length != 0){
+    if (allHadithPromises.length != 0) {
       allHadithPromises[0].then(
         (data: any) =>
           (title = `${
-            data.metadata.section[data.hadiths[0].reference.book].englishName
+            data.metadata.section[data.hadiths[0].reference.book]["eng-name"]
           } - ${data.metadata.name} | HadithHub`)
       );
     }
@@ -78,9 +78,8 @@
               >{data[0].metadata.name}</Crumb
             >
             <Crumb
-              >{data[0].metadata.section[data[0].hadiths[0].reference.book]
-                .englishName}</Crumb
-            >
+              >{data[0].metadata.section[data[0].hadiths[0].reference.book]["eng-name"]}
+            </Crumb>
           </Breadcrumb>
         </div>
       </div>

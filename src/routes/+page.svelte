@@ -5,7 +5,7 @@
   import { getData } from '$lib/common/utils'
   import { page } from "$app/stores";
 
-  const collections = `${urlPrefix}/01-Collections/collections.min.json`;
+  const collections = `${urlPrefix}/updates/collections/collections.min.json`;
 
   let collectionPromise = getData(collections);
 </script>
