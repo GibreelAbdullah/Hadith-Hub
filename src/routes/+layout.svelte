@@ -42,13 +42,12 @@
           </GradientHeading>
         </a>
       </svelte:fragment>
-
-      <form action="/search" method="get">
+      <form action="/search" method="get" class="">
         <input
           type="search"
           placeholder="Search..."
           value={$page.url.searchParams.get("q")}
-          class="max-w-[200px] px-5"
+          class="px-5 h-8 caret-black dark:caret-white"
           name="q"
         />
         <input type="hidden" name="lang" value={$selectedLanguagesStore} />
