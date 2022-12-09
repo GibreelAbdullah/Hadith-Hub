@@ -8,11 +8,13 @@
   } from "@brainandbones/skeleton";
   import { writable, type Writable } from "svelte/store";
   import { getData } from "$lib/common/utils";
+  import { urlPrefix } from "./constants";
 
-  const languages =
-    "https://raw.githubusercontent.com/GibreelAbdullah/hadith-api/3/04-Languages/languages.json";
+  const languages = `${urlPrefix}/updates/collections/languages.json`;
 
   let languagePromise = getData(languages);
+  
+  export {languagePromise}
 
   const storedLanguagesList = browser
     ? window.localStorage.getItem("storedLanguagesList") ?? "ara,eng"
@@ -23,7 +25,7 @@
   );
   export { selectedLanguagesStore };
 
-  function getSelectedLanguages(data:any, selectedLanguagesShortName:string[]){
+  function getSelectedLanguages(data:{Name:string, Prefix:string}[], selectedLanguagesShortName:string[]){
     let selectedLanguages:string = ''
     switch(selectedLanguagesShortName.length) {
       case 0:
