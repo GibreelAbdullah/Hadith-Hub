@@ -42,7 +42,7 @@
       {#each { length: languageCount } as _, j}
         <div class="break-words leading-7 m-3">
           {#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == '' }
-            <center><code>Hadith translation not found</code></center>
+            <center><code class="!text-white !bg-red-500">Hadith translation not found</code></center>
           {:else}
             {@html allHadiths[j].hadiths[i].text}
           {/if}
