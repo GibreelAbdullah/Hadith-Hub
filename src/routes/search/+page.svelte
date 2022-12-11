@@ -8,7 +8,7 @@
   const url =
     "https://hadith-search-api-gibreelabdullah.koyeb.app/search" +
     $page.url.search;
-  // const url = "http://0.0.0.0:5000/search" + $page.url.search;
+  // const url = "http://0.0.0.0:50010/search" + $page.url.search;
 
   const allHadithPromises = getData(url);
 
@@ -73,15 +73,22 @@
       </div>
     </div>
   {:then data}
-    <HadithContainer
+    {#if data.length != 0}
+      <HadithContainer
       allHadiths={[formatData(data)]}
-      book={$page.params["book"]}
-    />
+      book={$page.params["book"]}/>
+    {:else}
+      <div class="card card-body m-4">
+        <div class="hadithGroup font-medium p-2 grid">
+          <div class="break-words leading-7 m-3">No results found. Check if there are any spelling mistakes.</div>
+        </div>
+      </div>
+    {/if}
   {:catch data}
     <div class="card card-body m-4">
       <div class="hadithGroup font-medium p-2 grid">
         <div class="break-words leading-7 m-3">
-          Error. Try clearing the cache.
+          Something went wrong. Kindly report this to our twitter account <a href="https://twitter.com/TheHadithHub" target="blank">TheHadithHub</a> 
         </div>
       </div>
     </div>
