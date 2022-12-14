@@ -128,10 +128,13 @@
             <Crumb href="/{$page.params.collection}">
               {data.filter((n) => n)[0].metadata.name}
             </Crumb>
-            <Crumb>
+            <Crumb href="/{$page.params.collection}/{data.filter((n) => n)[0].hadiths[0].reference.book}">
               {data.filter((n) => n)[0].metadata.section[
                 data.filter((n) => n)[0].hadiths[0].reference.book
               ]["eng-name"]}
+            </Crumb>
+            <Crumb>
+              Hadith {data.filter((n) => n)[0].hadiths[0].reference.hadith}
             </Crumb>
           </Breadcrumb>
         </div>

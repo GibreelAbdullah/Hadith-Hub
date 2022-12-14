@@ -66,13 +66,15 @@
     </div>
     <Divider borderWidth="border-l" />
     <div class="flex justify-between px-4">
-      <div class="my-4">
+      <div class="my-4 text-sm">
+        #{@html allHadiths[0].hadiths[i].hadithnumber}
+        <br />
         {#if allHadiths[0].metadata}
           {@html allHadiths[0].metadata.name}
         {:else}
           {@html allHadiths[0].hadiths[i].bookName}
         {/if}
-        {@html allHadiths[0].hadiths[i].hadithnumber}
+        {@html allHadiths[0].hadiths[i].arabicnumber}
         <br />
         Book {@html allHadiths[0].hadiths[i].reference.book}, Hadith {@html allHadiths[0]
           .hadiths[i].reference.hadith}
