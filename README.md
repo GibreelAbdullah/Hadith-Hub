@@ -1,38 +1,36 @@
-# create-svelte
+# HADITH HUB (حديث حب)
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+This is the frontend of hadithhub.com website.
 
-## Creating a project
+HadithHub is a collection of Hadith in multiple languages and gradings from multiple scholars. 
 
-If you're seeing this, you've probably already done this step. Congrats!
+Written in svelte it uses sveltekit, skeleton and tailwind css.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+<hr>
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Prerequisites
 
-## Developing
+```npm``` should be installed in the system.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+<hr>
 
-```bash
-npm run dev
+## To contribute
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+1. Fork the repo.
 
-## Building
+2. Make the required changes.
 
-To create a production version of your app:
+3. Create a Pull Request.
 
-```bash
-npm run build
-```
+<hr>
 
-You can preview the production build with `npm run preview`.
+## To run the project
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+1. Clone the reposiory.
+
+2. run ```npm install``` to install dependencies
+
+3. run ```npm run dev``` to run the application in dev mode.
+
+4. Goto ```http://localhost:5173``` in your browser.
+
