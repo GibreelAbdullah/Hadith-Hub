@@ -7,7 +7,7 @@
   } from "$lib/common/sideBarContents.svelte";
   import { browser } from "$app/environment";
   import { urlPrefix } from "$lib/common/constants";
-  import { Breadcrumb, Crumb } from "@brainandbones/skeleton";
+  import { Breadcrumb, Crumb } from "@skeletonlabs/skeleton";
   import { getData } from "$lib/common/utils";
 
   let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`;
@@ -118,14 +118,14 @@
 <main>
   {#if allHadithPromises.length != 0}
     {#await allResolvingErrors(allHadithPromises)}
-      <div class="card card-body m-4">
+      <div class="card card-body p-4 m-4">
         <div class="hadithGroup font-medium p-2 grid">
           <div class="break-words leading-7 m-3">LOADING...</div>
         </div>
       </div>
     {:then data}
       {#if i != -1}
-        <div class="sticky top-0 card card-body m-4">
+        <div class="sticky top-0 card card-body p-4 m-4">
           <div class="hadithGroup text-xs grid px-5">
             <Breadcrumb>
               <Crumb href="/">Home</Crumb>
@@ -142,7 +142,7 @@
         </div>
       {/if}
       {#if unavailableBooks.length != 0}
-        <div class="card card-body m-4 !bg-red-500">
+        <div class="card card-body p-4 m-4 !bg-red-500">
           <div class="hadithGroup font-medium p-2 grid text-center ">
             {#await getBookName(unavailableBooks)}
               Loading...
@@ -156,7 +156,7 @@
         <HadithContainer allHadiths={data.filter((n) => n)} book={$page.params.collection} />
       {/if}
     {:catch data}
-      <div class="card card-body m-4">
+      <div class="card card-body p-4 m-4">
         <div class="hadithGroup font-medium p-2 grid">
           <div class="break-words leading-7 m-3">
             Error. Try clearing the cache.
@@ -165,7 +165,7 @@
       </div>
     {/await}
   {:else}
-    <div class="card card-body m-4">
+    <div class="card card-body p-4 m-4">
       <div class="hadithGroup font-medium p-2 grid">
         <div class="break-words leading-7 m-3">Select at least 1 language.</div>
       </div>

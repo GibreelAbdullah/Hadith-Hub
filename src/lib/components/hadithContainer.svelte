@@ -1,7 +1,7 @@
 <script lang="ts">
     import { page } from "$app/stores";
 
-  import { clipboard, Divider } from "@brainandbones/skeleton";
+  import { clipboard, Divider } from "@skeletonlabs/skeleton";
   export let book = "";
   export let allHadiths: any[] = [];
   let languageCount = allHadiths.length;
@@ -19,15 +19,15 @@
     } else if (
       ["hasan", "mursal"].some((i) => grade.toLowerCase().includes(i))
     ) {
-      gradingColorClass = "bg-indigo-600";
+      gradingColorClass = "bg-indigo-600 text-white";
     } else if (grade.toLowerCase().includes("sahih")) {
-      gradingColorClass = "bg-emerald-500";
+      gradingColorClass = "bg-emerald-500 text-black";
     } else if (
       ["mawdu", "batil", "munkar"].some((i) => grade.toLowerCase().includes(i))
     ) {
-      gradingColorClass = "bg-red-500";
+      gradingColorClass = "bg-red-500 text-black";
     } else if (grade.toLowerCase().includes("daif")) {
-      gradingColorClass = "bg-orange-500";
+      gradingColorClass = "bg-orange-500 text-black";
     } else {
       gradingColorClass = "bg-gray-500";
     }
@@ -36,7 +36,7 @@
 </script>
 
 {#each { length: allHadiths[0].hadiths.length } as _, i}
-  <div class="card card-body m-4 flex-wrap">
+  <div class="card card-body p-4 m-4 flex-wrap">
     <!-- HADITH TEXT -->
     <div class="hadithGroup font-medium p-2 grid">
       {#each { length: languageCount } as _, j}
@@ -79,7 +79,7 @@
       </div>
 
       <button
-        class="btn bg-primary-500 btn-sm text-white w-40 my-4 px-4"
+        class="btn bg-primary-500 btn-sm text-black w-40 my-4 px-4"
         on:click={clickHandler}
         use:clipboard={$page.url.host + "/" +
           (allHadiths[0].hadiths[i].shortName ?? book) +

@@ -5,7 +5,7 @@
     LightSwitch,
     ListBox,
     ListBoxItem,
-  } from "@brainandbones/skeleton";
+  } from "@skeletonlabs/skeleton";
   import { writable, type Writable } from "svelte/store";
   import { getData } from "$lib/common/utils";
   import { urlPrefix } from "./constants";

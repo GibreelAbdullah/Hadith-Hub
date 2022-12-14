@@ -1,5 +1,5 @@
 <script lang="ts">
-  import "@brainandbones/skeleton/styles/all.css";
+  import "@skeletonlabs/skeleton/styles/all.css";
   import BookContainer from "$lib/components/bookContainer.svelte";
   import { urlPrefix } from "$lib/common/constants";
   import { getData } from '$lib/common/utils'

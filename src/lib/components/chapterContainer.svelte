@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { Breadcrumb, Crumb } from "@brainandbones/skeleton";
+  import { Breadcrumb, Crumb } from "@skeletonlabs/skeleton";
   export let dataPromise: Promise<any>;
   export let bookURL: string;
 </script>
 
 {#await dataPromise}
-  <div class="card card-body m-4">LOADING...</div>
+  <div class="card card-body p-4 m-4">LOADING...</div>
 {:then data}
-  <div class="sticky top-0 card card-body m-4">
+  <div class="sticky top-0 card card-body p-4 m-4">
     <div class="text-xs grid px-3">
       <Breadcrumb>
         <Crumb href="/">Home</Crumb>
@@ -18,7 +18,7 @@
   {#each Object.keys(data["books"]) as chapterNumber}
     {#if data["books"][chapterNumber]["eng-name"] != ""}
       <a href="/{bookURL}/{chapterNumber}" class="card">
-        <div class="card card-body m-4 ">
+        <div class="card card-body p-4 m-4 ">
           <div class="hadithGroup font-medium p-2 grid ">
             <div>
               {chapterNumber} -
@@ -46,7 +46,7 @@
     {/if}
   {/each}
 {:catch data}
-  <div class="card card-body m-4">Error. Try clearing the cache.</div>
+  <div class="card card-body p-4 m-4">Error. Try clearing the cache.</div>
 {/await}
 
 <style>

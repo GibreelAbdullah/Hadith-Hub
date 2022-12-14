@@ -1,6 +1,6 @@
 <script lang="ts">
-  import "@brainandbones/skeleton/themes/theme-skeleton.css";
-  import "@brainandbones/skeleton/styles/all.css";
+  import "@skeletonlabs/skeleton/themes/theme-skeleton.css";
+  import "@skeletonlabs/skeleton/styles/all.css";
   import "../app.postcss";
   import { page } from "$app/stores";
   import { selectedLanguagesStore } from "$lib/common/sideBarContents.svelte";
@@ -9,18 +9,21 @@
     AppBar,
     GradientHeading,
     Drawer,
-  } from "@brainandbones/skeleton";
-  import { writable, type Writable } from "svelte/store";
+    type DrawerSettings,
+  } from "@skeletonlabs/skeleton";
   import SideBarContents from "$lib/common/sideBarContents.svelte";
   import Footer from "$lib/common/footer.svelte";
+  import { drawerStore } from "@skeletonlabs/skeleton";
 
-  const storeDrawer: Writable<boolean> = writable(false);
-  const drawerOpen: any = () => {
-    storeDrawer.set(true);
-  };
+  function drawerOpen(): void {
+    const settings: DrawerSettings = { id: "main" };
+    drawerStore.open(settings);
+  }
 </script>
 
-<Drawer open={storeDrawer} position="left"><div class="px-4 pt-8"><SideBarContents /></div></Drawer>
+<Drawer open={drawerOpen} position="left">
+  <div class="px-4 pt-8"><SideBarContents /></div>
+</Drawer>
 
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4 hidden md:block">
   <svelte:fragment slot="header">

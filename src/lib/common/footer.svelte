@@ -3,7 +3,7 @@
 </script>
 
 <div
-  class="sticky top-0 card card-body m-4  dark:bg-gradient-to-r dark:from-gray-800 dark:via-gray-800 dark:to-gray-900"
+  class="sticky top-[100vh] card card-body p-4 m-4  dark:bg-gradient-to-r dark:from-gray-800 dark:via-gray-800 dark:to-gray-900"
 >
   <div class="flex space-x-4">
     <a
