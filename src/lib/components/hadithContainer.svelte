@@ -79,7 +79,7 @@
         Book {@html allHadiths[0].hadiths[i].reference.book}, Hadith {@html allHadiths[0]
           .hadiths[i].reference.hadith}
       </div>
-
+      <!-- <div>  -->
       <button
         class="btn bg-primary-500 btn-sm text-black w-40 my-4 px-4"
         on:click={clickHandler}
@@ -92,6 +92,13 @@
             .replace("</span>", "")}
         >{permalinkText}
       </button>
+      <!-- <span class="flex bg-primary-500 h-12 rounded-l-full my-4 float-left">
+        <span class="text-center my-auto px-4 text-sm text-black">Copy Permalink</span>
+      </span>
+      <span class="flex bg-primary-500 h-12 rounded-r-full my-4 float-right">
+        <span class="text-center my-auto pr-4 text-sm text-black">⎋</span>
+      </span>
+    </div> -->
     </div>
   </div>
 {/each}

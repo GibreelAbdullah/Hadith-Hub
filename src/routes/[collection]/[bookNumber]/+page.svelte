@@ -2,13 +2,12 @@
   import { page } from "$app/stores";
   import HadithContainer from "$lib/components/hadithContainer.svelte";
   import {
-    languagePromise,
     selectedLanguagesStore,
   } from "$lib/common/sideBarContents.svelte";
   import { browser } from "$app/environment";
   import { urlPrefix } from "$lib/common/constants";
   import { Breadcrumb, Crumb } from "@skeletonlabs/skeleton";
-  import { getData } from "$lib/common/utils";
+  import { getBookName, getData } from "$lib/common/utils";
 
   let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`;
 
@@ -71,20 +70,6 @@
     //       } - ${data.metadata.name} | HadithHub`)
     //   );
     // }
-  }
-  async function getBookName(unavailableBooks: string[]) {
-    let unavailableBookFullNames: string[] = [];
-    let languageObject = await languagePromise;
-    for (let keys in Object.keys(languageObject)) {
-      if (
-        unavailableBooks.includes(languageObject[parseInt(keys) + 1]["Prefix"])
-      ) {
-        unavailableBookFullNames.push(
-          languageObject[parseInt(keys) + 1]["Name"]
-        );
-      }
-    }
-    return unavailableBookFullNames;
   }
 </script>
 
