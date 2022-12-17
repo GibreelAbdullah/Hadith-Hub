@@ -17,9 +17,10 @@
     for (const hadithData of data) {
       let hadithDict: any = {};
       hadithDict.hadithnumber = hadithData[0];
-      hadithDict.text = hadithData[1];
+      hadithDict.arabicnumber = hadithData[1];
+      hadithDict.text = hadithData[2];
       let gradings: any[] = [];
-      for (const grading of hadithData[2].split(" && ")) {
+      for (const grading of hadithData[3].split(" && ")) {
         gradings.push({
           name: grading.split("::")[0],
           grade: grading.split("::")[1],
@@ -27,11 +28,11 @@
       }
       hadithDict.grades = gradings;
       hadithDict.reference = {
-        book: hadithData[3],
-        hadith: hadithData[4],
+        book: hadithData[4],
+        hadith: hadithData[5],
       };
-      hadithDict.bookName = hadithData[5];
-      hadithDict.shortName = hadithData[7];
+      hadithDict.bookName = hadithData[6];
+      hadithDict.shortName = hadithData[8];
       indiHadith.push(hadithDict);
     }
     return { hadiths: indiHadith };
