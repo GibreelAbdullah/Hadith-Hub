@@ -36,7 +36,7 @@
         </button>
         <a href="/">
           <GradientHeading
-            class="md:text-4xl"
+            class="md:text-3xl"
             tag="h1"
             direction="bg-gradient-to-r"
             from="from-primary-500"
@@ -50,7 +50,7 @@
           type="search"
           placeholder="Search..."
           value={$page.url.searchParams.get("q")}
-          class="px-5 h-8 caret-black dark:caret-white"
+          class="px-5 pt-1 h-8 caret-black dark:caret-white"
           name="q"
         />
         <input type="hidden" name="lang" value={$selectedLanguagesStore} />
@@ -58,7 +58,7 @@
       <svelte:fragment slot="trail">
         <a href="/" class="hidden md:block">
           <GradientHeading
-            class="md:text-4xl"
+            class="md:text-3xl"
             tag="h1"
             direction="bg-gradient-to-r"
             from="from-primary-500"

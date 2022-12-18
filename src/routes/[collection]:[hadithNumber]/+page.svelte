@@ -122,7 +122,7 @@
   {:then data}
     {#if i != -1}
       <div class="sticky top-0 card card-body p-4 m-4">
-        <div class="hadithGroup text-xs grid px-5">
+        <div class="hadithGroup text-xs grid px-5 pt-1">
           <Breadcrumb>
             <Crumb href="/">Home</Crumb>
             <Crumb href="/{$page.params.collection}">

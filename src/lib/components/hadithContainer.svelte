@@ -1,16 +1,16 @@
 <script lang="ts">
-    import { page } from "$app/stores";
+  import { page } from "$app/stores";
 
   import { clipboard, Divider } from "@skeletonlabs/skeleton";
   export let book = "";
   export let allHadiths: any[] = [];
   let languageCount = allHadiths.length;
-  let permalinkText = "Copy Permalink";
+  let permalinkText = "Copy Link";
   let gradingColorClass = "";
   const clickHandler = () => {
     permalinkText = "Copied";
     setTimeout(() => {
-      permalinkText = "Copy Permalink";
+      permalinkText = "Copy Link";
     }, 2000);
   }
   const gradingColor = (grade: string) => {
@@ -54,7 +54,7 @@
     <div class="hadithGroup font-medium p-2 grid">
       {#each allHadiths[0].hadiths[i].grades as grade}
         <div
-          class="flex leading-7 p-2 rounded-full text-center bg-red m-2 {gradingColor(
+          class="flex leading-7 p-2 max-h-10 rounded-full text-center bg-red m-2 {gradingColor(
             grade['grade']
           )}"
         >
@@ -81,7 +81,7 @@
       </div>
       <!-- <div>  -->
       <button
-        class="btn bg-primary-500 btn-sm text-black w-40 my-4 px-4"
+        class="btn bg-primary-500 btn-sm text-black px-4 mt-6 pt-2 max-h-10"
         on:click={clickHandler}
         use:clipboard={$page.url.host + "/" +
           (allHadiths[0].hadiths[i].shortName ?? book) +

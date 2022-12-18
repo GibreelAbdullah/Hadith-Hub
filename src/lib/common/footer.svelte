@@ -13,7 +13,7 @@
       rel="noreferrer"
     >
       <SvgIcon name="twitter" fill="fill-white" />
-      <span class="hidden md:inline-block ml-2 text-white">Twitter</span>
+      <span class="hidden md:inline-block ml-2 text-white pt-1">Twitter</span>
     </a>
     <a
       class="btn bg-[#6e5494] text-white"
@@ -22,7 +22,7 @@
       rel="noreferrer"
     >
       <SvgIcon name="github" fill="fill-white" />
-      <span class="hidden md:inline-block ml-2 text-white">Github</span>
+      <span class="hidden md:inline-block ml-2 text-white pt-1">Github</span>
     </a>
   </div>
 </div>

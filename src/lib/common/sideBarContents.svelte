@@ -13,8 +13,8 @@
   const languages = `${urlPrefix}/updates/collections/languages.json`;
 
   let languagePromise = getData(languages);
-  
-  export {languagePromise}
+
+  export { languagePromise };
 
   const storedLanguagesList = browser
     ? window.localStorage.getItem("storedLanguagesList") ?? "ara,eng"
@@ -25,26 +25,35 @@
   );
   export { selectedLanguagesStore };
 
-  function getSelectedLanguages(data:{Name:string, Prefix:string}[], selectedLanguagesShortName:string[]){
-    let selectedLanguages:string = ''
-    switch(selectedLanguagesShortName.length) {
+  function getSelectedLanguages(
+    data: { Name: string; Prefix: string }[],
+    selectedLanguagesShortName: string[]
+  ) {
+    let selectedLanguages: string = "";
+    switch (selectedLanguagesShortName.length) {
       case 0:
-        selectedLanguages = 'No Language Selected'
-        break
+        selectedLanguages = "No Language Selected";
+        break;
       case 1:
       case 2:
       case 3:
-        for (let languageObject in data){
-          if(selectedLanguagesShortName.includes(data[languageObject]["Prefix"])){
-            selectedLanguages += data[languageObject]["Name"] + ', '
+        for (let languageObject in data) {
+          if (
+            selectedLanguagesShortName.includes(data[languageObject]["Prefix"])
+          ) {
+            selectedLanguages += data[languageObject]["Name"] + ", ";
           }
         }
-        selectedLanguages = selectedLanguages.substring(0, selectedLanguages.length-2)
-        break
+        selectedLanguages = selectedLanguages.substring(
+          0,
+          selectedLanguages.length - 2
+        );
+        break;
       default:
-        selectedLanguages = selectedLanguagesShortName.length + ' languages selected'
+        selectedLanguages =
+          selectedLanguagesShortName.length + " languages selected";
     }
-    return (selectedLanguages)
+    return selectedLanguages;
   }
 </script>
 
@@ -54,14 +63,16 @@
   <AccordionItem>
     <svelte:fragment slot="summary">
       <div class="text-primary-500 font-bold uppercase">Languages</div>
-      <div class="text-sm">{getSelectedLanguages(data, $selectedLanguagesStore)}</div>
+      <div class="text-sm">
+        {getSelectedLanguages(data, $selectedLanguagesStore)}
+      </div>
     </svelte:fragment>
 
     <svelte:fragment slot="content">
       <ListBox selected={selectedLanguagesStore} class="p-4">
         {#each Object.keys(data) as languageObject}
           <ListBoxItem value={data[languageObject]["Prefix"]}>
-            {data[languageObject]["Name"]}
+            <div class="max-h-4 pb-5">{data[languageObject]["Name"]}</div>
           </ListBoxItem>
         {/each}
       </ListBox>
@@ -72,7 +83,8 @@
 {/await}
 
 <div class="text-primary-500 text-sm font-bold uppercase py-8">
-  Set Theme <span style="float:right;">
+  Set Theme
+  <span style="float:right;">
     <LightSwitch />
   </span>
 </div>
