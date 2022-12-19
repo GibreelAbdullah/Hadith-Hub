@@ -7,11 +7,14 @@
     ListBoxItem,
   } from "@skeletonlabs/skeleton";
   import { writable, type Writable } from "svelte/store";
-  import { getData } from "$lib/common/utils";
   import { urlPrefix } from "./constants";
 
   const languages = `${urlPrefix}/updates/collections/languages.json`;
-
+  const getData = async(url: string) => {
+    return await fetch(url).then((response) => {
+		return response.json();
+    });
+  }
   let languagePromise = getData(languages);
 
   export { languagePromise };

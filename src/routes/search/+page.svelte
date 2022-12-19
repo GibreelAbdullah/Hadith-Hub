@@ -5,12 +5,11 @@
 
   const title = `Search for "${$page.url.searchParams.get("q")}" | HadithHub`;
   
-  const url =
+  $: url =
     "https://hadith-search-api-gibreelabdullah.koyeb.app/search" +
     $page.url.search;
   // const url = "http://0.0.0.0:5000/search" + $page.url.search;
-
-  const allHadithPromises = getData(url);
+  $: allHadithPromises = getData(url);
 
   const formatData = (data: [string[]]) => {
     let indiHadith: any[] = [];
@@ -81,7 +80,7 @@
     {:else}
       <div class="card card-body p-4 m-4">
         <div class="hadithGroup font-medium p-2 grid">
-          <div class="break-words leading-7 m-3">No results found. Check if there are any spelling mistakes.</div>
+          <div class="break-words leading-7 m-3">No results found for {$page.url.searchParams.get("q")}. Check if there are any spelling mistakes.</div>
         </div>
       </div>
     {/if}
