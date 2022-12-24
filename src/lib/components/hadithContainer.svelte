@@ -2,6 +2,7 @@
   import { page } from "$app/stores";
 
   import { clipboard, Divider } from "@skeletonlabs/skeleton";
+  import SvgIcon from "./svgIcon.svelte";
   export let book = "";
   export let allHadiths: any[] = [];
   let languageCount = allHadiths.length;
@@ -12,7 +13,7 @@
     setTimeout(() => {
       permalinkText = "Copy Link";
     }, 2000);
-  }
+  };
   const gradingColor = (grade: string) => {
     if (!grade) {
       return;
@@ -32,7 +33,7 @@
       gradingColorClass = "bg-gray-500";
     }
     return gradingColorClass;
-  }
+  };
 </script>
 
 {#each { length: allHadiths[0].hadiths.length } as _, i}
@@ -41,8 +42,12 @@
     <div class="hadithGroup font-medium p-2 grid">
       {#each { length: languageCount } as _, j}
         <div class="break-words leading-7 m-3">
-          {#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == '' }
-            <center><code class="!text-white !bg-red-500">Hadith translation not found</code></center>
+          {#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == ""}
+            <center
+              ><code class="!text-white !bg-red-500"
+                >Hadith translation not found</code
+              ></center
+            >
           {:else}
             {@html allHadiths[j].hadiths[i].text}
           {/if}
@@ -79,26 +84,37 @@
         Book {@html allHadiths[0].hadiths[i].reference.book}, Hadith {@html allHadiths[0]
           .hadiths[i].reference.hadith}
       </div>
-      <!-- <div>  -->
-      <button
-        class="btn bg-primary-500 btn-sm text-black px-4 mt-6 pt-2 max-h-10"
-        on:click={clickHandler}
-        use:clipboard={$page.url.host + "/" +
-          (allHadiths[0].hadiths[i].shortName ?? book) +
-          ":" +
-          allHadiths[0].hadiths[i].hadithnumber
-            .toString()
-            .replace('<span style="color:red;">', "")
-            .replace("</span>", "")}
-        >{permalinkText}
-      </button>
-      <!-- <span class="flex bg-primary-500 h-12 rounded-l-full my-4 float-left">
-        <span class="text-center my-auto px-4 text-sm text-black">Copy Permalink</span>
-      </span>
-      <span class="flex bg-primary-500 h-12 rounded-r-full my-4 float-right">
-        <span class="text-center my-auto pr-4 text-sm text-black">⎋</span>
-      </span>
-    </div> -->
+      <div class="text-[0px]">
+        <button
+          class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 max-h-10 rounded-l-full rounded-r-none"
+          on:click={clickHandler}
+          use:clipboard={$page.url.host +
+            "/" +
+            (allHadiths[0].hadiths[i].shortName ?? book) +
+            ":" +
+            allHadiths[0].hadiths[i].hadithnumber
+              .toString()
+              .replace('<span style="color:red;">', "")
+              .replace("</span>", "")}
+          >{permalinkText}
+        </button>
+        <a
+          class="btn bg-primary-500 btn-sm mt-6 pt-3 max-h-10 rounded-r-full rounded-l-none align-top border-l-2 border-primary-900"
+          href={"http://" +
+            $page.url.host +
+            "/" +
+            (allHadiths[0].hadiths[i].shortName ?? book) +
+            ":" +
+            allHadiths[0].hadiths[i].hadithnumber
+              .toString()
+              .replace('<span style="color:red;">', "")
+              .replace("</span>", "")}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <SvgIcon name="openExternal" fill="fill-black" />
+        </a>
+      </div>
     </div>
   </div>
 {/each}
