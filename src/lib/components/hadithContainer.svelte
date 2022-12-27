@@ -1,8 +1,10 @@
 <script lang="ts">
   import { page } from "$app/stores";
-
+  import * as htmlToImage from "html-to-image";
   import { clipboard, Divider } from "@skeletonlabs/skeleton";
   import SvgIcon from "./svgIcon.svelte";
+  import download from "downloadjs";
+
   export let book = "";
   export let allHadiths: any[] = [];
   let languageCount = allHadiths.length;
@@ -34,86 +36,114 @@
     }
     return gradingColorClass;
   };
+  function capture(i: number, name: string) {
+    htmlToImage
+      .toPng(document.getElementById("hadithGroup" + i)!)
+      .then(function (dataUrl) {
+        download(dataUrl, name);
+      });
+  }
 </script>
 
 {#each { length: allHadiths[0].hadiths.length } as _, i}
   <div class="card card-body p-4 m-4 flex-wrap">
-    <!-- HADITH TEXT -->
-    <div class="hadithGroup font-medium p-2 grid">
-      {#each { length: languageCount } as _, j}
-        <div class="break-words leading-7 m-3">
-          {#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == ""}
-            <center
-              ><code class="!text-white !bg-red-500"
-                >Hadith translation not found</code
-              ></center
-            >
-          {:else}
-            {@html allHadiths[j].hadiths[i].text}
-          {/if}
-        </div>
-      {/each}
-    </div>
-    <Divider borderWidth="border-l" />
-    <!-- GRADINGS -->
-    <div class="hadithGroup font-medium p-2 grid">
-      {#each allHadiths[0].hadiths[i].grades as grade}
-        <div
-          class="flex leading-7 p-2 max-h-10 rounded-full text-center bg-red m-2 {gradingColor(
-            grade['grade']
-          )}"
-        >
-          <div class="m-auto">
-            {@html grade["name"] + " : " + grade["grade"]}
+    <div id="hadithGroup{i}" class="card">
+      <!-- HADITH TEXT -->
+      <div class="hadithGroup font-medium grid">
+        {#each { length: languageCount } as _, j}
+          <div class="break-words leading-7 m-3">
+            {#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == ""}
+              <center
+                ><code class="!text-white !bg-red-500"
+                  >Hadith translation not found</code
+                ></center
+              >
+            {:else}
+              {@html allHadiths[j].hadiths[i].text}
+            {/if}
           </div>
-        </div>
-      {/each}
-    </div>
-    <Divider borderWidth="border-l" />
-    <div class="flex justify-between px-4">
-      <div class="my-4 text-sm">
-        #{@html allHadiths[0].hadiths[i].hadithnumber}
-        <br />
-        {#if allHadiths[0].metadata}
-          {@html allHadiths[0].metadata.name}
-        {:else}
-          {@html allHadiths[0].hadiths[i].bookName}
-        {/if}
-        {@html allHadiths[0].hadiths[i].arabicnumber}
-        <br />
-        Book {@html allHadiths[0].hadiths[i].reference.book}, Hadith {@html allHadiths[0]
-          .hadiths[i].reference.hadith}
+        {/each}
       </div>
-      <div class="text-[0px]">
-        <button
-          class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 max-h-10 rounded-l-full rounded-r-none"
-          on:click={clickHandler}
-          use:clipboard={$page.url.host +
-            "/" +
-            (allHadiths[0].hadiths[i].shortName ?? book) +
-            ":" +
-            allHadiths[0].hadiths[i].hadithnumber
-              .toString()
-              .replace('<span style="color:red;">', "")
-              .replace("</span>", "")}
-          >{permalinkText}
-        </button>
-        <a
-          class="btn bg-primary-500 btn-sm mt-6 pt-3 max-h-10 rounded-r-full rounded-l-none align-top border-l-2 border-primary-900"
-          href={"http://" +
-            $page.url.host +
-            "/" +
-            (allHadiths[0].hadiths[i].shortName ?? book) +
-            ":" +
-            allHadiths[0].hadiths[i].hadithnumber
-              .toString()
-              .replace('<span style="color:red;">', "")
-              .replace("</span>", "")}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <SvgIcon name="openExternal" fill="fill-black" />
-        </a>
+      <Divider borderWidth="border-l" />
+      <!-- GRADINGS -->
+      <div class="hadithGroup font-medium p-2 grid">
+        {#each allHadiths[0].hadiths[i].grades as grade}
+          <div
+            class="flex leading-7 pt-1 rounded-full text-center bg-red m-2 {gradingColor(
+              grade['grade']
+            )}"
+          >
+            <div class="m-auto">
+              {@html grade["name"] + " : " + grade["grade"]}
+            </div>
+          </div>
+        {/each}
+      </div>
+      <Divider borderWidth="border-l" />
+      <div class="metaGroup text-sm p-2 grid">
+        <div class="my-4">
+          #{@html allHadiths[0].hadiths[i].hadithnumber}
+          <br />
+          {#if allHadiths[0].metadata}
+            {@html allHadiths[0].metadata.name}
+          {:else}
+            {@html allHadiths[0].hadiths[i].bookName}
+          {/if}
+          {@html allHadiths[0].hadiths[i].arabicnumber}
+          <br />
+          Book {@html allHadiths[0].hadiths[i].reference.book}, Hadith {@html allHadiths[0]
+            .hadiths[i].reference.hadith}
+        </div>
+
+        <div class="text-[0px] whitespace-nowrap flex justify-between md:justify-end  ">
+          <button
+            class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 mr-4 px-4 h-10"
+            on:click={() =>
+              capture(
+                i,
+                (
+                  (allHadiths[0].metadata ? allHadiths[0].metadata.name : allHadiths[0].hadiths[i].bookName) +
+                  " " +
+                  allHadiths[0].hadiths[i].arabicnumber
+                )
+                  .replace('<span style="color:red;">', "")
+                  .replace("</span>", "")
+              )}
+          >
+            <SvgIcon name="download" fill="fill-black" /> Screenshot
+          </button>
+          <div>
+          <button
+            class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 h-10 rounded-l-full rounded-r-none"
+            on:click={clickHandler}
+            use:clipboard={$page.url.host +
+              "/" +
+              (allHadiths[0].hadiths[i].shortName ?? book) +
+              ":" +
+              allHadiths[0].hadiths[i].hadithnumber
+                .toString()
+                .replace('<span style="color:red;">', "")
+                .replace("</span>", "")}
+            >{permalinkText}
+          </button>
+          <a
+            class="btn bg-primary-500 btn-sm mt-6 pt-3 h-10 rounded-r-full rounded-l-none align-top border-l-2 border-primary-900"
+            href={"http://" +
+              $page.url.host +
+              "/" +
+              (allHadiths[0].hadiths[i].shortName ?? book) +
+              ":" +
+              allHadiths[0].hadiths[i].hadithnumber
+                .toString()
+                .replace('<span style="color:red;">', "")
+                .replace("</span>", "")}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <SvgIcon name="openExternal" fill="fill-black" />
+          </a>
+        </div>
+        </div>
       </div>
     </div>
   </div>
@@ -122,9 +152,11 @@
 <style>
   .hadithGroup {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    word-wrap: normal;
   }
 
-  .gradingGroup {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  .metaGroup {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    word-wrap: normal;
   }
 </style>
