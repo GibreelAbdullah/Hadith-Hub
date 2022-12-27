@@ -51,7 +51,7 @@
       <!-- HADITH TEXT -->
       <div class="hadithGroup font-medium grid">
         {#each { length: languageCount } as _, j}
-          <div class="break-words leading-7 m-3">
+          <div class="break-words leading-7 m-3 pb-4">
             {#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == ""}
               <center
                 ><code class="!text-white !bg-red-500"
