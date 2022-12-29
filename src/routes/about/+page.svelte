@@ -13,8 +13,8 @@
 	<div class="px-6 py-2">
 		All praise and thanks are due to Allah, the Master and King of
 		existence, the All-Merciful, Beneficent, who has power over all things.
-		May peace and blessings be upon His final Messenger, Sayyidina Muhammad ﷺ, and
-		his Family, and his Companions.
+		May peace and blessings be upon His final Messenger, Sayyidina Muhammad
+		ﷺ, and his Family, and his Companions.
 	</div>
 	<div class="text-xl p-4">About<Divider /></div>
 	<div class="px-6 py-2">

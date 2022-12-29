@@ -23,7 +23,7 @@
     property="og:description"
     content="A Multi Language collection of Hadith"
   />
-  <meta property="og:image" content="https://pbs.twimg.com/profile_images/1586735312943792129/CODmeGkG_400x400.jpg" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg" />
 
   <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -34,7 +34,7 @@
     name="twitter:description"
     content="A Multi Language collection of Hadith"
   />
-  <meta name="twitter:image" content="https://pbs.twimg.com/profile_images/1586735312943792129/CODmeGkG_400x400.jpg" />
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg" />
 </svelte:head>
 
 <main>
