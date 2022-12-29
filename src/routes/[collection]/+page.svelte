@@ -28,15 +28,15 @@
   <meta property="og:image" content="/favicon.png" />
 
   <!-- Twitter Meta Tags -->
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:domain" content={$page.url.hostname} />
   <meta property="twitter:url" content={$page.url.toString()} />
-  <meta name="twitter:title" content={title} />
+  <meta property="twitter:title" content={title} />
   <meta
-    name="twitter:description"
+    property="twitter:description"
     content="A Multi Language collection of Hadith"
   />
-  <meta name="twitter:image" content="/favicon.png" />
+  <meta property="twitter:image" content="/favicon.png" />
 </svelte:head>
 
 <main>
