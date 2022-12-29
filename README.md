@@ -1,6 +1,6 @@
 # HADITH HUB (حديث حب)
 
-This is the frontend of hadithhub.com website.
+This is the frontend of hadithhub.com website. The data is in the [hadith-api](https://github.com/GibreelAbdullah/hadith-api) repo.
 
 HadithHub is a collection of Hadith in multiple languages and gradings from multiple scholars. 
 
