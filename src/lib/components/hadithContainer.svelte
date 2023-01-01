@@ -7,6 +7,7 @@
 
   export let book = "";
   export let allHadiths: any[] = [];
+  export let singleHadithView: boolean = false;
   let languageCount = allHadiths.length;
   let permalinkText = "Copy Link";
   let gradingColorClass = "";
@@ -46,6 +47,21 @@
 </script>
 
 {#each { length: allHadiths[0].hadiths.length } as _, i}
+  {#if singleHadithView || (allHadiths[0].hadiths[i].chapter !== undefined && allHadiths[0].hadiths[i].chapter["isFirstHadith"])}
+    <div class="card card-body m-4 flex-wrap !bg-transparent">
+      <div class="hadithGroup grid">
+        <div class="break-words leading-7 m-3">
+          Chapter {allHadiths[0].hadiths[i].chapter["id"]} - {allHadiths[0]
+            .hadiths[i].chapter["eng-name"]}
+        </div>
+        <div class="break-words leading-7 m-3 text-right">
+          باب {allHadiths[0].hadiths[i].chapter["id"]} - {allHadiths[0].hadiths[
+            i
+          ].chapter["ara-name"]}
+        </div>
+      </div>
+    </div>
+  {/if}
   <div class="card card-body p-4 m-4 flex-wrap">
     <div id="hadithGroup{i}" class="card">
       <!-- HADITH TEXT -->
@@ -95,14 +111,18 @@
             .hadiths[i].reference.hadith}
         </div>
 
-        <div class="text-[0px] whitespace-nowrap flex justify-between md:justify-end  ">
+        <div
+          class="text-[0px] whitespace-nowrap flex justify-between md:justify-end"
+        >
           <button
             class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 mr-4 px-4 h-10"
             on:click={() =>
               capture(
                 i,
                 (
-                  (allHadiths[0].metadata ? allHadiths[0].metadata.name : allHadiths[0].hadiths[i].bookName) +
+                  (allHadiths[0].metadata
+                    ? allHadiths[0].metadata.name
+                    : allHadiths[0].hadiths[i].bookName) +
                   " " +
                   allHadiths[0].hadiths[i].arabicnumber
                 )
@@ -113,36 +133,36 @@
             <SvgIcon name="download" fill="fill-black" /> Screenshot
           </button>
           <div>
-          <button
-            class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 h-10 rounded-l-full rounded-r-none"
-            on:click={clickHandler}
-            use:clipboard={$page.url.host +
-              "/" +
-              (allHadiths[0].hadiths[i].shortName ?? book) +
-              ":" +
-              allHadiths[0].hadiths[i].hadithnumber
-                .toString()
-                .replace('<span style="color:red;">', "")
-                .replace("</span>", "")}
-            >{permalinkText}
-          </button>
-          <a
-            class="btn bg-primary-500 btn-sm mt-6 pt-3 h-10 rounded-r-full rounded-l-none align-top border-l-2 border-primary-900"
-            href={"http://" +
-              $page.url.host +
-              "/" +
-              (allHadiths[0].hadiths[i].shortName ?? book) +
-              ":" +
-              allHadiths[0].hadiths[i].hadithnumber
-                .toString()
-                .replace('<span style="color:red;">', "")
-                .replace("</span>", "")}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <SvgIcon name="openExternal" fill="fill-black" />
-          </a>
-        </div>
+            <button
+              class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 h-10 rounded-l-full rounded-r-none"
+              on:click={clickHandler}
+              use:clipboard={$page.url.host +
+                "/" +
+                (allHadiths[0].hadiths[i].shortName ?? book) +
+                ":" +
+                allHadiths[0].hadiths[i].hadithnumber
+                  .toString()
+                  .replace('<span style="color:red;">', "")
+                  .replace("</span>", "")}
+              >{permalinkText}
+            </button>
+            <a
+              class="btn bg-primary-500 btn-sm mt-6 pt-3 h-10 rounded-r-full rounded-l-none align-top border-l-2 border-primary-900"
+              href={"http://" +
+                $page.url.host +
+                "/" +
+                (allHadiths[0].hadiths[i].shortName ?? book) +
+                ":" +
+                allHadiths[0].hadiths[i].hadithnumber
+                  .toString()
+                  .replace('<span style="color:red;">', "")
+                  .replace("</span>", "")}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <SvgIcon name="openExternal" fill="fill-black" />
+            </a>
+          </div>
         </div>
       </div>
     </div>

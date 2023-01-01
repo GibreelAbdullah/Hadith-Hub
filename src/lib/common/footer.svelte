@@ -11,7 +11,7 @@
       tag="h1"
       direction="bg-gradient-to-r"
       from="from-primary-500"
-      to="to-accent-500"
+      to="to-secondary-500"
       >HadithHub
     </GradientHeading>
     <div class="flex space-x-4">

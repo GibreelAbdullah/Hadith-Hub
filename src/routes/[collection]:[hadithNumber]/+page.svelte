@@ -155,6 +155,7 @@
       <HadithContainer
         allHadiths={data.filter((n) => n)}
         book={$page.params.collection}
+        singleHadithView = {true}
       />
     {/if}
   {:catch _data}

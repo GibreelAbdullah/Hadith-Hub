@@ -40,7 +40,7 @@
             tag="h1"
             direction="bg-gradient-to-r"
             from="from-primary-500"
-            to="to-accent-500"
+            to="to-secondary-500"
             >HadithHub
           </GradientHeading>
         </a>
@@ -62,7 +62,7 @@
             tag="h1"
             direction="bg-gradient-to-r"
             from="from-primary-500"
-            to="to-accent-500"
+            to="to-secondary-500"
             >حديث حب
           </GradientHeading>
         </a>
