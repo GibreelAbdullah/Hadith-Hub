@@ -47,7 +47,7 @@
 </script>
 
 {#each { length: allHadiths[0].hadiths.length } as _, i}
-  {#if singleHadithView || (allHadiths[0].hadiths[i].chapter !== undefined && allHadiths[0].hadiths[i].chapter["isFirstHadith"])}
+  {#if allHadiths[0].hadiths[i].chapter !== undefined && allHadiths[0].hadiths[i].chapter.id && (singleHadithView || allHadiths[0].hadiths[i].chapter["isFirstHadith"])}
     <div class="card card-body m-4 flex-wrap !bg-transparent">
       <div class="hadithGroup grid">
         <div class="break-words leading-7 m-3">
