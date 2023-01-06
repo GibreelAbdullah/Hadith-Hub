@@ -1,10 +1,12 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import HadithContainer from "$lib/components/hadithContainer.svelte";
-  import { getData } from '$lib/common/utils'
+  import { getData } from "$lib/common/utils";
+  import { Divider } from "@skeletonlabs/skeleton";
+  import HadithPlaceholder from "$lib/common/hadithPlaceholder.svelte";
 
   const title = `Search for "${$page.url.searchParams.get("q")}" | HadithHub`;
-  
+
   $: url =
     "https://hadith-search-api-gibreelabdullah.koyeb.app/search" +
     $page.url.search;
@@ -35,7 +37,7 @@
       indiHadith.push(hadithDict);
     }
     return { hadiths: indiHadith };
-  }
+  };
 </script>
 
 <svelte:head>
@@ -51,7 +53,10 @@
     property="og:description"
     content="A Multi Language collection of Hadith"
   />
-  <meta property="og:image" content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg" />
+  <meta
+    property="og:image"
+    content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg"
+  />
 
   <!-- Twitter Meta Tags -->
   <meta property="twitter:card" content="summary_large_image" />
@@ -62,25 +67,28 @@
     property="twitter:description"
     content="A Multi Language collection of Hadith"
   />
-  <meta property="twitter:image" content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg" />
+  <meta
+    property="twitter:image"
+    content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg"
+  />
 </svelte:head>
 
 <main>
   {#await allHadithPromises}
-    <div class="card card-body p-4 m-4">
-      <div class="hadithGroup font-medium p-2 grid">
-        <div class="break-words leading-7 m-3">LOADING...</div>
-      </div>
-    </div>
+    <HadithPlaceholder />
   {:then data}
     {#if data.length != 0}
       <HadithContainer
-      allHadiths={[formatData(data)]}
-      book={$page.params["book"]}/>
+        allHadiths={[formatData(data)]}
+        book={$page.params["book"]}
+      />
     {:else}
       <div class="card card-body p-4 m-4">
         <div class="hadithGroup font-medium p-2 grid">
-          <div class="break-words leading-7 m-3">No results found for {$page.url.searchParams.get("q")}. Check if there are any spelling mistakes.</div>
+          <div class="break-words leading-7 m-3">
+            No results found for {$page.url.searchParams.get("q")}. Check if
+            there are any spelling mistakes.
+          </div>
         </div>
       </div>
     {/if}
@@ -88,7 +96,10 @@
     <div class="card card-body p-4 m-4">
       <div class="hadithGroup font-medium p-2 grid">
         <div class="break-words leading-7 m-3">
-          Something went wrong. Kindly report this to our twitter account <a href="https://twitter.com/TheHadithHub" target="blank">TheHadithHub</a> 
+          Something went wrong. Kindly report this to our twitter account <a
+            href="https://twitter.com/TheHadithHub"
+            target="blank">TheHadithHub</a
+          >
         </div>
       </div>
     </div>

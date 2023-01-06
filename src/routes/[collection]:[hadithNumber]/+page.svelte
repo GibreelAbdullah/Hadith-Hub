@@ -7,8 +7,9 @@
     selectedLanguagesStore,
   } from "$lib/common/sideBarContents.svelte";
   import HadithContainer from "$lib/components/hadithContainer.svelte";
-  import { Breadcrumb, Crumb } from "@skeletonlabs/skeleton";
+  import { Breadcrumb, Crumb, Divider } from "@skeletonlabs/skeleton";
   import { getData } from "$lib/common/utils";
+  import HadithPlaceholder from "$lib/common/hadithPlaceholder.svelte";
 
   let title = `${$page.params.collection}:${$page.params.hadithNumber} | HadithHub`;
 
@@ -98,7 +99,10 @@
     property="og:description"
     content="A Multi Language collection of Hadith"
   />
-  <meta property="og:image" content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg" />
+  <meta
+    property="og:image"
+    content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg"
+  />
 
   <!-- Twitter Meta Tags -->
   <meta property="twitter:card" content="summary_large_image" />
@@ -109,16 +113,33 @@
     property="twitter:description"
     content="A Multi Language collection of Hadith"
   />
-  <meta property="twitter:image" content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg" />
+  <meta
+    property="twitter:image"
+    content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg"
+  />
 </svelte:head>
 
 {#if hadithGroupPromise.length != 0}
   {#await allResolvingErrors(hadithGroupPromise)}
-    <div class="card card-body p-4 m-4">
-      <div class="hadithGroup font-medium p-2 grid">
-        <div class="break-words leading-7 m-3">LOADING...</div>
+    <div class="sticky top-0 card card-body p-4 m-4">
+      <div class="hadithGroup text-xs grid px-5">
+        <Breadcrumb>
+          <Crumb href="/">Home</Crumb>
+          <div class="placeholder w-52 m-auto animate-pulse" />
+        </Breadcrumb>
       </div>
     </div>
+    <div class="card card-body m-4 flex-wrap !bg-transparent">
+      <div class="hadithGroup grid">
+        <div class="break-words leading-7 m-3">
+          <div class="placeholder animate-pulse" />
+        </div>
+        <div class="break-words leading-7 m-3 text-right justify-end">
+          <div class="placeholder animate-pulse " />
+        </div>
+      </div>
+    </div>
+    <HadithPlaceholder />
   {:then data}
     {#if i != -1}
       <div class="sticky top-0 card card-body p-4 m-4">
@@ -128,7 +149,10 @@
             <Crumb href="/{$page.params.collection}">
               {data.filter((n) => n)[0].metadata.name}
             </Crumb>
-            <Crumb href="/{$page.params.collection}/{data.filter((n) => n)[0].hadiths[0].reference.book}">
+            <Crumb
+              href="/{$page.params.collection}/{data.filter((n) => n)[0]
+                .hadiths[0].reference.book}"
+            >
               {data.filter((n) => n)[0].metadata.section[
                 data.filter((n) => n)[0].hadiths[0].reference.book
               ]["eng-name"]}
@@ -144,7 +168,7 @@
       <div class="card card-body p-4 m-4 !bg-red-500">
         <div class="hadithGroup font-medium p-2 grid text-center ">
           {#await getBookName(unavailableBooks)}
-            Loading...
+            <div class="placeholder w-40 m-auto animate-pulse my-1" />
           {:then bookNames}
             This book is not available in {bookNames}
           {/await}
@@ -155,7 +179,7 @@
       <HadithContainer
         allHadiths={data.filter((n) => n)}
         book={$page.params.collection}
-        singleHadithView = {true}
+        singleHadithView={true}
       />
     {/if}
   {:catch _data}

@@ -5,7 +5,35 @@
 </script>
 
 {#await dataPromise}
-  <div class="card card-body p-4 m-4">LOADING...</div>
+  <div class="sticky top-0 card card-body p-4 m-4">
+    <div class="text-xs grid px-3">
+      <Breadcrumb>
+        <Crumb href="/">Home</Crumb>
+        <div class="placeholder w-52 m-auto animate-pulse" />
+      </Breadcrumb>
+    </div>
+  </div>
+  {#each { length: 5 } as _, i}
+    <div class="card card-body p-4 m-4 ">
+      <div class="hadithGroup font-medium p-2 grid ">
+        <div>
+          <div class="placeholder animate-pulse" />
+        </div>
+
+        <div class="text-right ml-10">
+          <div class="placeholder animate-pulse" />
+        </div>
+        <div class="hidden md:block text-right">
+          <div class="badge">
+            <div class="placeholder animate-pulse w-16 m-auto" />
+          </div>
+        </div>
+      </div>
+      <div class="md:hidden text-center">
+        <div class="placeholder animate-pulse w-16 m-auto" />
+      </div>
+    </div>
+  {/each}
 {:then data}
   <div class="sticky top-0 card card-body p-4 m-4">
     <div class="text-xs grid px-3">

@@ -10,11 +10,11 @@
   import { urlPrefix } from "./constants";
 
   const languages = `${urlPrefix}/updates/collections/languages.json`;
-  const getData = async(url: string) => {
+  const getData = async (url: string) => {
     return await fetch(url).then((response) => {
-		return response.json();
+      return response.json();
     });
-  }
+  };
   let languagePromise = getData(languages);
 
   export { languagePromise };
@@ -61,7 +61,10 @@
 </script>
 
 {#await languagePromise}
-  LOADING...
+  <div class="text-primary-500 font-bold uppercase">Languages</div>
+  <div class="text-sm">
+    <div class="placeholder animate-pulse w-32" />
+  </div>
 {:then data}
   <AccordionItem>
     <svelte:fragment slot="summary">
