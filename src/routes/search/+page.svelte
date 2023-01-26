@@ -2,7 +2,6 @@
   import { page } from "$app/stores";
   import HadithContainer from "$lib/components/hadithContainer.svelte";
   import { getData } from "$lib/common/utils";
-  import { Divider } from "@skeletonlabs/skeleton";
   import HadithPlaceholder from "$lib/common/hadithPlaceholder.svelte";
 
   const title = `Search for "${$page.url.searchParams.get("q")}" | HadithHub`;

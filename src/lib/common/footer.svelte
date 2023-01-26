@@ -1,19 +1,23 @@
 <script lang="ts">
   import SvgIcon from "$lib/components/svgIcon.svelte";
-  import { GradientHeading } from "@skeletonlabs/skeleton";
 </script>
 <div class="p-8 sticky top-[100vh]">
   <section
     class="flex flex-col lg:flex-row justify-between items-center lg:items-start space-y-5 lg:space-y-0"
   >
-    <GradientHeading
+    <!-- <GradientHeading
       class="md:text-3xl"
       tag="h1"
       direction="bg-gradient-to-r"
       from="from-primary-500"
       to="to-secondary-500"
       >HadithHub
-    </GradientHeading>
+    </GradientHeading> -->
+    <h2>
+      <span class="bg-gradient-to-br from-primary-500 via-tertiary-500 to-secondary-500 bg-clip-text text-transparent box-decoration-clone">
+        HadithHub
+      </span>
+    </h2>
     <div class="flex space-x-4">
       <a
         class="btn bg-[#ea4335] text-white"

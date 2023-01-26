@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Breadcrumb, Crumb } from "@skeletonlabs/skeleton";
   export let dataPromise: Promise<any>;
   export let bookURL: string;
 </script>
@@ -7,10 +6,11 @@
 {#await dataPromise}
   <div class="sticky top-0 card card-body p-4 m-4">
     <div class="text-xs grid px-3">
-      <Breadcrumb>
-        <Crumb href="/">Home</Crumb>
+      <ol class="breadcrumb">
+        <li class="crumb"><a href="/">Home</a></li>
+        <li class="crumb-separator" aria-hidden>&rsaquo;</li>
         <div class="placeholder w-52 m-auto animate-pulse" />
-      </Breadcrumb>
+      </ol>
     </div>
   </div>
   {#each { length: 5 } as _, i}
@@ -37,10 +37,11 @@
 {:then data}
   <div class="sticky top-0 card card-body p-4 m-4">
     <div class="text-xs grid px-3">
-      <Breadcrumb>
-        <Crumb href="/">Home</Crumb>
-        <Crumb>{data["name"]}</Crumb>
-      </Breadcrumb>
+      <ol class="breadcrumb">
+        <li class="crumb"><a href="/">Home</a></li>
+        <li class="crumb-separator" aria-hidden>&rsaquo;</li>
+        <li class="crumb">{data["name"]}</li>
+      </ol>
     </div>
   </div>
   {#each Object.keys(data["books"]) as chapterNumber}

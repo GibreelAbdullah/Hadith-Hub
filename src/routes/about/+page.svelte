@@ -1,6 +1,5 @@
 <script>
 	import SvgIcon from "$lib/components/svgIcon.svelte";
-	import { Divider } from "@skeletonlabs/skeleton";
 </script>
 
 <div class="card card-body p-4 m-4 flex-wrap">
@@ -16,7 +15,7 @@
 		May peace and blessings be upon His final Messenger, Sayyidina Muhammad
 		ﷺ, and his Family, and his Companions.
 	</div>
-	<div class="text-xl p-4">About<Divider /></div>
+	<div class="text-xl p-4">About<hr></div>
 	<div class="px-6 py-2">
 		HadithHub.com started in October 2022. It aims to make it easy for
 		anyone to read, study, and learn the ahadith of Sayyidina Rasulullah ﷺ.
@@ -37,7 +36,7 @@
 		May Allah ﷻ reward him immensely.
 	</div>
 
-	<div class="text-xl p-4">Credits <Divider /></div>
+	<div class="text-xl p-4">Credits <hr></div>
 	<div class="px-6 py-2">
 		<a href="https://github.com/fawazahmed0" class="font-bold">
 			Fawaz Ahmed

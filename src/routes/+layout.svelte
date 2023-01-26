@@ -7,7 +7,6 @@
   import {
     AppShell,
     AppBar,
-    GradientHeading,
     Drawer,
     type DrawerSettings,
   } from "@skeletonlabs/skeleton";
@@ -35,14 +34,19 @@
           >≡
         </button>
         <a href="/">
-          <GradientHeading
+          <h2>
+            <span class="bg-gradient-to-br from-primary-500 via-tertiary-500 to-secondary-500 bg-clip-text text-transparent box-decoration-clone">
+              HadithHub
+            </span>
+          </h2>
+          <!-- <GradientHeading
             class="md:text-3xl"
             tag="h1"
             direction="bg-gradient-to-r"
             from="from-primary-500"
             to="to-secondary-500"
             >HadithHub
-          </GradientHeading>
+          </GradientHeading> -->
         </a>
       </svelte:fragment>
       <form action="/search" method="get" class="">
@@ -57,14 +61,19 @@
       </form>
       <svelte:fragment slot="trail">
         <a href="/" class="hidden md:block">
-          <GradientHeading
+          <h2>
+            <span class="bg-gradient-to-br from-primary-500 via-tertiary-500 to-secondary-500 bg-clip-text text-transparent box-decoration-clone">
+              حديث حب
+            </span>
+          </h2>
+          <!-- <GradientHeading
             class="md:text-3xl"
             tag="h1"
             direction="bg-gradient-to-r"
             from="from-primary-500"
             to="to-secondary-500"
             >حديث حب
-          </GradientHeading>
+          </GradientHeading> -->
         </a>
       </svelte:fragment>
     </AppBar>

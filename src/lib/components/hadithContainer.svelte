@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import * as htmlToImage from "html-to-image";
-  import { clipboard, Divider } from "@skeletonlabs/skeleton";
+  import { clipboard } from "@skeletonlabs/skeleton";
   import SvgIcon from "./svgIcon.svelte";
   import download from "downloadjs";
 
@@ -80,7 +80,7 @@
           </div>
         {/each}
       </div>
-      <Divider borderWidth="border-l" />
+      <hr>
       <!-- GRADINGS -->
       <div class="hadithGroup font-medium p-2 grid">
         {#each allHadiths[0].hadiths[i].grades as grade}
@@ -95,7 +95,7 @@
           </div>
         {/each}
       </div>
-      <Divider borderWidth="border-l" />
+      <hr>
       <div class="metaGroup text-sm p-2 grid">
         <div class="my-4">
           #{@html allHadiths[0].hadiths[i].hadithnumber}

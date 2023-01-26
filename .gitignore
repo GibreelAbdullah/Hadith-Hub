@@ -1,7 +1,15 @@
-.idea
 .DS_Store
-.vscode
 node_modules
+/build
+/.svelte-kit
+/package
+.env
+.env.*
+!.env.example
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+.idea
+.vscode
 *.map
 /src/compiler/compile/internal_exports.ts
 /compiler.d.ts
@@ -21,5 +29,4 @@ node_modules
 _actual*.*
 _output
 /types
-/.svelte-kit
 /build/
