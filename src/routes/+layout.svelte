@@ -39,14 +39,6 @@
               HadithHub
             </span>
           </h2>
-          <!-- <GradientHeading
-            class="md:text-3xl"
-            tag="h1"
-            direction="bg-gradient-to-r"
-            from="from-primary-500"
-            to="to-secondary-500"
-            >HadithHub
-          </GradientHeading> -->
         </a>
       </svelte:fragment>
       <form action="/search" method="get" class="">
@@ -66,14 +58,6 @@
               حديث حب
             </span>
           </h2>
-          <!-- <GradientHeading
-            class="md:text-3xl"
-            tag="h1"
-            direction="bg-gradient-to-r"
-            from="from-primary-500"
-            to="to-secondary-500"
-            >حديث حب
-          </GradientHeading> -->
         </a>
       </svelte:fragment>
     </AppBar>

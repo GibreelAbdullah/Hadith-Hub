@@ -122,10 +122,6 @@
   {#await allResolvingErrors(hadithGroupPromise)}
     <div class="sticky top-0 card card-body p-4 m-4">
       <div class="hadithGroup text-xs grid px-5">
-        <!-- <Breadcrumb>
-          <Crumb href="/">Home</Crumb>
-          <div class="placeholder w-52 m-auto animate-pulse" />
-        </Breadcrumb> -->
         <ol class="breadcrumb">
           <li class="crumb"><a href="/">Home</a></li>
           <li class="crumb-separator" aria-hidden>&rsaquo;</li>
@@ -148,23 +144,6 @@
     {#if i != -1}
       <div class="sticky top-0 card card-body p-4 m-4">
         <div class="hadithGroup text-xs grid px-5 pt-1">
-          <!-- <Breadcrumb>
-            <Crumb href="/">Home</Crumb>
-            <Crumb href="/{$page.params.collection}">
-              {data.filter((n) => n)[0].metadata.name}
-            </Crumb>
-            <Crumb
-              href="/{$page.params.collection}/{data.filter((n) => n)[0]
-                .hadiths[0].reference.book}"
-            >
-              {data.filter((n) => n)[0].metadata.section[
-                data.filter((n) => n)[0].hadiths[0].reference.book
-              ]["eng-name"]}
-            </Crumb>
-            <Crumb>
-              Hadith {data.filter((n) => n)[0].hadiths[0].reference.hadith}
-            </Crumb>
-          </Breadcrumb> -->
           <ol class="breadcrumb">
             <li class="crumb"><a href="/">Home</a></li>
             <li class="crumb-separator" aria-hidden>&rsaquo;</li>

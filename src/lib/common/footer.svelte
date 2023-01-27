@@ -5,14 +5,6 @@
   <section
     class="flex flex-col lg:flex-row justify-between items-center lg:items-start space-y-5 lg:space-y-0"
   >
-    <!-- <GradientHeading
-      class="md:text-3xl"
-      tag="h1"
-      direction="bg-gradient-to-r"
-      from="from-primary-500"
-      to="to-secondary-500"
-      >HadithHub
-    </GradientHeading> -->
     <h2>
       <span class="bg-gradient-to-br from-primary-500 via-tertiary-500 to-secondary-500 bg-clip-text text-transparent box-decoration-clone">
         HadithHub
