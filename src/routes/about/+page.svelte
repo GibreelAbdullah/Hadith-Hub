@@ -40,14 +40,17 @@
 	<div class="px-6 py-2">
 		<a href="https://github.com/fawazahmed0" class="font-bold">
 			Fawaz Ahmed
-		</a>: For collecting all the
+		</a> : For collecting all the
 		<a href="https://github.com/fawazahmed0/hadith-api">Ahadith data</a>. A
 		complete list of sources of the data can be found
 		<a
 			href="https://github.com/fawazahmed0/hadith-api/blob/1/References.md"
-		>
-			here
-		</a>.
+		>here</a>.
+	</div>
+	<div class="px-6 py-2">
+		<a href="https://sunnah.com" class="font-bold">
+			Sunnah.com
+		</a> : For providing us with their Ahadith database.
 	</div>
 	<div class="px-6 py-2">
 		<a
@@ -55,7 +58,7 @@
 			class="font-bold"
 		>
 			Contributors - UI</a
-		>: Contributors who helped in creating the website.
+		> : Contributors who helped in creating the website.
 	</div>
 	<div class="px-6 py-2">
 		<a
@@ -63,22 +66,22 @@
 			class="font-bold"
 		>
 			Contributors - Data</a
-		>: Contributors who helped in collecting hadith/gradings or correcting
+		> : Contributors who helped in collecting hadith/gradings or correcting
 		them.
 	</div>
 	<div class="px-6 py-2">
-		<a href="https://svelte.dev/" class="font-bold"> Svelte </a>: A
+		<a href="https://svelte.dev/" class="font-bold"> Svelte</a> : A
 		front-end, open-source JavaScript framework for making interactive
 		webpages.
 	</div>
 	<div class="px-6 py-2">
-		<a href="https://www.skeleton.dev/" class="font-bold"> Skeleton </a>: A
+		<a href="https://www.skeleton.dev/" class="font-bold"> Skeleton</a> : A
 		fully featured UI Toolkit for svelte.
 	</div>
 	<div class="px-6 py-2">
 		<a href="https://github.com/bubkoo/html-to-image/" class="font-bold">
 			html-to-image
-		</a>: A javascript library to convert html to image, essentially
+		</a> : A javascript library to convert html to image, essentially
 		allowing us to download screenshots of Ahadith.
 	</div>
 </div>
