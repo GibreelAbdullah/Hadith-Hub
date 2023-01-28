@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SvgIcon from "$lib/components/svgIcon.svelte";
+  import SvgIcon from "$lib/common/svgIcon.svelte";
 </script>
 <div class="p-8 sticky top-[100vh]">
   <section

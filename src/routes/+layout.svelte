@@ -21,7 +21,7 @@
 	import type { Writable } from 'svelte/store';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { enhance } from '$app/forms';
-	import SvgIcon from '$lib/components/svgIcon.svelte';
+	import SvgIcon from '$lib/common/svgIcon.svelte';
 
 	export let data: LayoutServerData;
 

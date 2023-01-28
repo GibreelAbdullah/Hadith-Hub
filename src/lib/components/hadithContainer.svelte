@@ -2,7 +2,7 @@
   import { page } from "$app/stores";
   import * as htmlToImage from "html-to-image";
   import { clipboard } from "@skeletonlabs/skeleton";
-  import SvgIcon from "./svgIcon.svelte";
+  import SvgIcon from "../common/svgIcon.svelte";
   import download from "downloadjs";
 
   export let book = "";

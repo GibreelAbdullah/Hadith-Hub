@@ -1,5 +1,5 @@
 <script>
-	import SvgIcon from "$lib/components/svgIcon.svelte";
+	import SvgIcon from "$lib/common/svgIcon.svelte";
 </script>
 
 <div class="card card-body p-4 m-4 flex-wrap">
