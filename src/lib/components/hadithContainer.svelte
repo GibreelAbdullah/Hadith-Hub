@@ -136,7 +136,9 @@
             <button
               class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 h-10 rounded-l-full rounded-r-none"
               on:click={clickHandler}
-              use:clipboard={$page.url.host +
+              use:clipboard={$page.url.protocol +
+                "//" + 
+                $page.url.host +
                 "/" +
                 (allHadiths[0].hadiths[i].shortName ?? book) +
                 ":" +
