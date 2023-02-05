@@ -4,7 +4,6 @@
   import { clipboard } from "@skeletonlabs/skeleton";
   import SvgIcon from "../common/svgIcon.svelte";
   import download from "downloadjs";
-
   export let book = "";
   export let allHadiths: any[] = [];
   export let singleHadithView: boolean = false;
@@ -176,7 +175,6 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     word-wrap: normal;
   }
-
   .metaGroup {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     word-wrap: normal;
