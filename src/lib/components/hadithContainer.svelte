@@ -149,7 +149,8 @@
             </button>
             <a
               class="btn bg-primary-500 btn-sm mt-6 pt-3 h-10 rounded-r-full rounded-l-none align-top border-l-2 border-primary-900"
-              href={"http://" +
+              href={$page.url.protocol +
+                "//" + 
                 $page.url.host +
                 "/" +
                 (allHadiths[0].hadiths[i].shortName ?? book) +
