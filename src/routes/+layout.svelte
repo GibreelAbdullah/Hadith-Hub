@@ -91,7 +91,7 @@
 					type="search"
 					placeholder="Search..."
 					value={$page.url.searchParams.get('q')}
-					class="px-5 pb-1 h-8 caret-black dark:caret-white"
+					class="input px-5 pb-1 h-8"
 					name="q"
 				/>
 				<input type="hidden" name="lang" value={$selectedLanguagesStore} />
