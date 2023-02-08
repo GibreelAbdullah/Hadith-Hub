@@ -133,7 +133,7 @@
           </button>
           <div>
             <button
-              class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 h-10 rounded-l-full rounded-r-none"
+              class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 h-10 rounded-r-none"
               on:click={clickHandler}
               use:clipboard={$page.url.protocol +
                 "//" + 
@@ -148,7 +148,7 @@
               >{permalinkText}
             </button>
             <a
-              class="btn bg-primary-500 btn-sm mt-6 pt-3 h-10 rounded-r-full rounded-l-none align-top border-l-2 border-primary-900"
+              class="btn bg-primary-500 btn-sm mt-6 pt-3 h-10 rounded-l-none align-top border-l-2 border-primary-900"
               href={$page.url.protocol +
                 "//" + 
                 $page.url.host +
