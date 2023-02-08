@@ -62,7 +62,7 @@
 		</svelte:fragment>
 
 		<svelte:fragment slot="content">
-			<ListBox multiple class="p-4">
+			<ListBox multiple active="variant-filled-primary" hover="hover:variant-soft-primary" class="p-4">
 				{#each Object.keys(data) as languageObject}
 					<ListBoxItem bind:group={$selectedLanguagesStore} name={data[languageObject]['Prefix']} value={data[languageObject]['Prefix']}>
 						<div class="max-h-4 pb-5">{data[languageObject]['Name']}</div>
