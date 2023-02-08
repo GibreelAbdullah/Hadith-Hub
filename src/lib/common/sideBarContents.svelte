@@ -62,9 +62,9 @@
 		</svelte:fragment>
 
 		<svelte:fragment slot="content">
-			<ListBox selected={selectedLanguagesStore} class="p-4">
+			<ListBox multiple class="p-4">
 				{#each Object.keys(data) as languageObject}
-					<ListBoxItem value={data[languageObject]['Prefix']}>
+					<ListBoxItem bind:group={$selectedLanguagesStore} name={data[languageObject]['Prefix']} value={data[languageObject]['Prefix']}>
 						<div class="max-h-4 pb-5">{data[languageObject]['Name']}</div>
 					</ListBoxItem>
 				{/each}
