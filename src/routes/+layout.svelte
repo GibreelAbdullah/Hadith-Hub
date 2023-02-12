@@ -102,9 +102,7 @@
 						class="unstyled hover:bg-primary-hover-token px-4 py-2 rounded-token space-x-2"
 						use:menu={{ menu: 'theme', interactive: true }}
 					>
-						<span class="hidden md:inline-block">Theme</span>
-						<SvgIcon class="md:hidden" name="theme" fill="fill-white" />
-						<span>⮟</span>
+						<SvgIcon name="theme" fill="fill-white" />
 					</button>
 					<div class="card w-64 shadow-xl max-w-fit sm:max-w-none" data-menu="theme">
 						<section class="flex justify-between items-center p-4">
