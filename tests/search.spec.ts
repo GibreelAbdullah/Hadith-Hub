@@ -8,6 +8,6 @@ test('Search Page Test', async ({ page }) => {
 	await page.getByPlaceholder('Search...').press('Enter');
 
 	await expect(page).toHaveURL('/search?q=greed&lang=ara%2Ceng');
-	const textContainer = page.locator('.card').first()
+	const textContainer = page.locator('.card').nth(2)
 	await expect(textContainer).toContainText('greed')
 })

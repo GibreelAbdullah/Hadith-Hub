@@ -3,6 +3,7 @@
 	import '@skeletonlabs/skeleton/styles/all.css';
 	import '../app.postcss';
 	import { page } from '$app/stores';
+	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { selectedLanguagesStore } from '$lib/common/sideBarContents.svelte';
 	import {
 		AppShell,
@@ -12,8 +13,11 @@
 		drawerStore,
 		localStorageStore,
 		LightSwitch,
-		menu
+		storePopup,
+		popup
 	} from '@skeletonlabs/skeleton';
+	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+
 	import SideBarContents from '$lib/common/sideBarContents.svelte';
 	import Footer from '$lib/common/footer.svelte';
 	import type { LayoutServerData } from './$types';
@@ -97,20 +101,20 @@
 				<input type="hidden" name="lang" value={$selectedLanguagesStore} />
 			</form>
 			<svelte:fragment slot="trail">
+
 				<div class="relative">
-					<button
-						class="unstyled hover:bg-primary-hover-token px-4 py-2 rounded-token space-x-2"
-						use:menu={{ menu: 'theme', interactive: true }}
-					>
+					<!-- trigger -->
+					<button class="btn hover:variant-soft-primary" use:popup={{ event: 'click', target: 'theme' }}>
 						<SvgIcon name="theme" fill="fill-white" />
 					</button>
-					<div class="card w-64 shadow-xl max-w-fit sm:max-w-none" data-menu="theme">
-						<section class="flex justify-between items-center p-4">
-							<h6>Theme</h6>
+					<!-- popup -->
+					<div class="card p-4 w-60 shadow-xl" data-popup="theme">
+						<section class="w-48 flex justify-between items-center border-blue-50">
+							<h6>Mode</h6>
 							<LightSwitch />
 						</section>
-						<hr />
-						<nav class="list-nav p-4 max-h-64 lg:max-h-[480px] overflow-y-auto">
+						<hr class="my-4" />
+						<nav class="list-nav p-4 -m-4 max-h-64 lg:max-h-[500px] overflow-y-auto">
 							<form action="/?/setTheme" method="POST" use:enhance={setTheme}>
 								<ul>
 									{#each themes as { icon, name, type }}
