@@ -10,7 +10,7 @@
         HadithHub
       </span>
     </h2>
-    <div class="flex space-x-4">
+    <div class="px-4 logo-cloud grid-cols-4 gap-1">
       <a
         class="btn bg-[#ea4335] text-white"
         href="mailto:gibreel.khan@gmail.com"
