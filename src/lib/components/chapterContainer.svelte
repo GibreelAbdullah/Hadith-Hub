@@ -4,7 +4,7 @@
 </script>
 
 {#await dataPromise}
-  <div class="sticky top-0 card card-body p-4 m-4">
+  <div class="sticky top-0 card card-body p-4 m-4 !variant-glass-secondary">
     <div class="text-xs grid px-3">
       <ol class="breadcrumb">
         <li class="crumb"><a href="/">Home</a></li>
@@ -35,7 +35,7 @@
     </div>
   {/each}
 {:then data}
-  <div class="sticky top-0 card card-body p-4 m-4">
+  <div class="sticky top-0 card card-body p-4 m-4 !variant-glass-secondary">
     <div class="text-xs grid px-3">
       <ol class="breadcrumb">
         <li class="crumb"><a href="/">Home</a></li>
