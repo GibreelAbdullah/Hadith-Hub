@@ -3,20 +3,13 @@
 	import { AccordionItem, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import { languageUrl, urlPrefix } from '../common/constants';
 	import { writable, type Writable } from 'svelte/store';
+	import { getData } from '$lib/common/utils';
 
 	const languages = `${urlPrefix}${languageUrl}`;
-	const getData = async (url: string) => {
-		return await fetch(url).then((response) => {
-			return response.json();
-		});
-	};
+
 	let languagePromise = getData(languages);
 
-	let selectedLanguagesSearchStore: Writable<Array<string>> = writable(
-		browser
-			? window.localStorage.getItem('storedLanguagesList')?.split(',') ?? ['ara', 'eng']
-			: ['ara', 'eng']
-	);
+	let selectedLanguagesSearchStore: Writable<Array<string>> = writable();
 
 	export { selectedLanguagesSearchStore };
 
@@ -24,15 +17,12 @@
 		data: { Name: string; Prefix: string }[],
 		selectedLanguagesShortName: string[]
 	) {
-		// selectedLanguagesSearchStore.set(selectedLanguagesShortName);
 		let selectedLanguages: string = '';
 		switch (selectedLanguagesShortName.length) {
 			case 0:
 				selectedLanguages = 'No Language Selected';
 				break;
-			case 1:
-			case 2:
-			case 3:
+			default:
 				for (let languageObject in data) {
 					if (selectedLanguagesShortName.includes(data[languageObject]['Prefix'])) {
 						selectedLanguages += data[languageObject]['Name'] + ', ';
@@ -40,8 +30,6 @@
 				}
 				selectedLanguages = selectedLanguages.substring(0, selectedLanguages.length - 2);
 				break;
-			default:
-				selectedLanguages = selectedLanguagesShortName.length + ' languages selected';
 		}
 		return selectedLanguages;
 	}

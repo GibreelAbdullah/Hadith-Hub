@@ -9,7 +9,7 @@
 
 	// Elements
 	let elemDocSearch: HTMLElement;
-
+	$selectedLanguagesSearchStore = $page.url.searchParams.get('lang')?.split(',') ?? window.localStorage.getItem('storedLanguagesList')?.split(',') ?? ['ara', 'eng'];
 	function onInputKeyDown(event: KeyboardEvent): void {
 		if (['Enter'].includes(event.code)) {
 			modalStore.close();

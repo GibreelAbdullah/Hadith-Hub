@@ -3,7 +3,6 @@
 	import { AccordionItem, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import { writable, type Writable } from 'svelte/store';
 	import { languageUrl, urlPrefix } from './constants';
-	// export let updateStoredLanguagesList: boolean = true
 
 	const languages = `${urlPrefix}${languageUrl}`;
 	const getData = async (url: string) => {
@@ -11,6 +10,7 @@
 			return response.json();
 		});
 	};
+
 	let languagePromise = getData(languages);
 
 	export { languagePromise };
@@ -47,7 +47,6 @@
 		return selectedLanguages;
 	}
 </script>
-
 {#await languagePromise}
 	<div class="text-primary-500 font-bold uppercase">Languages</div>
 	<div class="text-sm">
