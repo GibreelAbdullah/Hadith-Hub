@@ -1,11 +1,9 @@
-import {
-  languagePromise,
-} from "$lib/common/sideBarContents.svelte";
+import { languagePromise } from "./sideBarContents.svelte";
 
-export const getData = async(url: string) => {
-    return await fetch(url).then((response) => {
-		return response.json();
-    });
+export const getData = async (url: string) => {
+  return await fetch(url).then((response) => {
+    return response.json();
+  });
 }
 
 export async function getBookName(unavailableBooks: string[]) {

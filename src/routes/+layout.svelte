@@ -2,23 +2,24 @@
 	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
 	import '@skeletonlabs/skeleton/styles/all.css';
 	import '../app.postcss';
-	import { page } from '$app/stores';
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
-	import { selectedLanguagesStore } from '$lib/common/sideBarContents.svelte';
 	import {
 		AppShell,
 		AppBar,
 		Drawer,
 		type DrawerSettings,
+		type ModalSettings,
+		type ModalComponent,
 		drawerStore,
 		localStorageStore,
 		LightSwitch,
 		storePopup,
-		popup
+		popup,
+		Modal,
+		modalStore
 	} from '@skeletonlabs/skeleton';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
-	import SideBarContents from '$lib/common/sideBarContents.svelte';
 	import Footer from '$lib/common/footer.svelte';
 	import type { LayoutServerData } from './$types';
 	import { browser } from '$app/environment';
@@ -26,6 +27,8 @@
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { enhance } from '$app/forms';
 	import SvgIcon from '$lib/common/svgIcon.svelte';
+	import SearchModal from '$lib/components/searchModal.svelte';
+	import SideBarContents from '$lib/common/sideBarContents.svelte';
 
 	export let data: LayoutServerData;
 
@@ -64,6 +67,22 @@
 		const settings: DrawerSettings = { id: 'main' };
 		drawerStore.open(settings);
 	}
+	const modalSearch: ModalComponent = {
+		// Pass a reference to your custom component
+		ref: SearchModal,
+		// Add the component properties as key/value pairs
+		props: { background: 'bg-red-500' },
+		// Provide a template literal for the default component slot
+		slot: '<p>Skeleton</p>'
+	};
+	function triggerSearch(): void {
+		const d: ModalSettings = {
+			type: 'component',
+			component: modalSearch,
+			position: 'item-start'
+		};
+		modalStore.trigger(d);
+	}
 </script>
 
 <svelte:head>
@@ -74,7 +93,7 @@
 <Drawer open={drawerOpen} position="left">
 	<div class="px-4 pt-8"><SideBarContents /></div>
 </Drawer>
-
+<Modal />
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4 hidden md:block">
 	<svelte:fragment slot="header">
 		<AppBar>
@@ -90,7 +109,7 @@
 					</h2>
 				</a>
 			</svelte:fragment>
-			<form action="/search" method="get" class="">
+			<!-- <form action="/search" method="get" class="">
 				<input
 					type="search"
 					placeholder="Search..."
@@ -99,12 +118,21 @@
 					name="q"
 				/>
 				<input type="hidden" name="lang" value={$selectedLanguagesStore} />
-			</form>
+			</form> -->
+			<button
+				class="btn variant-soft hover:variant-soft-primary h-10 w-32"
+				on:click={triggerSearch}
+			>
+				<span class="text-3xl p-0 pb-2">⌕</span>
+				<span class="text-sm inline-block badge variant-soft">Search</span>
+			</button>
 			<svelte:fragment slot="trail">
-
 				<div class="relative">
 					<!-- trigger -->
-					<button class="btn hover:variant-soft-primary" use:popup={{ event: 'click', target: 'theme' }}>
+					<button
+						class="btn hover:variant-soft-primary"
+						use:popup={{ event: 'click', target: 'theme' }}
+					>
 						<SvgIcon name="theme" fill="fill-white" />
 					</button>
 					<!-- popup -->

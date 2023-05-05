@@ -1,9 +1,8 @@
 <script lang="ts" context="module">
 	import { browser } from '$app/environment';
 	import { AccordionItem, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
+	import { languageUrl, urlPrefix } from '../common/constants';
 	import { writable, type Writable } from 'svelte/store';
-	import { languageUrl, urlPrefix } from './constants';
-	// export let updateStoredLanguagesList: boolean = true
 
 	const languages = `${urlPrefix}${languageUrl}`;
 	const getData = async (url: string) => {
@@ -13,19 +12,19 @@
 	};
 	let languagePromise = getData(languages);
 
-	export { languagePromise };
+	let selectedLanguagesSearchStore: Writable<Array<string>> = writable(
+		browser
+			? window.localStorage.getItem('storedLanguagesList')?.split(',') ?? ['ara', 'eng']
+			: ['ara', 'eng']
+	);
 
-	const storedLanguagesList = browser
-		? window.localStorage.getItem('storedLanguagesList') ?? 'ara,eng'
-		: 'ara,eng';
-
-	const selectedLanguagesStore: Writable<Array<string>> = writable(storedLanguagesList.split(','));
-	export { selectedLanguagesStore };
+	export { selectedLanguagesSearchStore };
 
 	function getSelectedLanguages(
 		data: { Name: string; Prefix: string }[],
 		selectedLanguagesShortName: string[]
 	) {
+		// selectedLanguagesSearchStore.set(selectedLanguagesShortName);
 		let selectedLanguages: string = '';
 		switch (selectedLanguagesShortName.length) {
 			case 0:
@@ -58,7 +57,7 @@
 		<svelte:fragment slot="summary">
 			<div class="text-primary-500 font-bold uppercase">Languages</div>
 			<div class="text-sm">
-				{getSelectedLanguages(data, $selectedLanguagesStore)}
+				{getSelectedLanguages(data, $selectedLanguagesSearchStore)}
 			</div>
 		</svelte:fragment>
 
@@ -71,7 +70,7 @@
 			>
 				{#each Object.keys(data) as languageObject}
 					<ListBoxItem
-						bind:group={$selectedLanguagesStore}
+						bind:group={$selectedLanguagesSearchStore}
 						name={data[languageObject]['Prefix']}
 						value={data[languageObject]['Prefix']}
 					>
