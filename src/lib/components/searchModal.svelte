@@ -3,13 +3,17 @@
 	import { page } from '$app/stores';
 	import LanguageFilter from '$lib/searchModalComponents/languageFilter.svelte';
 	import { selectedLanguagesSearchStore } from '$lib/searchModalComponents/languageFilter.svelte';
-
+	import CollectionFilter, { selectedcollectionsSearchStore } from '$lib/searchModalComponents/collectionFilter.svelte';
+	
 	const cHeader = 'bg-surface-300-600-token flex items-center';
 	const cSearchInput = 'bg-transparent border-0 ring-0 focus:ring-0 w-full p-4 text-lg';
-
+	
 	// Elements
 	let elemDocSearch: HTMLElement;
 	$selectedLanguagesSearchStore = $page.url.searchParams.get('lang')?.split(',') ?? window.localStorage.getItem('storedLanguagesList')?.split(',') ?? ['ara', 'eng'];
+
+	$selectedcollectionsSearchStore = $page.url.searchParams.get('collection')?.split(',') ?? [];
+
 	function onInputKeyDown(event: KeyboardEvent): void {
 		if (['Enter' , 'Done' , 'Go' , 'Next' , 'Previous' , 'Search' , 'Send'].includes(event.key)) {
 			modalStore.close();
@@ -34,11 +38,15 @@
 				on:keydown={onInputKeyDown}
 			/>
 			<input type="hidden" name="lang" value={$selectedLanguagesSearchStore} />
+			<input type="hidden" name="collection" value={$selectedcollectionsSearchStore} />
 		</form>
 	</header>
 	<!-- Filters-->
 	<div class="p-3">
 		<LanguageFilter />
+	</div>
+	<div class="p-3">
+		<CollectionFilter />
 	</div>
 
 	<div style="clear: both;" />

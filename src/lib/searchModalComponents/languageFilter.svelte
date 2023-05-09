@@ -1,13 +1,7 @@
 <script lang="ts" context="module">
-	import { browser } from '$app/environment';
 	import { AccordionItem, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
-	import { languageUrl, urlPrefix } from '../common/constants';
 	import { writable, type Writable } from 'svelte/store';
-	import { getData } from '$lib/common/utils';
-
-	const languages = `${urlPrefix}${languageUrl}`;
-
-	let languagePromise = getData(languages);
+	import { languagePromise } from '$lib/common/utils';
 
 	let selectedLanguagesSearchStore: Writable<Array<string>> = writable();
 
@@ -20,7 +14,7 @@
 		let selectedLanguages: string = '';
 		switch (selectedLanguagesShortName.length) {
 			case 0:
-				selectedLanguages = 'No Language Selected';
+				selectedLanguages = 'All Languages';
 				break;
 			default:
 				for (let languageObject in data) {

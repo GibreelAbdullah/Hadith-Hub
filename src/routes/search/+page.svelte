@@ -80,9 +80,9 @@
 						{/await}
 					</span>
 				{/if}
-				{#if $page.url.searchParams.get('book') != null}
+				{#if $page.url.searchParams.get('collection') != null}
 					<span class="chip variant-ringed">
-						{#await getCollectionFullName($page.url.searchParams.get('book').split(','))}
+						{#await getCollectionFullName($page.url.searchParams.get('collection').split(','))}
 							<div class="placeholder w-40 m-auto animate-pulse my-1" />
 						{:then collectionNames}
 							Collections : {collectionNames}
