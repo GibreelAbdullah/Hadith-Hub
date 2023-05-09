@@ -71,19 +71,19 @@
 				{#if $page.url.searchParams.get('q') != null}
 					<span class="chip variant-ringed">Search For : {$page.url.searchParams.get('q')}</span>
 				{/if}
-				{#if $page.url.searchParams.get('lang') != null}
+				{#if $page.url.searchParams.get('lang') != null && $page.url.searchParams.get('lang') != ''}
 					<span class="chip variant-ringed">
 						{#await getLanguageFullName($page.url.searchParams.get('lang').split(','))}
-							<div class="placeholder w-40 m-auto animate-pulse my-1" />
+							<div class="placeholder w-40 !h-2.5 m-auto animate-pulse my-1" />
 						{:then languagesNames}
 							Languages : {languagesNames}
 						{/await}
 					</span>
 				{/if}
-				{#if $page.url.searchParams.get('collection') != null}
+				{#if $page.url.searchParams.get('collection') != null && $page.url.searchParams.get('collection') != ''}
 					<span class="chip variant-ringed">
 						{#await getCollectionFullName($page.url.searchParams.get('collection').split(','))}
-							<div class="placeholder w-40 m-auto animate-pulse my-1" />
+							<div class="placeholder w-40 !h-2.5 m-auto animate-pulse my-1" />
 						{:then collectionNames}
 							Collections : {collectionNames}
 						{/await}

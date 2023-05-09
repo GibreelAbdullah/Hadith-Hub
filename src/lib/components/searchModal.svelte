@@ -3,21 +3,28 @@
 	import { page } from '$app/stores';
 	import LanguageFilter from '$lib/searchModalComponents/languageFilter.svelte';
 	import { selectedLanguagesSearchStore } from '$lib/searchModalComponents/languageFilter.svelte';
-	import CollectionFilter, { selectedcollectionsSearchStore } from '$lib/searchModalComponents/collectionFilter.svelte';
-	
+	import CollectionFilter, {
+		selectedcollectionsSearchStore
+	} from '$lib/searchModalComponents/collectionFilter.svelte';
+
 	const cHeader = 'bg-surface-300-600-token flex items-center';
-	const cSearchInput = 'bg-transparent border-0 ring-0 focus:ring-0 w-full p-4 text-lg';
-	
+	// const cSearchInput = '';
+
 	// Elements
 	let elemDocSearch: HTMLElement;
-	$selectedLanguagesSearchStore = $page.url.searchParams.get('lang')?.split(',') ?? window.localStorage.getItem('storedLanguagesList')?.split(',') ?? ['ara', 'eng'];
+	$selectedLanguagesSearchStore = $page.url.searchParams.get('lang')?.split(',') ??
+		window.localStorage.getItem('storedLanguagesList')?.split(',') ?? ['ara', 'eng'];
 
 	$selectedcollectionsSearchStore = $page.url.searchParams.get('collection')?.split(',') ?? [];
 
 	function onInputKeyDown(event: KeyboardEvent): void {
-		if (['Enter' , 'Done' , 'Go' , 'Next' , 'Previous' , 'Search' , 'Send'].includes(event.key)) {
+		if (['Enter', 'Done', 'Go', 'Next', 'Previous', 'Search', 'Send'].includes(event.key)) {
 			modalStore.close();
 		}
+	}
+
+	function onSubmit(): void {
+		modalStore.close();
 	}
 </script>
 
@@ -27,16 +34,24 @@
 >
 	<!-- Header -->
 	<header class="modal-search-header {cHeader}">
-		<span class="text-4xl pl-4 pb-2">⌕</span>
-		<form action="/search" method="get" class={cSearchInput}>
-			<input
-				type="search"
-				placeholder="Search..."
-				value={$page.url.searchParams.get('q')}
-				class="input px-5 pb-1 h-8"
-				name="q"
-				on:keydown={onInputKeyDown}
-			/>
+		<form
+			action="/search"
+			method="get"
+			class="m-auto bg-transparent border-0 ring-0 focus:ring-0 w-full p-4 text-lg"
+		>
+			<div class="content-normal">
+				<input
+					type="search"
+					placeholder="Search..."
+					value={$page.url.searchParams.get('q')}
+					class="input !w-[calc(100%-4rem)] pb-1"
+					name="q"
+					on:keydown={onInputKeyDown}
+				/>
+				<span class="btn bg-primary-500 h-9 pb-4 float-right cursor-pointer">
+					<input type="submit" class="text-4xl h-10 cursor-pointer" on:click={onSubmit} value="⌕" />
+				</span>
+			</div>
 			<input type="hidden" name="lang" value={$selectedLanguagesSearchStore} />
 			<input type="hidden" name="collection" value={$selectedcollectionsSearchStore} />
 		</form>
