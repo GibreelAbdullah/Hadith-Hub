@@ -100,33 +100,21 @@
 			<svelte:fragment slot="lead">
 				<button on:click={drawerOpen} class="md:hidden mr-2 p-1 cursor-pointer text-3xl">≡ </button>
 				<a href="/">
-					<h2>
-						<span
-							class="bg-gradient-to-br from-primary-500 via-tertiary-500 to-secondary-500 bg-clip-text text-transparent box-decoration-clone"
-						>
-							HadithHub
-						</span>
-					</h2>
+					<span>
+						<SvgIcon class="!w-10" name="icon" />
+						<SvgIcon class="!w-40 hidden md:inline-block" name="hadithHub" />
+					</span>
 				</a>
 			</svelte:fragment>
-			<!-- <form action="/search" method="get" class="">
-				<input
-					type="search"
-					placeholder="Search..."
-					value={$page.url.searchParams.get('q')}
-					class="input px-5 pb-1 h-8"
-					name="q"
-				/>
-				<input type="hidden" name="lang" value={$selectedLanguagesStore} />
-			</form> -->
 			<button
-				class="btn variant-soft hover:variant-soft-primary h-10 w-32"
+				class="btn variant-soft hover:variant-soft-primary h-10 "
 				on:click={triggerSearch}
 			>
 				<span class="text-3xl p-0 pb-2">⌕</span>
-				<span class="text-sm inline-block badge variant-soft">Search</span>
+				<span class="text-sm hidden md:inline-block badge variant-soft">Search</span>
 			</button>
 			<svelte:fragment slot="trail">
+
 				<div class="relative">
 					<!-- trigger -->
 					<button
@@ -164,15 +152,6 @@
 						</nav>
 					</div>
 				</div>
-				<a href="/" class="hidden md:block">
-					<h2>
-						<span
-							class="bg-gradient-to-br from-primary-500 via-tertiary-500 to-secondary-500 bg-clip-text text-transparent box-decoration-clone"
-						>
-							حديث حب
-						</span>
-					</h2>
-				</a>
 			</svelte:fragment>
 		</AppBar>
 	</svelte:fragment>

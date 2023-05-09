@@ -1,48 +1,86 @@
 <script lang="ts">
-  import { selectedLanguagesStore } from "$lib/common/sideBarContents.svelte";
-  import { getBookName } from "$lib/common/utils";
   export let dataPromise: Promise<any>;
-
-  function getUnavailableBooks(
-    availbleBooks: string[],
-    selectedLanguages: string[]
-  ) {
-    let unavailableBooksShortName: string[] = [];
-    selectedLanguages.forEach((book) => {
-      if (!availbleBooks.includes(book)) unavailableBooksShortName.push(book);
-    });
-    unavailableBooksShortName = unavailableBooksShortName;
-    return getBookName(unavailableBooksShortName);
-  }
+  export let bookURL: string;
 </script>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
-  {#await dataPromise}
-    {#each { length: 7 } as _, i}
-      <div class="card card-body p-4 h-20 ">
-        <div class="placeholder w-40 m-auto animate-pulse my-1" />
-        <div class="placeholder w-40 m-auto animate-pulse my-1" />
+{#await dataPromise}
+  <div class="sticky top-0 card card-body p-4 m-4 !variant-glass-secondary">
+    <div class="text-xs grid px-3">
+      <ol class="breadcrumb">
+        <li class="crumb"><a href="/">Home</a></li>
+        <li class="crumb-separator" aria-hidden>&rsaquo;</li>
+        <div class="placeholder w-52 m-auto animate-pulse" />
+      </ol>
+    </div>
+  </div>
+  {#each { length: 5 } as _, i}
+    <div class="card card-body p-4 m-4 ">
+      <div class="hadithGroup font-medium p-2 grid ">
+        <div>
+          <div class="placeholder animate-pulse" />
+        </div>
+
+        <div class="text-right ml-10">
+          <div class="placeholder animate-pulse" />
+        </div>
+        <div class="hidden md:block text-right">
+          <div class="badge">
+            <div class="placeholder animate-pulse w-16 m-auto" />
+          </div>
+        </div>
       </div>
-    {/each}
-  {:then data}
-    {#each data["collections"] as book}
-      <a class="card card-body p-4 text-center" href="/{book['name']}">
-        {book["eng-name"]}
-        <br />
-        {book["ara-name"]}
-        <br />
-        {#await getUnavailableBooks(book["availableLanguages"], $selectedLanguagesStore)}
-          <div class="placeholder w-40 m-auto animate-pulse" />
-        {:then bookNames}
-          {#if bookNames.length != 0}
-            <code class="!text-white !bg-red-500"
-              >Not available in {bookNames}</code
-            >
-          {/if}
-        {/await}
+      <div class="md:hidden text-center">
+        <div class="placeholder animate-pulse w-16 m-auto" />
+      </div>
+    </div>
+  {/each}
+{:then data}
+  <div class="sticky top-0 card card-body p-4 m-4 !variant-glass-secondary">
+    <div class="text-xs grid px-3">
+      <ol class="breadcrumb">
+        <li class="crumb"><a href="/">Home</a></li>
+        <li class="crumb-separator" aria-hidden>&rsaquo;</li>
+        <li class="crumb">{data["name"]}</li>
+      </ol>
+    </div>
+  </div>
+  {#each Object.keys(data["books"]) as bookNumber}
+    {#if data["books"][bookNumber]["eng-name"] != ""}
+      <a href="/{bookURL}/{bookNumber}" class="card">
+        <div class="card card-body p-4 m-4 ">
+          <div class="hadithGroup font-medium p-2 grid ">
+            <div>
+              {bookNumber} -
+              {data["books"][bookNumber]["eng-name"]}
+            </div>
+
+            <div class="text-right ml-10">
+              {data["books"][bookNumber]["ara-name"]}
+            </div>
+            <div class="hidden md:block text-right">
+              <div class="badge bg-gray-500">
+                {data["books"][bookNumber]["minHadith"]} to
+                {data["books"][bookNumber]["maxHadith"]}
+              </div>
+            </div>
+          </div>
+          <div class="md:hidden text-center">
+            <div class="badge bg-gray-500">
+              {data["books"][bookNumber]["minHadith"]} to
+              {data["books"][bookNumber]["maxHadith"]}
+            </div>
+          </div>
+        </div>
       </a>
-    {/each}
-  {:catch data}
-    <div class="card card-body p-4 hvr-reveal">Error...Could Not Load Data</div>
-  {/await}
-</div>
+    {/if}
+  {/each}
+{:catch data}
+  <div class="card card-body p-4 m-4">Error. Try clearing the cache.</div>
+{/await}
+
+<style>
+  .hadithGroup {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /* grid-template-columns: minmax(300px, 3fr) minmax(300px, 3fr) minmax(300px, 1fr); */
+  }
+</style>

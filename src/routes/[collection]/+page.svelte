@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { urlPrefix } from "$lib/common/constants";
-  import ChapterContainer from "$lib/components/chapterContainer.svelte";
+  import ChapterContainer from "$lib/components/bookContainer.svelte";
   import { getData } from '$lib/common/utils'
 
   let title = `${$page.params.collection} | HadithHub`;

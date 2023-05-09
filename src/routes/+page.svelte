@@ -1,13 +1,8 @@
 <script lang="ts">
   import "@skeletonlabs/skeleton/styles/all.css";
-  import BookContainer from "$lib/components/bookContainer.svelte";
-  import { collectionsUrl, urlPrefix } from "$lib/common/constants";
-  import { getData } from '$lib/common/utils'
+  import CollectionContainer from "$lib/components/collectionContainer.svelte";
   import { page } from "$app/stores";
-
-  const collections = `${urlPrefix}${collectionsUrl}`;
-
-  let collectionPromise = getData(collections);
+	import { collectionPromise } from "$lib/common/utils";
 </script>
 
 <svelte:head>
@@ -38,5 +33,5 @@
 </svelte:head>
 
 <main>
-  <BookContainer dataPromise={collectionPromise} />
+  <CollectionContainer dataPromise={collectionPromise} />
 </main>

@@ -19,7 +19,7 @@
   /** Provide classes to set the width color.*/
   export let width = "w-5";
   /** Provide classes to set the height color.*/
-  export let height = "w-5";
+  // export let height = "w-5";
 
   // A11y
   /** Set the title element value embedded within the SVG.*/
@@ -29,7 +29,7 @@
   const cBase = "inline-block outline-none";
 
   // Reactive Classes
-  $: classesBase = `${cBase} ${fill} ${width} ${height}`;
+  $: classesBase = `${cBase} ${fill} ${width} `;
 </script>
 
 <!-- prettier-ignore -->

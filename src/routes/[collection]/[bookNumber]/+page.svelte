@@ -4,7 +4,7 @@
 	import { selectedLanguagesStore } from '$lib/common/sideBarContents.svelte';
 	import { browser } from '$app/environment';
 	import { urlPrefix } from '$lib/common/constants';
-	import { getBookName, getData } from '$lib/common/utils';
+	import { getLanguageFullName, getData } from '$lib/common/utils';
 	import HadithPlaceholder from '$lib/common/hadithPlaceholder.svelte';
 
 	let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`;
@@ -130,7 +130,7 @@
 			{#if unavailableBooks.length != 0}
 				<div class="card card-body p-4 m-4 !bg-red-500">
 					<div class="hadithGroup font-medium p-2 grid text-center ">
-						{#await getBookName(unavailableBooks)}
+						{#await getLanguageFullName(unavailableBooks)}
 							<div class="placeholder w-40 m-auto animate-pulse my-1" />
 						{:then bookNames}
 							This book is not available in {bookNames}

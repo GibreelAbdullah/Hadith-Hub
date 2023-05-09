@@ -2,18 +2,16 @@
 	import { browser } from '$app/environment';
 	import { AccordionItem, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import { writable, type Writable } from 'svelte/store';
-	import { languageUrl, urlPrefix } from './constants';
+	import SvgIcon from './svgIcon.svelte';
+	import { languagePromise } from './utils';
 
-	const languages = `${urlPrefix}${languageUrl}`;
-	const getData = async (url: string) => {
-		return await fetch(url).then((response) => {
-			return response.json();
-		});
-	};
+	// const getData = async (url: string) => {
+	// 	return await fetch(url).then((response) => {
+	// 		return response.json();
+	// 	});
+	// };
 
-	let languagePromise = getData(languages);
 
-	export { languagePromise };
 
 	const storedLanguagesList = browser
 		? window.localStorage.getItem('storedLanguagesList') ?? 'ara,eng'
@@ -47,15 +45,20 @@
 		return selectedLanguages;
 	}
 </script>
+
 {#await languagePromise}
 	<div class="text-primary-500 font-bold uppercase">Languages</div>
 	<div class="text-sm">
 		<div class="placeholder animate-pulse w-32" />
 	</div>
 {:then data}
+	<span class="md:hidden">
+		<SvgIcon class="!w-10" name="icon" />
+		<SvgIcon class="!w-40" name="hadithHub" />
+	</span>
 	<AccordionItem>
 		<svelte:fragment slot="summary">
-			<div class="text-primary-500 font-bold uppercase">Languages</div>
+			<div class="text-primary-500 font-bold uppercase pt-4">Languages</div>
 			<div class="text-sm">
 				{getSelectedLanguages(data, $selectedLanguagesStore)}
 			</div>

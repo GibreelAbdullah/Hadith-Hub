@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { modalStore } from '@skeletonlabs/skeleton';
 	import { page } from '$app/stores';
-	import LanguageModal from '$lib/searchModalComponents/languageFilter.svelte';
+	import LanguageFilter from '$lib/searchModalComponents/languageFilter.svelte';
 	import { selectedLanguagesSearchStore } from '$lib/searchModalComponents/languageFilter.svelte';
 
 	const cHeader = 'bg-surface-300-600-token flex items-center';
@@ -11,7 +11,7 @@
 	let elemDocSearch: HTMLElement;
 	$selectedLanguagesSearchStore = $page.url.searchParams.get('lang')?.split(',') ?? window.localStorage.getItem('storedLanguagesList')?.split(',') ?? ['ara', 'eng'];
 	function onInputKeyDown(event: KeyboardEvent): void {
-		if (['Enter'].includes(event.code)) {
+		if (['Enter' , 'Done' , 'Go' , 'Next' , 'Previous' , 'Search' , 'Send'].includes(event.key)) {
 			modalStore.close();
 		}
 	}
@@ -38,7 +38,7 @@
 	</header>
 	<!-- Filters-->
 	<div class="p-3">
-		<LanguageModal />
+		<LanguageFilter />
 	</div>
 
 	<div style="clear: both;" />

@@ -3,11 +3,10 @@
   import { page } from "$app/stores";
   import { urlPrefix } from "$lib/common/constants";
   import {
-    languagePromise,
     selectedLanguagesStore,
   } from "$lib/common/sideBarContents.svelte";
   import HadithContainer from "$lib/components/hadithContainer.svelte";
-  import { getData } from "$lib/common/utils";
+  import { getLanguageFullName, getData } from "$lib/common/utils";
   import HadithPlaceholder from "$lib/common/hadithPlaceholder.svelte";
 
   let title = `${$page.params.collection}:${$page.params.hadithNumber} | HadithHub`;
@@ -69,20 +68,7 @@
     //   );
     // }
   }
-  async function getBookName(unavailableBooks: string[]) {
-    let unavailableBookFullNames: string[] = [];
-    let languageObject = await languagePromise;
-    for (let keys in Object.keys(languageObject)) {
-      if (
-        unavailableBooks.includes(languageObject[parseInt(keys) + 1]["Prefix"])
-      ) {
-        unavailableBookFullNames.push(
-          languageObject[parseInt(keys) + 1]["Name"]
-        );
-      }
-    }
-    return unavailableBookFullNames;
-  }
+
 </script>
 
 <svelte:head>
@@ -168,7 +154,7 @@
     {#if unavailableBooks.length != 0}
       <div class="card card-body p-4 m-4 !bg-red-500">
         <div class="hadithGroup font-medium p-2 grid text-center ">
-          {#await getBookName(unavailableBooks)}
+          {#await getLanguageFullName(unavailableBooks)}
             <div class="placeholder w-40 m-auto animate-pulse my-1" />
           {:then bookNames}
             This book is not available in {bookNames}

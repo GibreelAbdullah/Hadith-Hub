@@ -4,7 +4,7 @@
 
 <div class="card card-body p-4 m-4 flex-wrap">
 	<div class="text-center fill-black dark:fill-white">
-		<SvgIcon class="md:w-60 w-40" name="bismillah" />
+		<SvgIcon class="!w-40" name="bismillah" />
 	</div>
 	<div class="text-center fill-black dark:fill-white p-4">
 		With the name of Allah, the All-Merciful, the Very-Merciful.

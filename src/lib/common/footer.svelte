@@ -5,11 +5,10 @@
   <section
     class="flex flex-col lg:flex-row justify-between items-center lg:items-start space-y-5 lg:space-y-0"
   >
-    <h2>
-      <span class="bg-gradient-to-br from-primary-500 via-tertiary-500 to-secondary-500 bg-clip-text text-transparent box-decoration-clone">
-        HadithHub
-      </span>
-    </h2>
+  <span class="pr-4">
+    <SvgIcon class="!w-10" name="icon" />
+    <SvgIcon class="!w-40" name="hadithHub" />
+  </span>
     <div class="px-4 logo-cloud grid-cols-4 gap-1">
       <a
         class="btn bg-[#ea4335] text-white"
@@ -53,8 +52,8 @@
   </section>
   <section class="pt-8 flex flex-row justify-center lg:justify-start items-center space-y-0">
     <div>
-      <span class="float-left pr-8">Contributors</span>
-      <p class="text-xs pr-8">
+      <span class="float-left">Contributors</span>
+      <p class="text-xs">
         <a
           href="https://github.com/GibreelAbdullah/hadith-api/graphs/contributors"
           target="_blank"

@@ -1,4 +1,4 @@
-import { languagePromise } from "./sideBarContents.svelte";
+import { urlPrefix, languageUrl, collectionsUrl } from "./constants";
 
 export const getData = async (url: string) => {
   return await fetch(url).then((response) => {
@@ -6,17 +6,33 @@ export const getData = async (url: string) => {
   });
 }
 
-export async function getBookName(unavailableBooks: string[]) {
-  let unavailableBookFullNames: string[] = [];
+export const languagePromise = getData(`${urlPrefix}${languageUrl}`);
+
+export async function getLanguageFullName(languageShortName: string[]) {
+  let languageFullNames: string[] = [];
   let languageObject = await languagePromise;
   for (let keys in Object.keys(languageObject)) {
     if (
-      unavailableBooks.includes(languageObject[parseInt(keys) + 1]["Prefix"])
+      languageShortName.includes(languageObject[parseInt(keys) + 1]["Prefix"])
     ) {
-      unavailableBookFullNames.push(
+      languageFullNames.push(
         languageObject[parseInt(keys) + 1]["Name"]
       );
     }
   }
-  return unavailableBookFullNames;
+  return languageFullNames;
+}
+
+export const collectionPromise = getData(`${urlPrefix}${collectionsUrl}`);
+
+export async function getCollectionFullName(collectionShortName: string[]) {
+  let collectionFullNames: string[] = [];
+  let collectionObject = await collectionPromise;
+
+  collectionObject.collections.forEach((collection: { [x: string]: string; }) => {
+    if (collectionShortName.includes(collection["name"]!)) {
+      collectionFullNames.push(collection["eng-name"]);
+    }
+  });
+  return collectionFullNames;
 }
