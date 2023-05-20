@@ -38,7 +38,7 @@
 		let watermark = document.getElementById('watermark' + i)!;
 
 		buttonGroup.setAttribute('class', 'hidden');
-		watermark.setAttribute('class', 'flex');
+		watermark.setAttribute('class', 'flex p-3');
 		htmlToImage.toPng(hadithGroup).then(function (dataUrl) {
 			download(dataUrl, name);
 			buttonGroup.setAttribute('class', 'flex');
@@ -167,9 +167,11 @@
 								</a>
 							</div>
 						</div>
-						<div id="watermark{i}" class="hidden absolute p-6">
+						<div id="watermark{i}" class="hidden pt-6 pr-10">
 							<SvgIcon class="!w-10" name="icon" />
 							<SvgIcon class="!w-40" name="hadithHub" />
+							<SvgIcon class="!w-20 !fill-error-500 pt-1" name="com" />
+
 						</div>
 					</div>
 				</div>
