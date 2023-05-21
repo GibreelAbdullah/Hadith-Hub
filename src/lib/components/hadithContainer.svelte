@@ -142,7 +142,7 @@
 										'/' +
 										(allHadiths[0].hadiths[i].shortName ?? book) +
 										':' +
-										allHadiths[0].hadiths[i].hadithnumber
+										(allHadiths[0].hadiths[i].hadithnumber | 0)
 											.toString()
 											.replace('<span style="color:red;">', '')
 											.replace('</span>', '')}
@@ -156,7 +156,7 @@
 										'/' +
 										(allHadiths[0].hadiths[i].shortName ?? book) +
 										':' +
-										allHadiths[0].hadiths[i].hadithnumber
+										(allHadiths[0].hadiths[i].hadithnumber | 0)
 											.toString()
 											.replace('<span style="color:red;">', '')
 											.replace('</span>', '')}
