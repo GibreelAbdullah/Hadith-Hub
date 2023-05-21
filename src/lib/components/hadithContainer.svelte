@@ -10,10 +10,11 @@
 	let languageCount = allHadiths.length;
 	let permalinkText = 'Copy Link';
 	let gradingColorClass = '';
-	const clickHandler = () => {
-		permalinkText = 'Copied';
+	const clickHandler = (i: number) => {
+		let permalinkButton = document.getElementById('permalink' + i)!;
+		permalinkButton.innerHTML = 'Copied'
 		setTimeout(() => {
-			permalinkText = 'Copy Link';
+			permalinkButton.innerHTML = 'Copy Link'
 		}, 2000);
 	};
 	const gradingColor = (grade: string) => {
@@ -133,9 +134,9 @@
 								<SvgIcon name="download" fill="fill-black" /> Screenshot
 							</button>
 							<div>
-								<button
+								<button id="permalink{i}"
 									class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 h-10 rounded-r-none"
-									on:click={clickHandler}
+									on:click={() => clickHandler(i)} 
 									use:clipboard={$page.url.protocol +
 										'//' +
 										$page.url.host +
