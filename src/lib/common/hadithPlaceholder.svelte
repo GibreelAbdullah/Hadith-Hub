@@ -1,8 +1,8 @@
-<div class="card card-body p-4 m-4 flex-wrap">
+<div class="card p-4 m-4 flex-wrap">
   <div class="card">
     <!-- HADITH TEXT -->
     <div class="hadithGroup font-medium grid">
-      <div class="card card-body p-4 ">
+      <div class="card p-4 ">
         <div class="placeholder animate-pulse m-1" />
         <div class="placeholder animate-pulse m-1" />
         <div class="placeholder animate-pulse m-1" />

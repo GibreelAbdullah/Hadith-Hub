@@ -4,7 +4,7 @@
 </script>
 
 {#await dataPromise}
-  <div class="sticky top-0 card card-body p-4 m-4 !variant-glass-secondary">
+  <div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
     <div class="text-xs grid px-3">
       <ol class="breadcrumb">
         <li class="crumb"><a href="/">Home</a></li>
@@ -14,7 +14,7 @@
     </div>
   </div>
   {#each { length: 5 } as _, i}
-    <div class="card card-body p-4 m-4 ">
+    <div class="card p-4 m-4 ">
       <div class="hadithGroup font-medium p-2 grid ">
         <div>
           <div class="placeholder animate-pulse" />
@@ -35,7 +35,7 @@
     </div>
   {/each}
 {:then data}
-  <div class="sticky top-0 card card-body p-4 m-4 !variant-glass-secondary">
+  <div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
     <div class="text-xs grid px-3">
       <ol class="breadcrumb">
         <li class="crumb"><a href="/">Home</a></li>
@@ -47,7 +47,7 @@
   {#each Object.keys(data["books"]) as bookNumber}
     {#if data["books"][bookNumber]["eng-name"] != ""}
       <a href="/{bookURL}/{bookNumber}" class="card">
-        <div class="card card-body p-4 m-4 ">
+        <div class="card p-4 m-4 ">
           <div class="hadithGroup font-medium p-2 grid ">
             <div>
               {bookNumber} -
@@ -75,7 +75,7 @@
     {/if}
   {/each}
 {:catch data}
-  <div class="card card-body p-4 m-4">Error. Try clearing the cache.</div>
+  <div class="card p-4 m-4">Error. Try clearing the cache.</div>
 {/await}
 
 <style>

@@ -1,4 +1,5 @@
 <script lang="ts">
+// @ts-nocheck
 	import { page } from '$app/stores';
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
 	import { getLanguageFullName, getData, getCollectionFullName } from '$lib/common/utils';
@@ -65,7 +66,7 @@
 </svelte:head>
 
 <main>
-	<div class="card card-body m-4 flex-wrap variant-glass-primary z-[-1] relative">
+	<div class="card m-4 flex-wrap variant-glass-primary z-[-1] relative">
 		<div class="hadithGroup grid">
 			<div class="break-words leading-7 m-3">
 				{#if $page.url.searchParams.get('q') != null}
@@ -98,7 +99,7 @@
 		{#if data.length != 0}
 			<HadithContainer allHadiths={[formatData(data)]} book={$page.params['book']} />
 		{:else}
-			<div class="card card-body p-4 m-4">
+			<div class="card p-4 m-4">
 				<div class="hadithGroup font-medium p-2 grid">
 					<div class="break-words leading-7 m-3">
 						No results found for {$page.url.searchParams.get('q')}. Check if there are any spelling
@@ -108,7 +109,7 @@
 			</div>
 		{/if}
 	{:catch data}
-		<div class="card card-body p-4 m-4">
+		<div class="card p-4 m-4">
 			<div class="hadithGroup font-medium p-2 grid">
 				<div class="break-words leading-7 m-3">
 					Something went wrong. Kindly report this to our twitter account <a

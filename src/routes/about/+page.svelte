@@ -2,7 +2,7 @@
 	import SvgIcon from '$lib/common/svgIcon.svelte';
 </script>
 
-<div class="card card-body p-4 m-4 flex-wrap">
+<div class="card p-4 m-4 flex-wrap">
 	<div class="text-center fill-black dark:fill-white">
 		<SvgIcon class="!w-40" name="bismillah" />
 	</div>

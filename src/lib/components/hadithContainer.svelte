@@ -49,7 +49,7 @@
 
 {#each { length: allHadiths[0].hadiths.length } as _, i}
 	{#if allHadiths[0].hadiths[i].chapter !== undefined && allHadiths[0].hadiths[i].chapter.id && (singleHadithView || allHadiths[0].hadiths[i].chapter['isFirstHadith'])}
-		<div class="card card-body m-4 flex-wrap variant-glass-primary z-[-1] relative">
+		<div class="card m-4 flex-wrap variant-glass-primary z-[-1] relative">
 			<div class="hadithGroup grid">
 				<div class="break-words leading-7 m-3">
 					Chapter {allHadiths[0].hadiths[i].chapter['id']} - {allHadiths[0].hadiths[i].chapter[
@@ -66,7 +66,7 @@
 	{/if}
 	<div class="p-4">
 		<div id="hadithGroup{i}" class="card p-4">
-			<div class="card card-body flex-wrap">
+			<div class="card flex-wrap">
 				<!-- HADITH TEXT -->
 				<div class="hadithGroup font-medium grid">
 					{#each { length: languageCount } as _, j}

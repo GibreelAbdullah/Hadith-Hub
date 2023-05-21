@@ -87,7 +87,7 @@
 <main>
 	{#if allHadithPromises.length != 0}
 		{#await allResolvingErrors(allHadithPromises)}
-			<div class="sticky top-0 card card-body p-4 m-4 !variant-glass-secondary">
+			<div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
 				<div class="hadithGroup text-xs grid px-5">
 					<ol class="breadcrumb">
 						<li class="crumb"><a href="/">Home</a></li>
@@ -96,7 +96,7 @@
 					</ol>
 				</div>
 			</div>
-			<div class="card card-body m-4 flex-wrap !bg-transparent">
+			<div class="card m-4 flex-wrap !bg-transparent">
 				<div class="hadithGroup grid">
 					<div class="break-words leading-7 m-3">
 						<div class="placeholder animate-pulse" />
@@ -109,7 +109,7 @@
 			<HadithPlaceholder />
 		{:then data}
 			{#if i != -1}
-				<div class="sticky top-0 card card-body p-4 m-4 !variant-glass-secondary">
+				<div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
 					<div class="hadithGroup text-xs grid px-5">
 						<ol class="breadcrumb">
 							<li class="crumb"><a href="/">Home</a></li>
@@ -128,7 +128,7 @@
 				</div>
 			{/if}
 			{#if unavailableBooks.length != 0}
-				<div class="card card-body p-4 m-4 !bg-red-500">
+				<div class="card p-4 m-4 !bg-red-500">
 					<div class="hadithGroup font-medium p-2 grid text-center ">
 						{#await getLanguageFullName(unavailableBooks)}
 							<div class="placeholder w-40 m-auto animate-pulse my-1" />
@@ -142,14 +142,14 @@
 				<HadithContainer allHadiths={data.filter((n) => n)} book={$page.params.collection} />
 			{/if}
 		{:catch data}
-			<div class="card card-body p-4 m-4">
+			<div class="card p-4 m-4">
 				<div class="hadithGroup font-medium p-2 grid">
 					<div class="break-words leading-7 m-3">Error. Try clearing the cache.</div>
 				</div>
 			</div>
 		{/await}
 	{:else}
-		<div class="card card-body p-4 m-4">
+		<div class="card p-4 m-4">
 			<div class="hadithGroup font-medium p-2 grid">
 				<div class="break-words leading-7 m-3">Select at least 1 language.</div>
 			</div>
