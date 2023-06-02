@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import * as htmlToImage from 'html-to-image';
-	import { clipboard } from '@skeletonlabs/skeleton';
+	import { clipboard, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import SvgIcon from '../common/svgIcon.svelte';
 	import download from 'downloadjs';
+	import GradingPopup from '$lib/common/gradingPopup.svelte';
 	export let book = '';
 	export let allHadiths: any[] = [];
 	export let singleHadithView: boolean = false;
@@ -12,9 +13,9 @@
 	let gradingColorClass = '';
 	const clickHandler = (i: number) => {
 		let permalinkButton = document.getElementById('permalink' + i)!;
-		permalinkButton.innerHTML = 'Copied'
+		permalinkButton.innerHTML = 'Copied';
 		setTimeout(() => {
-			permalinkButton.innerHTML = 'Copy Link'
+			permalinkButton.innerHTML = 'Copy Link';
 		}, 2000);
 	};
 	const gradingColor = (grade: string) => {
@@ -45,6 +46,24 @@
 			buttonGroup.setAttribute('class', 'flex');
 			watermark.setAttribute('class', 'hidden');
 		});
+	}
+
+	const popupFeatured: PopupSettings = {
+		// Represents the type of event that opens/closed the popup
+		event: 'click',
+		// Matches the data-popup value on your popup element
+		target: 'popupFeatured',
+		// Defines which side of your trigger the popup will appear
+		placement: 'bottom'
+	};
+
+	let loadPopupFor: string = '';
+
+	function func(event: { state: boolean }, name: string): void {
+		// isPopupOpen = event.state;
+		if (event.state) {
+			loadPopupFor = name;
+		}
 	}
 </script>
 
@@ -86,14 +105,23 @@
 				<!-- GRADINGS -->
 				<div class="hadithGroup font-medium p-2 grid">
 					{#each allHadiths[0].hadiths[i].grades as grade}
-						<div
-							class="flex leading-7 pt-1 rounded-full text-center bg-red m-2 {gradingColor(
-								grade['grade']
-							)}"
+						<button
+							class="btn m-1 {gradingColor(grade['grade'])}"
+							use:popup={{
+								state: (event) => func(event, grade['name']),
+								event: 'click',
+								target: 'popupFeatured' + grade['name']
+							}}
 						>
-							<div class="m-auto">
-								{@html grade['name'] + ' : ' + grade['grade']}
-							</div>
+							{@html grade['name'] + ' : ' + grade['grade']}
+						</button>
+						<div
+							class="card p-4 w-72 shadow-xl variant-filled-secondary z-[1]"
+							data-popup="popupFeatured{grade['name']}"
+						>
+							{#if loadPopupFor != ''}
+								<GradingPopup muhaddithName={loadPopupFor} />
+							{/if}
 						</div>
 					{/each}
 				</div>
@@ -134,9 +162,10 @@
 								<SvgIcon name="download" fill="fill-black" /> Screenshot
 							</button>
 							<div>
-								<button id="permalink{i}"
+								<button
+									id="permalink{i}"
 									class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 h-10 rounded-r-none"
-									on:click={() => clickHandler(i)} 
+									on:click={() => clickHandler(i)}
 									use:clipboard={$page.url.protocol +
 										'//' +
 										$page.url.host +
@@ -172,7 +201,6 @@
 							<SvgIcon class="!w-10" name="icon" />
 							<SvgIcon class="!w-40" name="hadithHub" />
 							<SvgIcon class="!w-20 !fill-error-500 pt-1" name="com" />
-
 						</div>
 					</div>
 				</div>
@@ -183,7 +211,7 @@
 
 <style>
 	.hadithGroup {
-		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
 		word-wrap: normal;
 	}
 	.metaGroup {

@@ -5,11 +5,9 @@
   import { getData } from '$lib/common/utils'
 
   let title = `${$page.params.collection} | HadithHub`;
-
-  let collectionPromise: Promise<any>;
-
   let collections = `${urlPrefix}/updates/sections/${$page.params.collection}.json`;
-  collectionPromise = getData(collections);
+  let collectionPromise : Promise<any> = getData(collections);
+  
 </script>
 
 <svelte:head>

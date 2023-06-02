@@ -121,7 +121,7 @@
 						class="btn hover:variant-soft-primary"
 						use:popup={{ event: 'click', target: 'theme' }}
 					>
-						<SvgIcon name="theme" fill="fill-white" />
+						<SvgIcon name="theme" />
 					</button>
 					<!-- popup -->
 					<div class="card p-4 w-60 shadow-xl" data-popup="theme">

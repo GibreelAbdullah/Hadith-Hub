@@ -4,11 +4,11 @@
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
 	import { getLanguageFullName, getData, getCollectionFullName } from '$lib/common/utils';
 	import HadithPlaceholder from '$lib/common/hadithPlaceholder.svelte';
+	import { searchUrl } from '$lib/common/constants';
 
 	const title = `Search for "${$page.url.searchParams.get('q')}" | HadithHub`;
 
-	$: url = 'https://hadith-search-api-gibreelabdullah.koyeb.app/search' + $page.url.search;
-	// const url = "http://0.0.0.0:5000/search" + $page.url.search;
+	$: url = searchUrl + $page.url.search;
 	$: allHadithPromises = getData(url);
 
 	const formatData = (data: [string[]]) => {
