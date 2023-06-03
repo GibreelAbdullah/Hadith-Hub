@@ -56,7 +56,7 @@
 		<SvgIcon class="!w-10" name="icon" />
 		<SvgIcon class="!w-40" name="hadithHub" />
 	</span>
-	<AccordionItem>
+	<AccordionItem open class="pointer-events-none" regionCaret="hidden">
 		<svelte:fragment slot="summary">
 			<div class="text-primary-500 font-bold uppercase pt-4">Languages</div>
 			<div class="text-sm">
@@ -69,7 +69,7 @@
 				multiple
 				active="variant-filled-primary"
 				hover="hover:variant-soft-primary"
-				class="p-4"
+				class="p-4 pointer-events-auto"
 			>
 				{#each Object.keys(data) as languageObject}
 					<ListBoxItem
