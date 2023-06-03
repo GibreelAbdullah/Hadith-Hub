@@ -2,7 +2,6 @@
 	import { page } from '$app/stores';
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
 	import { selectedLanguagesStore } from '$lib/common/sideBarContents.svelte';
-	import { browser } from '$app/environment';
 	import { urlPrefix } from '$lib/common/constants';
 	import { getLanguageFullName, getData } from '$lib/common/utils';
 	import HadithPlaceholder from '$lib/common/hadithPlaceholder.svelte';
@@ -43,9 +42,6 @@
 	$: {
 		i = 0;
 		allHadithPromises = [];
-		if (browser) {
-			window.localStorage.setItem('storedLanguagesList', $selectedLanguagesStore.toString());
-		}
 		for (const language in $selectedLanguagesStore) {
 			const url = `${urlPrefix}/editions/${$selectedLanguagesStore[language]}-${$page.params.collection}/sections/${$page.params.bookNumber}.min.json`;
 			const hadithPromise = getData(url);
@@ -102,7 +98,7 @@
 						<div class="placeholder animate-pulse" />
 					</div>
 					<div class="break-words leading-7 m-3 text-right justify-end">
-						<div class="placeholder animate-pulse " />
+						<div class="placeholder animate-pulse" />
 					</div>
 				</div>
 			</div>
@@ -129,7 +125,7 @@
 			{/if}
 			{#if unavailableBooks.length != 0}
 				<div class="card p-4 m-4 !bg-red-500">
-					<div class="hadithGroup font-medium p-2 grid text-center ">
+					<div class="hadithGroup font-medium p-2 grid text-center">
 						{#await getLanguageFullName(unavailableBooks)}
 							<div class="placeholder w-40 m-auto animate-pulse my-1" />
 						{:then bookNames}

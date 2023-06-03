@@ -5,14 +5,6 @@
 	import SvgIcon from './svgIcon.svelte';
 	import { languagePromise } from './utils';
 
-	// const getData = async (url: string) => {
-	// 	return await fetch(url).then((response) => {
-	// 		return response.json();
-	// 	});
-	// };
-
-
-
 	const storedLanguagesList = browser
 		? window.localStorage.getItem('storedLanguagesList') ?? 'ara,eng'
 		: 'ara,eng';
@@ -41,6 +33,9 @@
 				break;
 			default:
 				selectedLanguages = selectedLanguagesShortName.length + ' languages selected';
+		}
+		if (browser) {
+			window.localStorage.setItem('storedLanguagesList', selectedLanguagesShortName.toString());
 		}
 		return selectedLanguages;
 	}
