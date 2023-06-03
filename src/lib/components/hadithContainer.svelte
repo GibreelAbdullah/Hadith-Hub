@@ -56,13 +56,21 @@
 		// Defines which side of your trigger the popup will appear
 		placement: 'bottom'
 	};
-
-	let loadPopupFor: string = '';
-
-	function func(event: { state: boolean }, name: string): void {
+	let loadPopupForMuhaddith: string;
+	let loadPopupForIndex: number;
+	$: {
+		loadPopupForMuhaddith = '';
+		loadPopupForIndex = -1;
+	}
+	function func(
+		event: { state: boolean },
+		name: string,
+		hadithIndex: number
+	): void {
 		// isPopupOpen = event.state;
 		if (event.state) {
-			loadPopupFor = name;
+			loadPopupForMuhaddith = name;
+			loadPopupForIndex = hadithIndex;
 		}
 	}
 </script>
@@ -91,6 +99,7 @@
 				<div class="hadithGroup font-medium grid">
 					{#each { length: languageCount } as _, j}
 						<div class="break-words leading-7 m-3 pb-4">
+							<!-- j iterates through selected languages -->
 							{#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == ''}
 								<center
 									><code class="!text-white !bg-red-500">Hadith translation not found</code></center
@@ -104,11 +113,12 @@
 				<hr />
 				<!-- GRADINGS -->
 				<div class="hadithGroup font-medium p-2 grid">
+					<!-- [0] because if there are multiple languages selected we only take from the first one, since gradings don't change for different languages -->
 					{#each allHadiths[0].hadiths[i].grades as grade}
 						<button
 							class="btn m-1 {gradingColor(grade['grade'])}"
 							use:popup={{
-								state: (event) => func(event, grade['name']),
+								state: (event) => func(event, grade['name'], i),
 								event: 'click',
 								target: 'popupFeatured' + grade['name']
 							}}
@@ -119,8 +129,9 @@
 							class="card p-4 w-72 shadow-xl variant-filled-secondary z-[1]"
 							data-popup="popupFeatured{grade['name']}"
 						>
-							{#if loadPopupFor != ''}
-								<GradingPopup muhaddithName={loadPopupFor} />
+							<!-- Why is it not working for  loadPopupForIndex = i -->
+							{#if loadPopupForMuhaddith == grade['name'] && loadPopupForIndex >= i}
+								<GradingPopup muhaddithName={loadPopupForMuhaddith} collection={allHadiths[0].hadiths[i].shortName ?? book}/>
 							{/if}
 						</div>
 					{/each}
@@ -144,7 +155,7 @@
 					<div class="text-[0px] whitespace-nowrap flex justify-evenly md:justify-end relative">
 						<div id="buttonGroup{i}" class="flex">
 							<button
-								class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 mr-4 px-4 h-10"
+								class="btn bg-primary-500 btn-sm text-black mt-6 mr-4 px-4 h-10"
 								on:click={() =>
 									capture(
 										i,
@@ -164,7 +175,7 @@
 							<div>
 								<button
 									id="permalink{i}"
-									class="btn bg-primary-500 btn-sm text-black mt-6 pt-3 h-10 rounded-r-none"
+									class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
 									on:click={() => clickHandler(i)}
 									use:clipboard={$page.url.protocol +
 										'//' +
@@ -179,7 +190,7 @@
 									>{permalinkText}
 								</button>
 								<a
-									class="btn bg-primary-500 btn-sm mt-6 pt-3 h-10 rounded-l-none align-top border-l-2 border-primary-900"
+									class="btn bg-primary-500 btn-sm mt-6 h-10 rounded-l-none align-top border-l-2 border-primary-900"
 									href={$page.url.protocol +
 										'//' +
 										$page.url.host +

@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let muhaddithName: string;
+	export let collection: string;
 
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import { muhaddithUrl, urlPrefix } from './constants';
@@ -31,6 +32,7 @@
 			<span class="px-2 my-auto">{muhaddithName}</span>
 		</div>
 		<p class="text-xs">{@html data.dates}</p>
+		<p class="text-xs">{@html "Grading Source : " + data[collection]}</p>
 		<p>{@html data.bio}</p>
 	</div>
 	<div class="arrow variant-filled-secondary" />
