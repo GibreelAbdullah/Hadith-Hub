@@ -51,33 +51,28 @@
 		<SvgIcon class="!w-10" name="icon" />
 		<SvgIcon class="!w-40" name="hadithHub" />
 	</span>
-	<AccordionItem open class="pointer-events-none" regionCaret="hidden">
-		<svelte:fragment slot="summary">
-			<div class="text-primary-500 font-bold uppercase pt-4">Languages</div>
-			<div class="text-sm">
-				{getSelectedLanguages(data, $selectedLanguagesStore)}
-			</div>
-		</svelte:fragment>
 
-		<svelte:fragment slot="content">
-			<ListBox
-				multiple
-				active="variant-filled-primary"
-				hover="hover:variant-soft-primary"
-				class="p-4 pointer-events-auto"
+	<div class="text-primary-500 font-bold uppercase pt-4">Languages</div>
+	<div class="text-sm">
+		{getSelectedLanguages(data, $selectedLanguagesStore)}
+	</div>
+
+	<ListBox
+		multiple
+		active="variant-filled-primary"
+		hover="hover:variant-soft-primary"
+		class="p-4 pointer-events-auto"
+	>
+		{#each Object.keys(data) as languageObject}
+			<ListBoxItem
+				bind:group={$selectedLanguagesStore}
+				name={data[languageObject]['Prefix']}
+				value={data[languageObject]['Prefix']}
 			>
-				{#each Object.keys(data) as languageObject}
-					<ListBoxItem
-						bind:group={$selectedLanguagesStore}
-						name={data[languageObject]['Prefix']}
-						value={data[languageObject]['Prefix']}
-					>
-						<div class="max-h-4 pb-5">{data[languageObject]['Name']}</div>
-					</ListBoxItem>
-				{/each}
-			</ListBox>
-		</svelte:fragment>
-	</AccordionItem>
+				<div class="max-h-4 pb-5">{data[languageObject]['Name']}</div>
+			</ListBoxItem>
+		{/each}
+	</ListBox>
 {:catch data}
 	Error...Could Not Load Data
 {/await}
