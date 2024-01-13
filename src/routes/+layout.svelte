@@ -1,27 +1,30 @@
 <script lang="ts">
-	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
-	import '@skeletonlabs/skeleton/styles/all.css';
 	import '../app.postcss';
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import {
+		initializeStores,
 		AppShell,
 		AppBar,
 		Drawer,
 		type DrawerSettings,
 		type ModalSettings,
 		type ModalComponent,
-		drawerStore,
+		getDrawerStore,
 		localStorageStore,
 		LightSwitch,
 		storePopup,
 		popup,
 		Modal,
-		modalStore
+		getModalStore
 	} from '@skeletonlabs/skeleton';
+
+	initializeStores();
+	const drawerStore = getDrawerStore();
+	const modalStore = getModalStore();
+	
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 	import Footer from '$lib/common/footer.svelte';
-	import type { LayoutServerData } from './$types';
 	import { browser } from '$app/environment';
 	import type { Writable } from 'svelte/store';
 	import type { SubmitFunction } from '@sveltejs/kit';
@@ -29,8 +32,6 @@
 	import SvgIcon from '$lib/common/svgIcon.svelte';
 	import SearchModal from '$lib/components/searchModal.svelte';
 	import SideBarContents from '$lib/common/sideBarContents.svelte';
-
-	export let data: LayoutServerData;
 
 	export const storeTheme: Writable<string> = localStorageStore('storeTheme', 'skeleton');
 
@@ -53,10 +54,9 @@
 		{ type: 'hamlindigo', name: 'Hamlindigo', icon: '👔' },
 		{ type: 'gold-nouveau', name: 'Gold Nouveau', icon: '💫' },
 		{ type: 'crimson', name: 'Crimson', icon: '⭕' },
-		{ type: 'seasonal', name: 'Seasonal', icon: '🎆' }
+		{ type: 'wintry', name: 'Wintry', icon: '🌨️' }
 	];
-	$: ({ currentTheme } = data);
-
+	
 	storeTheme.subscribe(setBodyThemeAttribute);
 	function setBodyThemeAttribute(): void {
 		if (!browser) return;
@@ -67,6 +67,7 @@
 		const settings: DrawerSettings = { id: 'main' };
 		drawerStore.open(settings);
 	}
+
 	const modalSearch: ModalComponent = {
 		// Pass a reference to your custom component
 		ref: SearchModal,
@@ -84,11 +85,6 @@
 		modalStore.trigger(d);
 	}
 </script>
-
-<svelte:head>
-	<!-- Select Preset Theme CSS DO NOT REMOVE ESCAPES-->
-	{@html `\<style\>${currentTheme}}\</style\>`}
-</svelte:head>
 
 <Drawer open={drawerOpen} position="left">
 	<div class="px-4 pt-8"><SideBarContents /></div>

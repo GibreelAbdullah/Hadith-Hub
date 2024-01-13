@@ -1,5 +1,4 @@
 <script lang="ts">
-  import "@skeletonlabs/skeleton/styles/all.css";
   import CollectionContainer from "$lib/components/collectionContainer.svelte";
   import { page } from "$app/stores";
 	import { collectionPromise } from "$lib/common/utils";

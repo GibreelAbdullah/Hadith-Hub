@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { modalStore } from '@skeletonlabs/skeleton';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { page } from '$app/stores';
 	import LanguageFilter from '$lib/searchModalComponents/languageFilter.svelte';
 	import { selectedLanguagesSearchStore } from '$lib/searchModalComponents/languageFilter.svelte';
 	import CollectionFilter, {
 		selectedcollectionsSearchStore
 	} from '$lib/searchModalComponents/collectionFilter.svelte';
+	
+	const modalStore = getModalStore();
 
 	const cHeader = 'bg-surface-300-600-token flex items-center';
 	// const cSearchInput = '';
