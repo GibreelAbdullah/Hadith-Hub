@@ -16,13 +16,13 @@
 
 	let allHadithPromises: { language: string; promise: Promise<any> }[] = [];
 
-	let unavailableBooks: string[] = [];
+	let unavailableLanguages: string[] = [];
 
 	///If the promises are rejected, need to move forward ignoring those promises.
 	///This function will make the value of all rejected promises = null and it
 	///will be removed in the next step
 	function allResolvingErrors(allHadithPromises: { language: string; promise: Promise<any> }[]) {
-		unavailableBooks = [];
+		unavailableLanguages = [];
 		return Promise.all(
 			allHadithPromises.map(async function (p, index) {
 				return p.promise.catch(function nullifyErroredPromises(error) {
@@ -32,7 +32,7 @@
 							i = -1; //i=-1 when no selected language has data
 						}
 					}
-					unavailableBooks.push(p.language);
+					unavailableLanguages.push(p.language);
 					return null;
 				});
 			})
@@ -123,13 +123,13 @@
 					</div>
 				</div>
 			{/if}
-			{#if unavailableBooks.length != 0}
+			{#if unavailableLanguages.length != 0}
 				<div class="card p-4 m-4 !bg-red-500">
 					<div class="hadithGroup font-medium p-2 grid text-center">
-						{#await getLanguageFullName(unavailableBooks)}
+						{#await getLanguageFullName(unavailableLanguages)}
 							<div class="placeholder w-40 m-auto animate-pulse my-1" />
-						{:then bookNames}
-							This book is not available in {bookNames}
+						{:then languages}
+							This book is not available in {languages}
 						{/await}
 					</div>
 				</div>
