@@ -3,3 +3,11 @@ docker build -t gibreelabdullah/hadith-hub:latest . &&
 docker push gibreelabdullah/hadith-hub:latest &&
 
 gcloud beta run deploy hadith-hub --project hadith-hub --image gibreelabdullah/hadith-hub:latest --region us-central1 --platform managed --allow-unauthenticated --quiet
+
+
+
+TO RUN 
+
+docker build -t gibreelabdullah/hadith-hub:latest . &&
+
+docker run --init --publish 3000:3000 gibreelabdullah/hadith-hub:latest
