@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import { AccordionItem, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
+	import { Accordion, AccordionItem, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import { writable, type Writable } from 'svelte/store';
 	import { collectionPromise } from '$lib/common/utils';
 
@@ -32,6 +32,8 @@
 		<div class="placeholder animate-pulse w-32" />
 	</div>
 {:then data}
+<Accordion>
+
 	<AccordionItem>
 		<svelte:fragment slot="summary">
 			<div class="text-primary-500 font-bold uppercase">collections</div>
@@ -59,6 +61,7 @@
 			</ListBox>
 		</svelte:fragment>
 	</AccordionItem>
+</Accordion>
 {:catch data}
 	Error...Could Not Load Data
 {/await}

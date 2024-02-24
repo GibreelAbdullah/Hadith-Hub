@@ -14,7 +14,7 @@
 
 	// Elements
 	let elemDocSearch: HTMLElement;
-	$selectedLanguagesSearchStore = $page.url.searchParams.get('lang')?.split(',') ??
+	$selectedLanguagesSearchStore = $page.url.searchParams.get('language_code')?.split(',') ??
 		window.localStorage.getItem('storedLanguagesList')?.split(',') ?? ['ara', 'eng'];
 
 	$selectedcollectionsSearchStore = $page.url.searchParams.get('collection')?.split(',') ?? [];
@@ -45,16 +45,16 @@
 				<input
 					type="search"
 					placeholder="Search..."
-					value={$page.url.searchParams.get('q')}
+					value={$page.url.searchParams.get('query')}
 					class="input !w-[calc(100%-4rem)] pb-1"
-					name="q"
+					name="query"
 					on:keydown={onInputKeyDown}
 				/>
 				<span class="btn bg-primary-500 h-9 pb-4 float-right cursor-pointer">
-					<input type="submit" class="text-4xl h-10 cursor-pointer" on:click={onSubmit} value="⌕" />
+					<input type="submit" class="text-4xl h-10 cursor-pointer" on:click|once={onSubmit} value="⌕" />
 				</span>
 			</div>
-			<input type="hidden" name="lang" value={$selectedLanguagesSearchStore} />
+			<input type="hidden" name="language_code" value={$selectedLanguagesSearchStore} />
 			<input type="hidden" name="collection" value={$selectedcollectionsSearchStore} />
 		</form>
 	</header>

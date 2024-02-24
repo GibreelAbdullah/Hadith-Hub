@@ -1,5 +1,5 @@
 <script lang="ts">
-// @ts-nocheck
+	// @ts-nocheck
 	import { page } from '$app/stores';
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
 	import { getLanguageFullName, getData, getCollectionFullName } from '$lib/common/utils';
@@ -69,12 +69,12 @@
 	<div class="card m-4 flex-wrap variant-glass-primary z-[-1] relative">
 		<div class="hadithGroup grid">
 			<div class="break-words leading-7 m-3">
-				{#if $page.url.searchParams.get('q') != null}
-					<span class="chip variant-ringed">Search For : {$page.url.searchParams.get('q')}</span>
+				{#if $page.url.searchParams.get('query') != null}
+					<span class="chip variant-ringed">Search For : {$page.url.searchParams.get('query')}</span>
 				{/if}
-				{#if $page.url.searchParams.get('lang') != null && $page.url.searchParams.get('lang') != ''}
+				{#if $page.url.searchParams.get('language_code') != null && $page.url.searchParams.get('language_code') != ''}
 					<span class="chip variant-ringed">
-						{#await getLanguageFullName($page.url.searchParams.get('lang').split(','))}
+						{#await getLanguageFullName($page.url.searchParams.get('language_code').split(','))}
 							<div class="placeholder w-40 !h-2.5 m-auto animate-pulse my-1" />
 						{:then languagesNames}
 							Languages : {languagesNames}
@@ -108,7 +108,7 @@
 				</div>
 			</div>
 		{/if}
-	{:catch data}
+	{:catch error}
 		<div class="card p-4 m-4">
 			<div class="hadithGroup font-medium p-2 grid">
 				<div class="break-words leading-7 m-3">
@@ -116,6 +116,9 @@
 						href="https://twitter.com/TheHadithHub"
 						target="blank">TheHadithHub</a
 					>
+				</div>
+				<div class="break-words leading-7 m-3">
+					{error}
 				</div>
 			</div>
 		</div>

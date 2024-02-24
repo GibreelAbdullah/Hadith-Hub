@@ -3,6 +3,7 @@ export const urlPrefix = "https://raw.githubusercontent.com/GibreelAbdullah/hadi
 // Run command 'npx serve --cors' in hadith-api folder to run a local webserver
 // export const urlPrefix = "http://localhost:3000/";
 
+// export const searchUrl = 'https://hadithmlsearch2.fly.dev/search/';
 export const searchUrl = 'https://hadith-search-api-gibreelabdullah.koyeb.app/search';
 // export const searchUrl = 'http://0.0.0.0:5000/search';
 
