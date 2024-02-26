@@ -16,62 +16,80 @@
 		unavailableLanguagesShortName = unavailableLanguagesShortName;
 		return getLanguageFullName(unavailableLanguagesShortName);
 	}
-	function myFunction() {
+
+	function filterCollections() {
 		// Declare variables
-		var input, filter, collectionlist, collection, i, txtValue;
+		var input, filter, category, collectionlist, collection, i, j, txtValue, display;
 		input = <HTMLInputElement>document.getElementById('myInput');
-		filter = input.value.toUpperCase().replace(/([ً-ٰٗ])/g, '');
+		filter = input.value.toUpperCase();
 		collectionlist = document.getElementById('collectionlist');
 		if (collectionlist != null) {
-			collection = collectionlist.getElementsByTagName('a');
-
-			// Loop through all table rows, and hide those who don't match the search query
-			for (i = 0; i < collection.length; i++) {
-				if (collection[i]) {
-					txtValue = collection[i].textContent || collection[i].innerText;
-					if (txtValue.replace(/([ً-ٰٗ])/g, '').toUpperCase().indexOf(filter) > -1) {
-						collection[i].style.display = '';
-					} else {
-						collection[i].style.display = 'none';
+			category = collectionlist.querySelectorAll<HTMLElement>('.category');
+			for (i = 0; i < category.length; i++) {
+				display = 'None';
+				collection = category[i].getElementsByTagName('a');
+				for (j = 0; j < collection.length; j++) {
+					if (collection[j]) {
+						txtValue = collection[j].textContent || collection[j].innerText;
+						if (txtValue.toUpperCase().indexOf(filter) > -1) {
+							collection[j].style.display = '';
+							display = '';
+						} else {
+							collection[j].style.display = 'none';
+						}
 					}
 				}
+				category[i].style.display = display
 			}
 		}
 	}
 </script>
 
-<input
-	class="input max-w-xl mx-auto mt-4 block"
-	type="text"
-	id="myInput"
-	on:keyup={myFunction}
-	placeholder="Filter Collections..."
-/>
-<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4" id="collectionlist">
-	{#await dataPromise}
+{#await dataPromise}
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
 		{#each { length: 7 } as _, i}
 			<div class="card p-4 h-20">
 				<div class="placeholder w-40 m-auto animate-pulse my-1" />
 				<div class="placeholder w-40 m-auto animate-pulse my-1" />
 			</div>
 		{/each}
-	{:then data}
-		{#each data['collections'] as collection}
-			<a class="card p-4 text-center" href="/{collection['name']}">
-				{collection['eng-name']}
-				<br />
-				{collection['ara-name']}
-				<br />
-				{#await getUnavailableCollections(collection['availableLanguages'], $selectedLanguagesStore)}
-					<div class="placeholder w-40 m-auto animate-pulse" />
-				{:then collectionNames}
-					{#if collectionNames.length != 0}
-						<code class="!text-white !bg-red-500">Not available in {collectionNames}</code>
-					{/if}
-				{/await}
-			</a>
+	</div>
+{:then data}
+	<input
+		class="input max-w-max mx-auto mt-4 block"
+		type="text"
+		id="myInput"
+		on:keyup={filterCollections}
+		placeholder="Filter Collections..."
+	/>
+	<div id="collectionlist">
+		{#each data['collections'] as category}
+			<div class="category ">
+				<div class="m-4 mb-0 h5">
+					{category['eng-name']} | {category['ara-name']}
+				</div>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
+					{#each category['books'] as collection}
+						<a class="card p-4 text-center" href="/{collection['name']}">
+							{collection['eng-name']}
+							<br />
+							{collection['ara-name']}
+							<br />
+							{#await getUnavailableCollections(collection['availableLanguages'], $selectedLanguagesStore)}
+								<div class="placeholder w-40 m-auto animate-pulse" />
+							{:then collectionNames}
+								{#if collectionNames.length != 0}
+									<code class="!text-error-500">Not available in {collectionNames}</code>
+								{/if}
+							{/await}
+						</a>
+					{/each}
+				</div>
+			</div>
 		{/each}
-	{:catch data}
+	</div>
+{:catch error}
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
 		<div class="card p-4 hvr-reveal">Error...Could Not Load Data</div>
-	{/await}
-</div>
+	</div>
+{/await}
