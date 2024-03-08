@@ -84,9 +84,9 @@
 	{#if allHadithPromises.length != 0}
 		{#await allResolvingErrors(allHadithPromises)}
 			<div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
-				<div class="hadithGroup text-xs grid px-5">
+				<div class="hadithGroup grid px-5">
 					<ol class="breadcrumb">
-						<li class="crumb"><a href="/">Home</a></li>
+						<li class="crumb anchor"><a href="/">Home</a></li>
 						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 						<div class="placeholder w-52 m-auto animate-pulse" />
 					</ol>
@@ -106,18 +106,16 @@
 		{:then data}
 			{#if i != -1}
 				<div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
-					<div class="hadithGroup text-xs grid px-5">
+					<div class="hadithGroup grid px-5">
 						<ol class="breadcrumb">
-							<li class="crumb"><a href="/">Home</a></li>
+							<li class="crumb anchor"><a href="/">Home</a></li>
 							<li class="crumb-separator" aria-hidden>&rsaquo;</li>
-							<li class="crumb">
-								<a href="/{$page.params.collection}">{data.filter((n) => n)[0].metadata.name}</a>
+							<li class="crumb anchor">
+								<a href="/{$page.params.collection}">{data[0].metadata.name}</a>
 							</li>
 							<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 							<li class="crumb">
-								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book][
-									'eng-name'
-								]}
+								{data[0].metadata.section[data[i].hadiths[0].reference.book]}
 							</li>
 						</ol>
 					</div>
@@ -135,7 +133,7 @@
 				</div>
 			{/if}
 			{#if i != -1}
-				<HadithContainer allHadiths={data.filter((n) => n)} book={$page.params.collection} />
+				<HadithContainer allHadiths={data} book={$page.params.collection} />
 			{/if}
 		{:catch data}
 			<div class="card p-4 m-4">

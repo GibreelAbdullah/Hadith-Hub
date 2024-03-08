@@ -83,9 +83,9 @@
 {#if hadithGroupPromise.length != 0}
 	{#await allResolvingErrors(hadithGroupPromise)}
 		<div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
-			<div class="hadithGroup text-xs grid px-5">
+			<div class="hadithGroupgrid px-5">
 				<ol class="breadcrumb">
-					<li class="crumb"><a href="/">Home</a></li>
+					<li class="crumb anchor"><a href="/">Home</a></li>
 					<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 					<div class="placeholder w-52 m-auto animate-pulse" />
 				</ol>
@@ -105,27 +105,22 @@
 	{:then data}
 		{#if i != -1}
 			<div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
-				<div class="hadithGroup text-xs grid px-5 pt-1">
+				<div class="hadithGroup grid px-5 pt-1">
 					<ol class="breadcrumb">
-						<li class="crumb"><a href="/">Home</a></li>
+						<li class="crumb anchor"><a href="/">Home</a></li>
 						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
-						<li class="crumb">
-							<a href="/{$page.params.collection}">{data.filter((n) => n)[0].metadata.name}</a>
+						<li class="crumb anchor">
+							<a href="/{$page.params.collection}">{data[0].metadata.name}</a>
+						</li>
+						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
+						<li class="crumb anchor">
+							<a href="/{$page.params.collection}/{data[0].hadiths[0].reference.book}">
+								{data[0].metadata.section[data[i].hadiths[0].reference.book]}
+							</a>
 						</li>
 						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 						<li class="crumb">
-							<a
-								href="/{$page.params.collection}/{data.filter((n) => n)[0].hadiths[0].reference
-									.book}"
-							>
-								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book][
-									'eng-name'
-								]}</a
-							>
-						</li>
-						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
-						<li class="crumb">
-							Hadith {data.filter((n) => n)[0].hadiths[0].reference.hadith}
+							Hadith {data[0].hadiths[0].reference.hadith}
 						</li>
 					</ol>
 				</div>
@@ -143,11 +138,7 @@
 			</div>
 		{/if}
 		{#if i != -1}
-			<HadithContainer
-				allHadiths={data.filter((n) => n)}
-				book={$page.params.collection}
-				singleHadithView={true}
-			/>
+			<HadithContainer allHadiths={data} book={$page.params.collection} singleHadithView={true} />
 		{/if}
 	{:catch _data}
 		<div class="card p-4 m-4">

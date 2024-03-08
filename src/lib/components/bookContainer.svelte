@@ -5,9 +5,9 @@
 
 {#await dataPromise}
   <div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
-    <div class="text-xs grid px-3">
+    <div class="grid px-3">
       <ol class="breadcrumb">
-        <li class="crumb"><a href="/">Home</a></li>
+        <li class="crumb anchor"><a href="/">Home</a></li>
         <li class="crumb-separator" aria-hidden>&rsaquo;</li>
         <div class="placeholder w-52 m-auto animate-pulse" />
       </ol>
@@ -36,9 +36,9 @@
   {/each}
 {:then data}
   <div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
-    <div class="text-xs grid px-3">
+    <div class="grid px-3">
       <ol class="breadcrumb">
-        <li class="crumb"><a href="/">Home</a></li>
+        <li class="crumb anchor"><a href="/">Home</a></li>
         <li class="crumb-separator" aria-hidden>&rsaquo;</li>
         <li class="crumb">{data["name"]}</li>
       </ol>
