@@ -110,17 +110,17 @@
 						<li class="crumb anchor"><a href="/">Home</a></li>
 						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 						<li class="crumb anchor">
-							<a href="/{$page.params.collection}">{data[0].metadata.name}</a>
+							<a href="/{$page.params.collection}">{data.filter((n) => n)[0].metadata.name}</a>
 						</li>
 						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 						<li class="crumb anchor">
-							<a href="/{$page.params.collection}/{data[0].hadiths[0].reference.book}">
-								{data[0].metadata.section[data[i].hadiths[0].reference.book]}
+							<a href="/{$page.params.collection}/{data.filter((n) => n)[0].hadiths[0].reference.book}">
+								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]}
 							</a>
 						</li>
 						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 						<li class="crumb">
-							Hadith {data[0].hadiths[0].reference.hadith}
+							Hadith {data.filter((n) => n)[0].hadiths[0].reference.hadith}
 						</li>
 					</ol>
 				</div>

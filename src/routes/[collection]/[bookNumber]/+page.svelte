@@ -111,11 +111,11 @@
 							<li class="crumb anchor"><a href="/">Home</a></li>
 							<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 							<li class="crumb anchor">
-								<a href="/{$page.params.collection}">{data[0].metadata.name}</a>
+								<a href="/{$page.params.collection}">{data.filter((n) => n)[0].metadata.name}</a>
 							</li>
 							<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 							<li class="crumb">
-								{data[0].metadata.section[data[i].hadiths[0].reference.book]}
+								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]}
 							</li>
 						</ol>
 					</div>
@@ -133,7 +133,8 @@
 				</div>
 			{/if}
 			{#if i != -1}
-				<HadithContainer allHadiths={data} book={$page.params.collection} />
+				<!-- Filter is to remove null values. -->
+				<HadithContainer allHadiths={data.filter((n) => n)} book={$page.params.collection} />
 			{/if}
 		{:catch data}
 			<div class="card p-4 m-4">
