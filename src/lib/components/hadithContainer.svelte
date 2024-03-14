@@ -62,11 +62,7 @@
 		loadPopupForMuhaddith = '';
 		loadPopupForIndex = -1;
 	}
-	function func(
-		event: { state: boolean },
-		name: string,
-		hadithIndex: number
-	): void {
+	function func(event: { state: boolean }, name: string, hadithIndex: number): void {
 		// isPopupOpen = event.state;
 		if (event.state) {
 			loadPopupForMuhaddith = name;
@@ -116,25 +112,30 @@
 					{/if}
 					<!-- [0] because if there are multiple languages selected we only take from the first one, since gradings don't change for different languages -->
 					{#each allHadiths[0].hadiths[i].grades as grade}
-						<button
-							class="btn m-1 {gradingColor(grade['grade'])}"
-							use:popup={{
-								state: (event) => func(event, grade['name'], i),
-								event: 'click',
-								target: 'popupFeatured' + grade['name']
-							}}
-						>
-							{@html grade['name'] + ' : ' + grade['grade']}
-						</button>
-						<div
-							class="card p-4 w-72 shadow-xl variant-filled-secondary z-[1]"
-							data-popup="popupFeatured{grade['name']}"
-						>
-							<!-- Why is it not working for  loadPopupForIndex = i -->
-							{#if loadPopupForMuhaddith == grade['name'] && loadPopupForIndex >= i}
-								<GradingPopup muhaddithName={loadPopupForMuhaddith} collection={allHadiths[0].hadiths[i].shortName ?? book}/>
-							{/if}
-						</div>
+						{#if grade['name'] != ''}
+							<button
+								class="btn m-1 {gradingColor(grade['grade'])}"
+								use:popup={{
+									state: (event) => func(event, grade['name'], i),
+									event: 'click',
+									target: 'popupFeatured' + grade['name']
+								}}
+							>
+								{@html grade['name'] + ' : ' + grade['grade']}
+							</button>
+							<div
+								class="card p-4 w-72 shadow-xl variant-filled-secondary z-[1]"
+								data-popup="popupFeatured{grade['name']}"
+							>
+								<!-- Why is it not working for  loadPopupForIndex = i -->
+								{#if loadPopupForMuhaddith == grade['name'] && loadPopupForIndex >= i}
+									<GradingPopup
+										muhaddithName={loadPopupForMuhaddith}
+										collection={allHadiths[0].hadiths[i].shortName ?? book}
+									/>
+								{/if}
+							</div>
+						{/if}
 					{/each}
 				</div>
 				<hr />
