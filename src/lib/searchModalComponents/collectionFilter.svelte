@@ -14,10 +14,12 @@
 				selectedcollections = 'All Collections';
 				break;
 			default:
-				collections.forEach((collection: { [x: string]: string; }) => {
-					if (selectedcollectionsShortName.includes(collection['name'])) {
-						selectedcollections += collection['eng-name'] + ', ';
-					}
+				collections.forEach((collectionCategories) => {
+					collectionCategories['books'].forEach((collection: { [x: string]: string }) => {
+						if (selectedcollectionsShortName.includes(collection['name'])) {
+							selectedcollections += collection['eng-name'] + ', ';
+						}
+					});
 				});
 				selectedcollections = selectedcollections.substring(0, selectedcollections.length - 2);
 				break;
@@ -32,36 +34,37 @@
 		<div class="placeholder animate-pulse w-32" />
 	</div>
 {:then data}
-<Accordion>
+	<Accordion>
+		<AccordionItem>
+			<svelte:fragment slot="summary">
+				<div class="text-primary-500 font-bold uppercase">collections</div>
+				<div class="text-sm">
+					{getSelectedcollections(data.collections, $selectedcollectionsSearchStore)}
+				</div>
+			</svelte:fragment>
 
-	<AccordionItem>
-		<svelte:fragment slot="summary">
-			<div class="text-primary-500 font-bold uppercase">collections</div>
-			<div class="text-sm">
-				{getSelectedcollections(data.collections , $selectedcollectionsSearchStore)}
-			</div>
-		</svelte:fragment>
-
-		<svelte:fragment slot="content">
-			<ListBox
-				multiple
-				active="variant-filled-primary"
-				hover="hover:variant-soft-primary"
-				class="p-4"
-			>
-				{#each data.collections as collectionObject}
-					<ListBoxItem
-						bind:group={$selectedcollectionsSearchStore}
-						name={collectionObject['name']}
-						value={collectionObject['name']}
-					>
-						<div class="max-h-4 pb-5">{collectionObject['eng-name']}</div>
-					</ListBoxItem>
-				{/each}
-			</ListBox>
-		</svelte:fragment>
-	</AccordionItem>
-</Accordion>
+			<svelte:fragment slot="content">
+				<ListBox
+					multiple
+					active="variant-filled-primary"
+					hover="hover:variant-soft-primary"
+					class="p-4"
+				>
+					{#each data.collections as collectionCategoriesObject}
+						{#each collectionCategoriesObject['books'] as collectionObject}
+							<ListBoxItem
+								bind:group={$selectedcollectionsSearchStore}
+								name={collectionObject['name']}
+								value={collectionObject['name']}
+							>
+								<div class="max-h-4 pb-5">{collectionObject['eng-name']}</div>
+							</ListBoxItem>
+						{/each}
+					{/each}
+				</ListBox>
+			</svelte:fragment>
+		</AccordionItem>
+	</Accordion>
 {:catch data}
 	Error...Could Not Load Data
 {/await}

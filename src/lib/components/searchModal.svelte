@@ -32,14 +32,14 @@
 
 <div
 	bind:this={elemDocSearch}
-	class="modal-search card bg-surface-100/60 dark:bg-surface-500/30 backdrop-blur-lg overflow-hidden w-full max-w-[800px] shadow-xl mt-8 mb-auto"
+	class="modal-search card bg-surface-100/60 dark:bg-surface-500/30 backdrop-blur-lg overflow-y-auto w-full max-w-[800px] shadow-xl mt-8 mb-auto h-fit"
 >
 	<!-- Header -->
 	<header class="modal-search-header {cHeader}">
 		<form
 			action="/search"
 			method="get"
-			class="m-auto bg-transparent border-0 ring-0 focus:ring-0 w-full p-4 text-lg"
+			class="m-auto bg-transparent border-0 ring-0 focus:ring-0 w-full p-4 text-lg overflow-y-auto"
 		>
 			<div class="content-normal">
 				<input
@@ -59,10 +59,10 @@
 		</form>
 	</header>
 	<!-- Filters-->
-	<div class="p-3">
+	<div class="p-3 overflow-y-auto">
 		<LanguageFilter />
 	</div>
-	<div class="p-3">
+	<div class="p-3 overflow-y-auto">
 		<CollectionFilter />
 	</div>
 

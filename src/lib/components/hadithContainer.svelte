@@ -109,9 +109,11 @@
 						</div>
 					{/each}
 				</div>
-				<hr />
 				<!-- GRADINGS -->
 				<div class="hadithGroup font-medium p-2 grid">
+					{#if allHadiths[0].hadiths[i].grades.size > 0}
+						<hr />
+					{/if}
 					<!-- [0] because if there are multiple languages selected we only take from the first one, since gradings don't change for different languages -->
 					{#each allHadiths[0].hadiths[i].grades as grade}
 						<button

@@ -6,7 +6,7 @@
 	import HadithPlaceholder from '$lib/common/hadithPlaceholder.svelte';
 	import { searchUrl } from '$lib/common/constants';
 
-	const title = `Search for "${$page.url.searchParams.get('q')}" | HadithHub`;
+	const title = `Search for "${$page.url.searchParams.get('query')}" | HadithHub`;
 
 	$: url = searchUrl + $page.url.search;
 	$: allHadithPromises = getData(url);
@@ -102,7 +102,7 @@
 			<div class="card p-4 m-4">
 				<div class="hadithGroup font-medium p-2 grid">
 					<div class="break-words leading-7 m-3">
-						No results found for {$page.url.searchParams.get('q')}. Check if there are any spelling
+						No results found for {$page.url.searchParams.get('query')}. Check if there are any spelling
 						mistakes.
 					</div>
 				</div>

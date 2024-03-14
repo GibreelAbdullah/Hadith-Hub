@@ -40,10 +40,12 @@ export async function getCollectionFullName(collectionShortName: string[]) {
   let collectionFullNames: string[] = [];
   let collectionObject = await collectionPromise;
 
-  collectionObject.collections.forEach((collection: { [x: string]: string; }) => {
-    if (collectionShortName.includes(collection["name"]!)) {
-      collectionFullNames.push(collection["eng-name"]);
-    }
+  collectionObject.collections.forEach((collectionCategories: { [x: string]: { [x: string]: string; }[]; }) => {
+    collectionCategories["books"].forEach((collection: { [x: string]: string; }) => {
+      if (collectionShortName.includes(collection["name"]!)) {
+        collectionFullNames.push(collection["eng-name"]);
+      }
+    });
   });
   return collectionFullNames;
 }
