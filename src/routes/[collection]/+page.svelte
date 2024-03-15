@@ -5,7 +5,7 @@
   import { getData } from '$lib/common/utils'
 
   let title = `${$page.params.collection} | HadithHub`;
-  let collections = `${urlPrefix}/updates/sections/${$page.params.collection}.json`;
+  let collections = `${urlPrefix}/updates/sections/${$page.params.collection}.min.json`;
   let collectionPromise : Promise<any> = getData(collections);
   
 </script>

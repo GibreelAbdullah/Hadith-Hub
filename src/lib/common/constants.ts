@@ -7,7 +7,7 @@ export const urlPrefix = "https://raw.githubusercontent.com/GibreelAbdullah/hadi
 export const searchUrl = 'https://hadith-search-api-gibreelabdullah.koyeb.app/search';
 // export const searchUrl = 'http://0.0.0.0:5000/search';
 
-export const languageUrl = "/updates/collections/languages.json";
+export const languageUrl = "/updates/collections/languages.min.json";
 
 export const collectionsUrl = "/updates/collections/collections.min.json";
 

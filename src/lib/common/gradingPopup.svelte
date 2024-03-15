@@ -8,7 +8,7 @@
 	let muhaddithDetailsUrl: string;
 	let MuhaddithDetailsPromise: Promise<any>;
 	$: {
-		muhaddithDetailsUrl = `${urlPrefix + muhaddithUrl + muhaddithName}.json`;
+		muhaddithDetailsUrl = `${urlPrefix + muhaddithUrl + muhaddithName}.min.json`;
 		MuhaddithDetailsPromise = getData(muhaddithDetailsUrl);
 	}
 </script>
