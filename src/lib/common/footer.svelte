@@ -4,7 +4,7 @@
 
 <div class="p-8 sticky top-[100vh]">
 	<div class="card p-4 m-4 !bg-surface-500">
-		<div class="hadithGroup font-medium p-2 grid text-center">
+		<div class="hadithGroup font-medium p-2 grid text-center text-white">
 			Requesting Talib Ul-Ilm to help in adding more books and Takhreej. Connect with me on any of
 			the platforms below.
 		</div>
