@@ -115,7 +115,7 @@
 							</li>
 							<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 							<li class="crumb">
-								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]}
+								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]["eng-name"]}
 							</li>
 						</ol>
 					</div>

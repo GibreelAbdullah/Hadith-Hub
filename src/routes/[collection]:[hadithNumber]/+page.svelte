@@ -115,7 +115,7 @@
 						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 						<li class="crumb anchor">
 							<a href="/{$page.params.collection}/{data.filter((n) => n)[0].hadiths[0].reference.book}">
-								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]}
+								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]["eng-name"]}
 							</a>
 						</li>
 						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
