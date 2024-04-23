@@ -30,13 +30,17 @@ It would be a grave injustice to omit the mention of [Fawaz Ahmed](https://githu
 
 <hr>
 
-## To contribute
+## Contribution Guide
 
-1. Fork the repo.
+There are 3 repositories of interest.
 
-2. Make the required changes.
+1. [Hadith Hub](https://github.com/GibreelAbdullah/Hadith-Hub) (This Repo) - It is the frontend of the application written in Svelte.
 
-3. Create a Pull Request.
+2. [hadith-api](https://github.com/GibreelAbdullah/hadith-api) Branch name '2' - It holds all the data. All the json files in the repo act as APIs and the raw files are are served to the website whenever requested.
+    
+3. [hadith-search-api](https://github.com/GibreelAbdullah/hadith-search-api) - For the search functionailty, this is deployed to a server. Currently rethinking this implementation to make it more robust and cost effective. 
+
+You may raise a PR, give suggestions, raise issues for any of them. 
 
 <hr>
 
