@@ -83,7 +83,7 @@
 <main>
 	{#if allHadithPromises.length != 0}
 		{#await allResolvingErrors(allHadithPromises)}
-			<div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
+			<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
 				<div class="hadithGroup grid px-5">
 					<ol class="breadcrumb">
 						<li class="crumb anchor"><a href="/">Home</a></li>
@@ -92,7 +92,7 @@
 					</ol>
 				</div>
 			</div>
-			<div class="card m-4 flex-wrap !bg-transparent">
+			<div class="card flex-wrap !bg-transparent max-w-[90rem] m-auto my-4">
 				<div class="hadithGroup grid">
 					<div class="break-words leading-7 m-3">
 						<div class="placeholder animate-pulse" />
@@ -105,7 +105,7 @@
 			<HadithPlaceholder />
 		{:then data}
 			{#if i != -1}
-				<div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
+				<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
 					<div class="hadithGroup grid px-5">
 						<ol class="breadcrumb">
 							<li class="crumb anchor"><a href="/">Home</a></li>
@@ -115,20 +115,24 @@
 							</li>
 							<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 							<li class="crumb">
-								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]["eng-name"]}
+								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book][
+									'eng-name'
+								]}
 							</li>
 						</ol>
 					</div>
 				</div>
 			{/if}
 			{#if unavailableLanguages.length != 0}
-				<div class="card p-4 m-4 !bg-red-500">
-					<div class="hadithGroup font-medium p-2 grid text-center">
-						{#await getLanguageFullName(unavailableLanguages)}
-							<div class="placeholder w-40 m-auto animate-pulse my-1" />
-						{:then languages}
-							This book is not available in {languages}
-						{/await}
+				<div class="p-4">
+					<div class="card p-4 !bg-red-500 max-w-[90rem] m-auto">
+						<div class="hadithGroup font-medium p-2 grid text-center">
+							{#await getLanguageFullName(unavailableLanguages)}
+								<div class="placeholder w-40 m-auto animate-pulse my-1" />
+							{:then languages}
+								This book is not available in {languages}
+							{/await}
+						</div>
 					</div>
 				</div>
 			{/if}

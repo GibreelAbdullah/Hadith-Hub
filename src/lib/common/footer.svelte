@@ -3,10 +3,12 @@
 </script>
 
 <div class="p-8 sticky top-[100vh]">
-	<div class="card p-4 m-4 variant-filled-error">
-		<div class="hadithGroup font-medium p-2 grid text-center ">
-			Requesting Talib Ul-Ilm to help in adding more books and Takhreej and Tahqeeq. Connect with me on any of
-			the platforms below.
+	<div class="p-4">
+		<div class="card p-4 variant-filled-error max-w-[90rem] m-auto">
+			<div class="hadithGroup font-medium p-2 grid text-center">
+				Requesting Talib Ul-Ilm to help in adding more books, Takhreej and Tahqeeq. Connect with me
+				on any of the platforms below.
+			</div>
 		</div>
 	</div>
 	<section
@@ -44,18 +46,13 @@
 				<SvgIcon name="twitter" fill="fill-white" />
 				<span class="hidden lg:inline-block ml-2 text-white pt-1">Twitter</span>
 			</a>
-			<a
-				class="btn bg-[#2aa1da] text-white"
-				href="https://t.me/GibreelAbdullah"
-				target="_blank"
-			>
+			<a class="btn bg-[#2aa1da] text-white" href="https://t.me/GibreelAbdullah" target="_blank">
 				<img
 					width="32"
 					alt="Telegram logo"
 					src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png"
 				/>
 				<span class="hidden lg:inline-block ml-2 text-white pt-1">Telegram</span>
-
 			</a>
 			<a
 				class="btn bg-[#008c40] text-white"

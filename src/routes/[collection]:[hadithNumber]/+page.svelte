@@ -82,7 +82,7 @@
 
 {#if hadithGroupPromise.length != 0}
 	{#await allResolvingErrors(hadithGroupPromise)}
-		<div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
+		<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
 			<div class="hadithGroupgrid px-5">
 				<ol class="breadcrumb">
 					<li class="crumb anchor"><a href="/">Home</a></li>
@@ -104,7 +104,7 @@
 		<HadithPlaceholder />
 	{:then data}
 		{#if i != -1}
-			<div class="sticky top-0 card p-4 m-4 !variant-glass-secondary">
+			<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
 				<div class="hadithGroup grid px-5 pt-1">
 					<ol class="breadcrumb">
 						<li class="crumb anchor"><a href="/">Home</a></li>

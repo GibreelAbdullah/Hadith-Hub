@@ -73,23 +73,25 @@
 
 {#each { length: allHadiths[0].hadiths.length } as _, i}
 	{#if allHadiths[0].hadiths[i].chapter !== undefined && allHadiths[0].hadiths[i].chapter.id && (singleHadithView || allHadiths[0].hadiths[i].chapter['isFirstHadith'])}
-		<div class="card m-4 flex-wrap variant-glass-primary z-[-1] relative">
-			<div class="hadithGroup grid">
-				<div class="break-words leading-7 m-3">
-					Chapter {allHadiths[0].hadiths[i].chapter['id']} - {allHadiths[0].hadiths[i].chapter[
-						'eng-name'
-					]}
-				</div>
-				<div class="break-words leading-7 m-3 text-right">
-					باب {allHadiths[0].hadiths[i].chapter['id']} - {allHadiths[0].hadiths[i].chapter[
-						'ara-name'
-					]}
+		<div class="p-4">
+			<div class="card flex-wrap variant-glass-primary z-[-1] relative max-w-[90rem] m-auto">
+				<div class="hadithGroup grid">
+					<div class="break-words leading-7 m-3">
+						Chapter {allHadiths[0].hadiths[i].chapter['id']} - {allHadiths[0].hadiths[i].chapter[
+							'eng-name'
+						]}
+					</div>
+					<div class="break-words leading-7 m-3 text-right">
+						باب {allHadiths[0].hadiths[i].chapter['id']} - {allHadiths[0].hadiths[i].chapter[
+							'ara-name'
+						]}
+					</div>
 				</div>
 			</div>
 		</div>
 	{/if}
 	<div class="p-4">
-		<div id="hadithGroup{i}" class="card p-4">
+		<div id="hadithGroup{i}" class="card p-4 max-w-[90rem] m-auto">
 			<div class="card flex-wrap">
 				<!-- HADITH TEXT -->
 				<div class="hadithGroup font-medium grid">

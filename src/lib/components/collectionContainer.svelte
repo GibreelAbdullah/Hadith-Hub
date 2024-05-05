@@ -51,8 +51,15 @@
 	}
 </script>
 
+<input
+	class="input max-w-max mx-auto mt-4 block"
+	type="text"
+	id="myInput"
+	on:keyup={filterCollections}
+	placeholder="Filter Collections..."
+/>
 {#await dataPromise}
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
+	<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 max-w-[90rem] m-auto">
 		{#each { length: 7 } as _, i}
 			<div class="card p-4 h-20">
 				<div class="placeholder w-40 m-auto animate-pulse my-1" />
@@ -61,20 +68,13 @@
 		{/each}
 	</div>
 {:then data}
-	<input
-		class="input max-w-max mx-auto mt-4 block"
-		type="text"
-		id="myInput"
-		on:keyup={filterCollections}
-		placeholder="Filter Collections..."
-	/>
-	<div id="collectionlist">
+	<div id="collectionlist" class="max-w-[90rem] m-auto">
 		{#each data['collections'] as category}
 			<div class="category">
-				<div class="m-4 mb-0 h5">
+				<div class="mb-0 h5">
 					{category['eng-name']} | {category['ara-name']}
 				</div>
-				<div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 p-4 relative">
+				<div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 p-4 relative ">
 					{#each category['books'] as collection}
 						<a class="card p-4 text-center relative" href="/{collection['name']}">
 							{collection['eng-name']}
@@ -85,7 +85,8 @@
 								<div class="placeholder w-40 m-auto animate-pulse" />
 							{:then collectionNames}
 								{#if collectionNames.length != 0}
-									<code class="break-words !text-error-500">Not available in {collectionNames}</code>
+									<code class="break-words !text-error-500">Not available in {collectionNames}</code
+									>
 								{/if}
 							{/await}
 							<button

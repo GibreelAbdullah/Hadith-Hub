@@ -66,7 +66,7 @@
 </svelte:head>
 
 <main>
-	<div class="card m-4 flex-wrap variant-glass-primary z-[-1] relative">
+	<div class="card flex-wrap variant-glass-primary z-[-1] relative max-w-[90rem] m-auto my-4">
 		<div class="hadithGroup grid">
 			<div class="break-words leading-7 m-3">
 				{#if $page.url.searchParams.get('query') != null}
@@ -99,7 +99,7 @@
 		{#if data.length != 0}
 			<HadithContainer allHadiths={[formatData(data)]} book={$page.params['book']} />
 		{:else}
-			<div class="card p-4 m-4">
+			<div class="card p-4 max-w-[90rem] m-auto my-4">
 				<div class="hadithGroup font-medium p-2 grid">
 					<div class="break-words leading-7 m-3">
 						No results found for {$page.url.searchParams.get('query')}. Check if there are any spelling
@@ -109,7 +109,7 @@
 			</div>
 		{/if}
 	{:catch error}
-		<div class="card p-4 m-4">
+		<div class="card p-4 max-w-[90rem] m-auto my-4">
 			<div class="hadithGroup font-medium p-2 grid">
 				<div class="break-words leading-7 m-3">
 					Something went wrong. Kindly report this to our twitter account <a

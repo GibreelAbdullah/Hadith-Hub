@@ -1,4 +1,4 @@
-<div class="card p-4 m-4 flex-wrap">
+<div class="card p-4 flex-wrap max-w-[90rem] m-auto my-4">
   <div class="card">
     <!-- HADITH TEXT -->
     <div class="hadithGroup font-medium grid">
