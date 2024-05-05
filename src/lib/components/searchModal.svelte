@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getModalStore } from '@skeletonlabs/skeleton';
+	import {getModalStore } from '@skeletonlabs/skeleton';
 	import { page } from '$app/stores';
 	import LanguageFilter from '$lib/searchModalComponents/languageFilter.svelte';
 	import { selectedLanguagesSearchStore } from '$lib/searchModalComponents/languageFilter.svelte';

@@ -19,11 +19,13 @@
 			hadithDict.arabicnumber = hadithData[1];
 			hadithDict.text = hadithData[2];
 			let gradings: any[] = [];
-			for (const grading of hadithData[3].split(' && ')) {
-				gradings.push({
-					name: grading.split('::')[0],
-					grade: grading.split('::')[1]
-				});
+			if (hadithData[3]) {
+				for (const grading of hadithData[3].split(' && ')) {
+					gradings.push({
+						name: grading.split('::')[0],
+						grade: grading.split('::')[1]
+					});
+				}
 			}
 			hadithDict.grades = gradings;
 			hadithDict.reference = {
@@ -70,7 +72,8 @@
 		<div class="hadithGroup grid">
 			<div class="break-words leading-7 m-3">
 				{#if $page.url.searchParams.get('query') != null}
-					<span class="chip variant-ringed">Search For : {$page.url.searchParams.get('query')}</span>
+					<span class="chip variant-ringed">Search For : {$page.url.searchParams.get('query')}</span
+					>
 				{/if}
 				{#if $page.url.searchParams.get('language_code') != null && $page.url.searchParams.get('language_code') != ''}
 					<span class="chip variant-ringed">
@@ -102,8 +105,8 @@
 			<div class="card p-4 max-w-[90rem] m-auto my-4">
 				<div class="hadithGroup font-medium p-2 grid">
 					<div class="break-words leading-7 m-3">
-						No results found for {$page.url.searchParams.get('query')}. Check if there are any spelling
-						mistakes.
+						No results found for {$page.url.searchParams.get('query')}. Check if there are any
+						spelling mistakes.
 					</div>
 				</div>
 			</div>
