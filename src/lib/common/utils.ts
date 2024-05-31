@@ -6,6 +6,18 @@ export const getData = async (url: string) => {
   });
 }
 
+export async function getSearchResults(query: String, lang: String, collection: String) {
+  import('$lib/common/sqlclient').then((sqlbro) => {
+    sqlbro.initDbConfig({baseUrl: "https://raw.githubusercontent.com/GibreelAbdullah/hadith-db/master/database/", fileName: "config.json"});
+    const data = sqlbro
+      .query(searchQuery(query, lang, collection));
+      data.then((resolvedData) => {
+        console.log(resolvedData);
+      });
+    return data;
+  });
+}
+
 // export const getDataHeaders = async (url: string, headers: {}) => {
 //   return await fetch(url, {
 //     method: 'GET',
@@ -48,4 +60,54 @@ export async function getCollectionFullName(collectionShortName: string[]) {
     });
   });
   return collectionFullNames;
+}
+
+function searchQuery(query: String, lang: String, collection: String) {
+  let langFilter = '';
+  if (lang !== null) {
+      langFilter = `AND "language" MATCH "${lang.replace(/,/g, " OR ")}"`;
+  }
+  let collectionFilter = '';
+  if (collection !== null && collection !== '' && collection !== ',') {
+      collectionFilter = `AND "shortname" MATCH "${collection.replace(/,/g, " OR ")}"`;
+  }
+
+  var x = `
+  select
+      hadithnumber ,
+      highlight(hadith,
+      1 ,
+      '<span style="color:red;">',
+      '</span>') arabicnumber ,
+      highlight(hadith,
+      2 ,
+      '<span style="color:red;">',
+      '</span>') "text" ,
+      grades ,
+      highlight(hadith,
+      4 ,
+      '<span style="color:red;">',
+      '</span>') bookNumber ,
+      highlight(hadith,
+      5 ,
+      '<span style="color:red;">',
+      '</span>') bookhadith ,
+      highlight(hadith,
+      6 ,
+      '<span style="color:red;">',
+      '</span>') bookname,
+      language,
+      shortname
+  from
+      hadith
+  WHERE hadith
+  MATCH "${query}"
+  and text != ""
+  and text != "empty"
+  ${langFilter}
+  ${collectionFilter}
+  LIMIT 1
+  `;
+        console.log(x)
+  return x;
 }

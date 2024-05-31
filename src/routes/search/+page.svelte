@@ -2,14 +2,22 @@
 	// @ts-nocheck
 	import { page } from '$app/stores';
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
-	import { getLanguageFullName, getData, getCollectionFullName } from '$lib/common/utils';
+	import { getLanguageFullName, getData, getCollectionFullName, getSearchResults } from '$lib/common/utils';
 	import HadithPlaceholder from '$lib/common/hadithPlaceholder.svelte';
 	import { searchUrl } from '$lib/common/constants';
+	import { onMount } from 'svelte';
 
 	const title = `Search for "${$page.url.searchParams.get('query')}" | HadithHub`;
 
 	$: url = searchUrl + $page.url.search;
-	$: allHadithPromises = getData(url);
+	// $: allHadithPromises = getData(url);
+
+	$: allHadithPromises = new Promise( () => {} )
+
+	async function updateHadithPromises() {
+		allHadithPromises = getSearchResults($page.url.searchParams.get('query'),$page.url.searchParams.get('lang'),$page.url.searchParams.get('collection'))
+	}
+	onMount(updateHadithPromises)
 
 	const formatData = (data: [string[]]) => {
 		let indiHadith: any[] = [];
