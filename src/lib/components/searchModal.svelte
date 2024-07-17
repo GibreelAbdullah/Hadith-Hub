@@ -48,7 +48,7 @@
 					value={$page.url.searchParams.get('query')}
 					class="input !w-[calc(100%-4rem)] pb-1"
 					name="query"
-					on:keydown={onInputKeyDown}
+					on:keydown|once={onInputKeyDown}
 				/>
 				<span class="btn bg-primary-500 h-9 pb-4 float-right cursor-pointer">
 					<input type="submit" class="text-4xl h-10 cursor-pointer" on:click|once={onSubmit} value="⌕" />

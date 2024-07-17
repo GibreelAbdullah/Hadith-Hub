@@ -6,7 +6,8 @@ export const urlPrefix = "https://raw.githubusercontent.com/GibreelAbdullah/hadi
 // export const searchUrl = 'https://hadithmlsearch2.fly.dev/search/';
 // export const searchUrl = 'https://hadith-search-api-gibreelabdullah.koyeb.app/search';
 // export const searchUrl = 'http://0.0.0.0:5000/search';
-export const searchUrl = 'https://us-east4-hadith-hub.cloudfunctions.net/function-1/search';
+// export const searchUrl = 'https://us-east4-hadith-hub.cloudfunctions.net/function-1/search';
+export const searchUrl = 'https://jzufhqzxs3t7w632plkwg6k5lq0rvvfl.lambda-url.us-east-1.on.aws/';
 
 export const languageUrl = "/updates/collections/languages.min.json";
 
