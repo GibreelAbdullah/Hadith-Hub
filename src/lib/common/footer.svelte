@@ -85,10 +85,6 @@
 			</p>
 		</div>
 		<a class="anchor float-right pl-8" href="/about">About</a>
-		<a
-			class="anchor float-right pl-8"
-			href="https://github.com/fawazahmed0/hadith-api/blob/1/References.md"
-			target="_blank">References</a
-		>
+		<a class="anchor float-right pl-8" href="/references">References</a>
 	</section>
 </div>
