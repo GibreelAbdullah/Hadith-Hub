@@ -116,7 +116,7 @@
 					{#each allHadiths[0].hadiths[i].grades as grade}
 						{#if grade['name'] != ''}
 							<button
-								class="btn m-1 {gradingColor(grade['grade'])}"
+								class="btn m-1 {gradingColor(grade['grade'])} text-wrap"
 								use:popup={{
 									state: (event) => func(event, grade['name'], i),
 									event: 'click',
