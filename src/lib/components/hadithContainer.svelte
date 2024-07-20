@@ -21,7 +21,7 @@
 	const gradingColor = (grade: string) => {
 		if (!grade) {
 			return;
-		} else if (['hasan', 'mursal'].some((i) => grade.toLowerCase().includes(i))) {
+		} else if (['hasan', 'mursal', 'jayyid'].some((i) => grade.toLowerCase().includes(i))) {
 			gradingColorClass = 'bg-indigo-600 text-white';
 		} else if (grade.toLowerCase().includes('sahih')) {
 			gradingColorClass = 'bg-emerald-500 text-black';
@@ -34,7 +34,7 @@
 		}
 		return gradingColorClass;
 	};
-	function capture(i: number, name: string) {
+	function capture(i: number, name: string, copy: boolean, save: boolean) {
 		let hadithGroup = document.getElementById('hadithGroup' + i)!;
 		let buttonGroup = document.getElementById('buttonGroup' + i)!;
 		let watermark = document.getElementById('watermark' + i)!;
@@ -42,7 +42,35 @@
 		buttonGroup.setAttribute('class', 'hidden');
 		watermark.setAttribute('class', 'flex p-3');
 		htmlToImage.toPng(hadithGroup).then(function (dataUrl) {
-			download(dataUrl, name);
+			if (save) {
+				download(dataUrl, name);
+			}
+			if (copy) {
+				const img = new Image();
+				img.onload = function () {
+					const canvas = document.createElement('canvas');
+					canvas.width = img.width;
+					canvas.height = img.height;
+					const ctx = canvas.getContext('2d');
+					if (!ctx) return;
+					ctx.drawImage(img, 0, 0);
+
+					canvas.toBlob(function (blob) {
+						if (!blob) return;
+						const item = new ClipboardItem({ 'image/png': blob });
+						navigator.clipboard.write([item]).then(
+							function () {
+								console.log('Image copied to clipboard successfully!');
+							},
+							function (err) {
+								console.error('Failed to copy image: ', err);
+							}
+						);
+					}, 'image/png');
+				};
+
+				img.src = dataUrl;
+			}
 			buttonGroup.setAttribute('class', 'flex');
 			watermark.setAttribute('class', 'hidden');
 		});
@@ -90,8 +118,8 @@
 			</div>
 		</div>
 	{/if}
-	<div class="p-4">
-		<div id="hadithGroup{i}" class="card p-4 max-w-[90rem] m-auto">
+	<div class="p-4 card max-w-[90rem] m-auto">
+		<div id="hadithGroup{i}">
 			<div class="card flex-wrap">
 				<!-- HADITH TEXT -->
 				<div class="hadithGroup font-medium grid">
@@ -158,24 +186,77 @@
 
 					<div class="text-[0px] whitespace-nowrap flex justify-evenly md:justify-end relative">
 						<div id="buttonGroup{i}" class="flex">
-							<button
-								class="btn bg-primary-500 btn-sm text-black mt-6 mr-4 px-4 h-10"
-								on:click={() =>
-									capture(
-										i,
-										(
-											(allHadiths[0].metadata
-												? allHadiths[0].metadata.name
-												: allHadiths[0].hadiths[i].bookName) +
-											' ' +
-											allHadiths[0].hadiths[i].arabicnumber
-										)
-											.replace('<span style="color:red;">', '')
-											.replace('</span>', '')
-									)}
-							>
-								<SvgIcon name="download" fill="fill-black" /> Screenshot
-							</button>
+							<div class="">
+								<button
+									id="permalink{i}"
+									class="ml-4 btn bg-primary-400 btn-sm text-black mt-6 h-10 rounded-r-none border-r-2 border-primary-900"
+									on:click={() =>
+										capture(
+											i,
+											(
+												(allHadiths[0].metadata
+													? allHadiths[0].metadata.name
+													: allHadiths[0].hadiths[i].bookName) +
+												' ' +
+												allHadiths[0].hadiths[i].arabicnumber
+											)
+												.replace('<span style="color:red;">', '')
+												.replace('</span>', ''),
+											true,
+											false
+										)}
+								>
+									<SvgIcon name="copy" fill="fill-black" />
+								</button>
+								<button
+									id="permalink{i}"
+									class="btn bg-primary-600 btn-sm text-black mt-6 h-10 rounded-none"
+									on:click={() =>
+										capture(
+											i,
+											(
+												(allHadiths[0].metadata
+													? allHadiths[0].metadata.name
+													: allHadiths[0].hadiths[i].bookName) +
+												' ' +
+												allHadiths[0].hadiths[i].arabicnumber
+											)
+												.replace('<span style="color:red;">', '')
+												.replace('</span>', ''),
+											true,
+											true
+										)}
+								>
+									<SvgIcon name="copy" fill="fill-black" />
+									<div class="pr-1"></div>
+									+ <SvgIcon name="download" fill="fill-black" />
+								</button>
+								<button
+									id="permalink{i}"
+									class="btn bg-primary-400 btn-sm text-black mt-6 h-10 rounded-l-none mr-4 border-l-2 border-primary-900"
+									on:click={() =>
+										capture(
+											i,
+											(
+												(allHadiths[0].metadata
+													? allHadiths[0].metadata.name
+													: allHadiths[0].hadiths[i].bookName) +
+												' ' +
+												allHadiths[0].hadiths[i].arabicnumber
+											)
+												.replace('<span style="color:red;">', '')
+												.replace('</span>', ''),
+											false,
+											true
+										)}
+								>
+									<SvgIcon name="download" fill="fill-black" />
+								</button>
+								<div class="text-center bottom-2">
+									<p class="text-sm">|----SCREENSHOT----|</p>
+								</div>
+							</div>
+
 							<div>
 								<button
 									id="permalink{i}"

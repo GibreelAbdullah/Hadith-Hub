@@ -55,21 +55,29 @@
 	on:keyup={filterTable}
 	placeholder="Filter References..."
 />
-{#if isLoading}
-	<p>Loading data...</p>
-{:else if error}
-	<p>Error: {error}</p>
-{:else}
-	<div class="p-4 max-w-[90rem] m-auto">
-		<div class="m-auto table-container text-token">
-			<table id="referenceTable" class="m-auto table table-hover">
-				<thead>
-					<tr>
-						<th>Book</th>
-						<th>Language</th>
-						<th>Source</th>
-					</tr>
-				</thead>
+<div class="p-4 max-w-[90rem] m-auto">
+	<div class="m-auto table-container text-token">
+		<table id="referenceTable" class="m-auto table table-hover">
+			<thead>
+				<tr>
+					<th>Book</th>
+					<th>Language</th>
+					<th>Source</th>
+				</tr>
+			</thead>
+			{#if isLoading}
+				<tbody>
+					{#each { length: 20 } as _, i}
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					{/each}
+				</tbody>
+			{:else if error}
+				<p>Error: {error}</p>
+			{:else}
 				<tbody>
 					{#each data as row}
 						<tr class="data">
@@ -79,7 +87,7 @@
 						</tr>
 					{/each}
 				</tbody>
-			</table>
-		</div>
+			{/if}
+		</table>
 	</div>
-{/if}
+</div>
