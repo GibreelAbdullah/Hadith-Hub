@@ -9,7 +9,6 @@
 	export let allHadiths: any[] = [];
 	export let singleHadithView: boolean = false;
 	let languageCount = allHadiths.length;
-	let permalinkText = 'Copy Link';
 	let gradingColorClass = '';
 	const clickHandler = (i: number) => {
 		let permalinkButton = document.getElementById('permalink' + i)!;
@@ -169,8 +168,8 @@
 					{/each}
 				</div>
 				<hr />
-				<div class="metaGroup text-sm p-2 grid">
-					<div class="my-4">
+				<div class="hadithGroup grid text-sm mx-4">
+					<div class="py-4 px-2 text-center sm:text-left">
 						#{@html allHadiths[0].hadiths[i].hadithnumber}
 						<br />
 						{#if allHadiths[0].metadata}
@@ -183,13 +182,14 @@
 						Book {@html allHadiths[0].hadiths[i].reference.book}, Hadith {@html allHadiths[0]
 							.hadiths[i].reference.hadith}
 					</div>
+					<!-- <span class=""/> -->
 
-					<div class="text-[0px] whitespace-nowrap flex justify-evenly md:justify-end relative">
+					<div class="text-[0px] whitespace-nowrap flex justify-center relative">
 						<div id="buttonGroup{i}" class="flex">
-							<div class="">
+							<div class="mx-2">
 								<button
 									id="permalink{i}"
-									class="ml-4 btn bg-primary-400 btn-sm text-black mt-6 h-10 rounded-r-none border-r-2 border-primary-900"
+									class="text-center justify-center px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
 									on:click={() =>
 										capture(
 											i,
@@ -209,31 +209,7 @@
 									<SvgIcon name="copy" fill="fill-black" />
 								</button>
 								<button
-									id="permalink{i}"
-									class="btn bg-primary-600 btn-sm text-black mt-6 h-10 rounded-none"
-									on:click={() =>
-										capture(
-											i,
-											(
-												(allHadiths[0].metadata
-													? allHadiths[0].metadata.name
-													: allHadiths[0].hadiths[i].bookName) +
-												' ' +
-												allHadiths[0].hadiths[i].arabicnumber
-											)
-												.replace('<span style="color:red;">', '')
-												.replace('</span>', ''),
-											true,
-											true
-										)}
-								>
-									<SvgIcon name="copy" fill="fill-black" />
-									<div class="pr-1"></div>
-									+ <SvgIcon name="download" fill="fill-black" />
-								</button>
-								<button
-									id="permalink{i}"
-									class="btn bg-primary-400 btn-sm text-black mt-6 h-10 rounded-l-none mr-4 border-l-2 border-primary-900"
+									class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-8 border-l-2 border-primary-900"
 									on:click={() =>
 										capture(
 											i,
@@ -252,12 +228,51 @@
 								>
 									<SvgIcon name="download" fill="fill-black" />
 								</button>
-								<div class="text-center bottom-2">
-									<p class="text-sm">|----SCREENSHOT----|</p>
+								<div class="text-center">
+									<p class="text-sm badge opacity-50">SCREENSHOT</p>
 								</div>
 							</div>
 
-							<div>
+							<div class="mx-2">
+								<button
+									id="permalink{i}"
+									class="text-center justify-center px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
+									use:clipboard={$page.url.protocol +
+										'//' +
+										$page.url.host +
+										'/' +
+										(allHadiths[0].hadiths[i].shortName ?? book) +
+										':' +
+										(allHadiths[0].hadiths[i].hadithnumber | 0)
+											.toString()
+											.replace('<span style="color:red;">', '')
+											.replace('</span>', '')}
+								>
+									<SvgIcon name="copy" fill="fill-black" />
+								</button>
+								<a
+									class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-8 border-l-2 border-primary-900"
+									href={$page.url.protocol +
+										'//' +
+										$page.url.host +
+										'/' +
+										(allHadiths[0].hadiths[i].shortName ?? book) +
+										':' +
+										(allHadiths[0].hadiths[i].hadithnumber | 0)
+											.toString()
+											.replace('<span style="color:red;">', '')
+											.replace('</span>', '')}
+									target="_blank"
+									rel="noreferrer"
+								>
+									<SvgIcon name="openExternal" fill="fill-black" />
+								</a>
+								<div class="text-center">
+									<p class="text-sm badge opacity-50">LINK</p>
+								</div>
+							</div>
+
+							<!-- <div>
 								<button
 									id="permalink{i}"
 									class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
@@ -291,7 +306,7 @@
 								>
 									<SvgIcon name="openExternal" fill="fill-black" />
 								</a>
-							</div>
+							</div> -->
 						</div>
 						<div id="watermark{i}" class="hidden pt-6 pr-10">
 							<SvgIcon class="!w-10" name="icon" />
@@ -308,10 +323,6 @@
 <style>
 	.hadithGroup {
 		grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-		word-wrap: normal;
-	}
-	.metaGroup {
-		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 		word-wrap: normal;
 	}
 </style>
