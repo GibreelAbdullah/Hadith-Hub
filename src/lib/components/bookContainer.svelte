@@ -80,7 +80,7 @@
 		{/if}
 	{/each}
 {:catch data}
-	<div class="card p-4 m-4">Error. Try clearing the cache.</div>
+	<div class="card p-4 m-4">Error. What you're looking for is not here.</div>
 {/await}
 
 <style>
