@@ -90,7 +90,6 @@
 		loadPopupForIndex = -1;
 	}
 	function func(event: { state: boolean }, name: string, hadithIndex: number): void {
-		// isPopupOpen = event.state;
 		if (event.state) {
 			loadPopupForMuhaddith = name;
 			loadPopupForIndex = hadithIndex;
@@ -170,7 +169,7 @@
 					</div>
 					<hr />
 					<div class="hadithGroup grid text-sm mx-4">
-						<div class="py-4 px-2 text-center sm:text-left">
+						<div class="py-4 px-2 text-center md:text-left">
 							#{@html allHadiths[0].hadiths[i].hadithnumber}
 							<br />
 							{#if allHadiths[0].metadata}
@@ -185,7 +184,7 @@
 						</div>
 						<!-- <span class=""/> -->
 
-						<div class="text-[0px] whitespace-nowrap flex justify-center relative">
+						<div class="text-[0px] whitespace-nowrap flex justify-center md:justify-end relative">
 							<div id="buttonGroup{i}" class="flex">
 								<div class="mx-2">
 									<button
@@ -272,42 +271,6 @@
 										<p class="text-sm badge opacity-50">LINK</p>
 									</div>
 								</div>
-
-								<!-- <div>
-								<button
-									id="permalink{i}"
-									class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
-									on:click={() => clickHandler(i)}
-									use:clipboard={$page.url.protocol +
-										'//' +
-										$page.url.host +
-										'/' +
-										(allHadiths[0].hadiths[i].shortName ?? book) +
-										':' +
-										(allHadiths[0].hadiths[i].hadithnumber | 0)
-											.toString()
-											.replace('<span style="color:red;">', '')
-											.replace('</span>', '')}
-									>{permalinkText}
-								</button>
-								<a
-									class="btn bg-primary-500 btn-sm mt-6 h-10 rounded-l-none align-top border-l-2 border-primary-900"
-									href={$page.url.protocol +
-										'//' +
-										$page.url.host +
-										'/' +
-										(allHadiths[0].hadiths[i].shortName ?? book) +
-										':' +
-										(allHadiths[0].hadiths[i].hadithnumber | 0)
-											.toString()
-											.replace('<span style="color:red;">', '')
-											.replace('</span>', '')}
-									target="_blank"
-									rel="noreferrer"
-								>
-									<SvgIcon name="openExternal" fill="fill-black" />
-								</a>
-							</div> -->
 							</div>
 							<div id="watermark{i}" class="hidden pt-6 pr-10">
 								<SvgIcon class="!w-10" name="icon" />
