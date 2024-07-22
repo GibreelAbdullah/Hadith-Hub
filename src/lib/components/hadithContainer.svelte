@@ -101,7 +101,7 @@
 {#each { length: allHadiths[0].hadiths.length } as _, i}
 	{#if allHadiths[0].hadiths[i].chapter !== undefined && allHadiths[0].hadiths[i].chapter.id && (singleHadithView || allHadiths[0].hadiths[i].chapter['isFirstHadith'])}
 		<div class="p-4">
-			<div class="card flex-wrap variant-glass-primary z-[-1] relative max-w-[90rem] m-auto">
+			<div class="card variant-glass-primary z-[-1] relative max-w-[90rem] m-auto">
 				<div class="hadithGroup grid">
 					<div class="break-words leading-7 m-3">
 						Chapter {allHadiths[0].hadiths[i].chapter['id']} - {allHadiths[0].hadiths[i].chapter[
@@ -117,162 +117,163 @@
 			</div>
 		</div>
 	{/if}
-	<div class="p-4 card max-w-[90rem] m-auto">
-		<div id="hadithGroup{i}">
-			<div class="card flex-wrap">
-				<!-- HADITH TEXT -->
-				<div class="hadithGroup font-medium grid">
-					{#each { length: languageCount } as _, j}
-						<div class="break-words leading-7 m-3 pb-4">
-							{#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == ''}
-								<center
-									><code class="!text-white !bg-red-500">Hadith translation not found</code></center
-								>
-							{:else}
-								{@html allHadiths[j].hadiths[i].text}
-							{/if}
-						</div>
-					{/each}
-				</div>
-				<!-- GRADINGS -->
-				<div class="hadithGroup font-medium p-2 grid">
-					{#if allHadiths[0].hadiths[i].grades.size > 0}
-						<hr />
-					{/if}
-					<!-- [0] because if there are multiple languages selected we only take from the first one, since gradings don't change for different languages -->
-					{#each allHadiths[0].hadiths[i].grades as grade}
-						{#if grade['name'] != ''}
-							<button
-								class="btn m-1 {gradingColor(grade['grade'])} text-wrap"
-								use:popup={{
-									state: (event) => func(event, grade['name'], i),
-									event: 'click',
-									target: 'popupFeatured' + grade['name']
-								}}
-							>
-								{@html grade['name'] + ' : ' + grade['grade']}
-							</button>
-							<div
-								class="card p-4 w-72 shadow-xl variant-filled-secondary z-[1]"
-								data-popup="popupFeatured{grade['name']}"
-							>
-								<!-- Why is it not working for  loadPopupForIndex = i -->
-								{#if loadPopupForMuhaddith == grade['name'] && loadPopupForIndex >= i}
-									<GradingPopup
-										muhaddithName={loadPopupForMuhaddith}
-										collection={allHadiths[0].hadiths[i].shortName ?? book}
-									/>
+	<div class="p-4">
+		<div class="p-4 card max-w-[90rem] m-auto">
+			<div id="hadithGroup{i}">
+				<div class="card flex-wrap">
+					<!-- HADITH TEXT -->
+					<div class="hadithGroup font-medium grid">
+						{#each { length: languageCount } as _, j}
+							<div class="break-words leading-7 m-3 pb-4">
+								{#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == ''}
+									<center>
+										<code class="!text-white !bg-red-500">Hadith translation not found</code>
+									</center>
+								{:else}
+									{@html allHadiths[j].hadiths[i].text}
 								{/if}
 							</div>
-						{/if}
-					{/each}
-				</div>
-				<hr />
-				<div class="hadithGroup grid text-sm mx-4">
-					<div class="py-4 px-2 text-center sm:text-left">
-						#{@html allHadiths[0].hadiths[i].hadithnumber}
-						<br />
-						{#if allHadiths[0].metadata}
-							{@html allHadiths[0].metadata.name}
-						{:else}
-							{@html allHadiths[0].hadiths[i].bookName}
-						{/if}
-						{@html allHadiths[0].hadiths[i].arabicnumber}
-						<br />
-						Book {@html allHadiths[0].hadiths[i].reference.book}, Hadith {@html allHadiths[0]
-							.hadiths[i].reference.hadith}
+						{/each}
 					</div>
-					<!-- <span class=""/> -->
-
-					<div class="text-[0px] whitespace-nowrap flex justify-center relative">
-						<div id="buttonGroup{i}" class="flex">
-							<div class="mx-2">
+					<!-- GRADINGS -->
+					<div class="hadithGroup font-medium p-2 grid">
+						{#if allHadiths[0].hadiths[i].grades.size > 0}
+							<hr />
+						{/if}
+						<!-- [0] because if there are multiple languages selected we only take from the first one, since gradings don't change for different languages -->
+						{#each allHadiths[0].hadiths[i].grades as grade}
+							{#if grade['name'] != ''}
 								<button
-									id="permalink{i}"
-									class="text-center justify-center px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
-									on:click={() =>
-										capture(
-											i,
-											(
-												(allHadiths[0].metadata
-													? allHadiths[0].metadata.name
-													: allHadiths[0].hadiths[i].bookName) +
-												' ' +
-												allHadiths[0].hadiths[i].arabicnumber
-											)
-												.replace('<span style="color:red;">', '')
-												.replace('</span>', ''),
-											true,
-											false
-										)}
+									class="btn m-1 {gradingColor(grade['grade'])} text-wrap"
+									use:popup={{
+										state: (event) => func(event, grade['name'], i),
+										event: 'click',
+										target: 'popupFeatured' + grade['name']
+									}}
 								>
-									<SvgIcon name="copy" fill="fill-black" />
+									{@html grade['name'] + ' : ' + grade['grade']}
 								</button>
-								<button
-									class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-8 border-l-2 border-primary-900"
-									on:click={() =>
-										capture(
-											i,
-											(
-												(allHadiths[0].metadata
-													? allHadiths[0].metadata.name
-													: allHadiths[0].hadiths[i].bookName) +
-												' ' +
-												allHadiths[0].hadiths[i].arabicnumber
-											)
-												.replace('<span style="color:red;">', '')
-												.replace('</span>', ''),
-											false,
-											true
-										)}
+								<div
+									class="card p-4 w-72 shadow-xl variant-filled-secondary z-[1]"
+									data-popup="popupFeatured{grade['name']}"
 								>
-									<SvgIcon name="download" fill="fill-black" />
-								</button>
-								<div class="text-center">
-									<p class="text-sm badge opacity-50">SCREENSHOT</p>
+									<!-- Why is it not working for  loadPopupForIndex = i -->
+									{#if loadPopupForMuhaddith == grade['name'] && loadPopupForIndex >= i}
+										<GradingPopup
+											muhaddithName={loadPopupForMuhaddith}
+											collection={allHadiths[0].hadiths[i].shortName ?? book}
+										/>
+									{/if}
 								</div>
-							</div>
+							{/if}
+						{/each}
+					</div>
+					<hr />
+					<div class="hadithGroup grid text-sm mx-4">
+						<div class="py-4 px-2 text-center sm:text-left">
+							#{@html allHadiths[0].hadiths[i].hadithnumber}
+							<br />
+							{#if allHadiths[0].metadata}
+								{@html allHadiths[0].metadata.name}
+							{:else}
+								{@html allHadiths[0].hadiths[i].bookName}
+							{/if}
+							{@html allHadiths[0].hadiths[i].arabicnumber}
+							<br />
+							Book {@html allHadiths[0].hadiths[i].reference.book}, Hadith {@html allHadiths[0]
+								.hadiths[i].reference.hadith}
+						</div>
+						<!-- <span class=""/> -->
 
-							<div class="mx-2">
-								<button
-									id="permalink{i}"
-									class="text-center justify-center px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
-									use:clipboard={$page.url.protocol +
-										'//' +
-										$page.url.host +
-										'/' +
-										(allHadiths[0].hadiths[i].shortName ?? book) +
-										':' +
-										(allHadiths[0].hadiths[i].hadithnumber | 0)
-											.toString()
-											.replace('<span style="color:red;">', '')
-											.replace('</span>', '')}
-								>
-									<SvgIcon name="copy" fill="fill-black" />
-								</button>
-								<a
-									class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-8 border-l-2 border-primary-900"
-									href={$page.url.protocol +
-										'//' +
-										$page.url.host +
-										'/' +
-										(allHadiths[0].hadiths[i].shortName ?? book) +
-										':' +
-										(allHadiths[0].hadiths[i].hadithnumber | 0)
-											.toString()
-											.replace('<span style="color:red;">', '')
-											.replace('</span>', '')}
-									target="_blank"
-									rel="noreferrer"
-								>
-									<SvgIcon name="openExternal" fill="fill-black" />
-								</a>
-								<div class="text-center">
-									<p class="text-sm badge opacity-50">LINK</p>
+						<div class="text-[0px] whitespace-nowrap flex justify-center relative">
+							<div id="buttonGroup{i}" class="flex">
+								<div class="mx-2">
+									<button
+										id="permalink{i}"
+										class="text-center justify-center px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
+										on:click={() =>
+											capture(
+												i,
+												(
+													(allHadiths[0].metadata
+														? allHadiths[0].metadata.name
+														: allHadiths[0].hadiths[i].bookName) +
+													' ' +
+													allHadiths[0].hadiths[i].arabicnumber
+												)
+													.replace('<span style="color:red;">', '')
+													.replace('</span>', ''),
+												true,
+												false
+											)}
+									>
+										<SvgIcon name="copy" fill="fill-black" />
+									</button>
+									<button
+										class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-8 border-l-2 border-primary-900"
+										on:click={() =>
+											capture(
+												i,
+												(
+													(allHadiths[0].metadata
+														? allHadiths[0].metadata.name
+														: allHadiths[0].hadiths[i].bookName) +
+													' ' +
+													allHadiths[0].hadiths[i].arabicnumber
+												)
+													.replace('<span style="color:red;">', '')
+													.replace('</span>', ''),
+												false,
+												true
+											)}
+									>
+										<SvgIcon name="download" fill="fill-black" />
+									</button>
+									<div class="text-center">
+										<p class="text-sm badge opacity-50">SCREENSHOT</p>
+									</div>
 								</div>
-							</div>
 
-							<!-- <div>
+								<div class="mx-2">
+									<button
+										id="permalink{i}"
+										class="text-center justify-center px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
+										use:clipboard={$page.url.protocol +
+											'//' +
+											$page.url.host +
+											'/' +
+											(allHadiths[0].hadiths[i].shortName ?? book) +
+											':' +
+											(allHadiths[0].hadiths[i].hadithnumber | 0)
+												.toString()
+												.replace('<span style="color:red;">', '')
+												.replace('</span>', '')}
+									>
+										<SvgIcon name="copy" fill="fill-black" />
+									</button>
+									<a
+										class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-8 border-l-2 border-primary-900"
+										href={$page.url.protocol +
+											'//' +
+											$page.url.host +
+											'/' +
+											(allHadiths[0].hadiths[i].shortName ?? book) +
+											':' +
+											(allHadiths[0].hadiths[i].hadithnumber | 0)
+												.toString()
+												.replace('<span style="color:red;">', '')
+												.replace('</span>', '')}
+										target="_blank"
+										rel="noreferrer"
+									>
+										<SvgIcon name="openExternal" fill="fill-black" />
+									</a>
+									<div class="text-center">
+										<p class="text-sm badge opacity-50">LINK</p>
+									</div>
+								</div>
+
+								<!-- <div>
 								<button
 									id="permalink{i}"
 									class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
@@ -307,11 +308,12 @@
 									<SvgIcon name="openExternal" fill="fill-black" />
 								</a>
 							</div> -->
-						</div>
-						<div id="watermark{i}" class="hidden pt-6 pr-10">
-							<SvgIcon class="!w-10" name="icon" />
-							<SvgIcon class="!w-40" name="hadithHub" />
-							<SvgIcon class="!w-20 !fill-error-500 pt-1" name="com" />
+							</div>
+							<div id="watermark{i}" class="hidden pt-6 pr-10">
+								<SvgIcon class="!w-10" name="icon" />
+								<SvgIcon class="!w-40" name="hadithHub" />
+								<SvgIcon class="!w-20 !fill-error-500 pt-1" name="com" />
+							</div>
 						</div>
 					</div>
 				</div>
