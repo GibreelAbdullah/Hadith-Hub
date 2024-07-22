@@ -135,7 +135,7 @@
 						{/each}
 					</div>
 					<!-- GRADINGS -->
-					<div class="hadithGroup font-medium p-2 grid">
+					<div class="hadithGroup font-medium p-2 grid place-items-center">
 						{#if allHadiths[0].hadiths[i].grades.size > 0}
 							<hr />
 						{/if}
@@ -143,7 +143,7 @@
 						{#each allHadiths[0].hadiths[i].grades as grade}
 							{#if grade['name'] != ''}
 							<button
-									class="btn m-auto {gradingColor(grade['grade'])} text-wrap !max-w-md w-[calc(100%-8px)] h-[calc(100%-1px)]"
+									class="btn m-1 {gradingColor(grade['grade'])} text-wrap  max-w-md w-full"
 									use:popup={{
 										state: (event) => func(event, grade['name'], i),
 										event: 'click',
@@ -170,8 +170,6 @@
 					<hr />
 					<div class="hadithGroup grid text-sm mx-4">
 						<div class="py-4 px-2 text-center md:text-left">
-							#{@html allHadiths[0].hadiths[i].hadithnumber}
-							<br />
 							{#if allHadiths[0].metadata}
 								{@html allHadiths[0].metadata.name}
 							{:else}
