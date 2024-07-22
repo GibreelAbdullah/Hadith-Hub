@@ -142,8 +142,8 @@
 						<!-- [0] because if there are multiple languages selected we only take from the first one, since gradings don't change for different languages -->
 						{#each allHadiths[0].hadiths[i].grades as grade}
 							{#if grade['name'] != ''}
-								<button
-									class="btn m-1 {gradingColor(grade['grade'])} text-wrap"
+							<button
+									class="btn m-auto {gradingColor(grade['grade'])} text-wrap !max-w-md w-[calc(100%-8px)] h-[calc(100%-1px)]"
 									use:popup={{
 										state: (event) => func(event, grade['name'], i),
 										event: 'click',
@@ -289,5 +289,6 @@
 	.hadithGroup {
 		grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
 		word-wrap: normal;
+
 	}
 </style>
