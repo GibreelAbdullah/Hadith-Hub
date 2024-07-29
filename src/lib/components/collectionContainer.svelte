@@ -74,13 +74,15 @@
 				<div class="mb-0 h5">
 					{category['eng-name']} | {category['ara-name']}
 				</div>
-				<div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 p-4 relative ">
+				<div class="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 p-4 relative">
 					{#each category['books'] as collection}
 						<a class="card p-4 text-center relative" href="/{collection['name']}">
-							{collection['eng-name']}
-							<br />
-							{collection['ara-name']}
-							<br />
+							<h1>
+								{collection['eng-name']}
+								<br />
+								{collection['ara-name']}
+								<br />
+							</h1>
 							{#await getUnavailableCollections(collection['availableLanguages'], $selectedLanguagesStore)}
 								<div class="placeholder w-40 m-auto animate-pulse" />
 							{:then collectionNames}

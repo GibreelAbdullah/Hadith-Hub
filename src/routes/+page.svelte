@@ -6,16 +6,16 @@
 
 <svelte:head>
   <!-- HTML Meta Tags -->
-  <title>HadithHub</title>
-  <meta name="description" content="A Multi Language collection of Hadith" />
+  <title>HadithHub | حدیث Hadith হাদিস хадис Hadis</title>
+  <meta name="description" content="Hadith with Tahqeeq in العربية, বাংলা, English, français, Bahasa Indonesia, Русский, தமிழ், Türkçe, اردو" />
 
   <!-- Facebook Meta Tags -->
   <meta property="og:url" content={$page.url.toString()} />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="HadithHub" />
+  <meta property="og:title" content="HadithHub | حدیث Hadith হাদিস хадис Hadis" />
   <meta
     property="og:description"
-    content="A Multi Language collection of Hadith"
+    content="Hadith with Tahqeeq in العربية, বাংলা, English, français, Bahasa Indonesia, Русский, தமிழ், Türkçe, اردو"
   />
   <meta property="og:image" content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg" />
 
@@ -23,10 +23,10 @@
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:domain" content={$page.url.hostname} />
   <meta property="twitter:url" content={$page.url.toString()} />
-  <meta property="twitter:title" content="HadithHub" />
+  <meta property="twitter:title" content="HadithHub | حدیث Hadith হাদিস хадис Hadis" />
   <meta
     property="twitter:description"
-    content="A Multi Language collection of Hadith"
+    content="Hadith with Tahqeeq in العربية, বাংলা, English, français, Bahasa Indonesia, Русский, தமிழ், Türkçe, اردو"
   />
   <meta property="twitter:image" content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg" />
 </svelte:head>
