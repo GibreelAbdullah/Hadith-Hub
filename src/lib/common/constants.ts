@@ -1,4 +1,5 @@
-export const urlPrefix = "https://raw.githubusercontent.com/GibreelAbdullah/hadith-api/2";
+export const urlPrefix = "https://cdn.jsdelivr.net/gh/GibreelAbdullah/hadith-api-updater@master/hadith-api-master";
+// export const urlPrefix = "https://raw.githubusercontent.com/GibreelAbdullah/hadith-api-updater/master/hadith-api-master";
 
 // Run command 'npx serve --cors' in hadith-api folder to run a local webserver
 // export const urlPrefix = "http://localhost:3000/";
