@@ -129,7 +129,7 @@
 										<code class="!text-white !bg-red-500">Hadith translation not found</code>
 									</center>
 								{:else}
-									{@html allHadiths[j].hadiths[i].text}
+									<article>{@html allHadiths[j].hadiths[i].text}</article>
 								{/if}
 							</div>
 						{/each}

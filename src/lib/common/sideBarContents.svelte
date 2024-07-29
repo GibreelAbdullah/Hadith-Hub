@@ -6,7 +6,7 @@
 	import { languagePromise } from './utils';
 
 	const storedLanguagesList = browser
-		? window.localStorage.getItem('storedLanguagesList') ?? 'ara,eng'
+		? (window.localStorage.getItem('storedLanguagesList') ?? 'ara,eng')
 		: 'ara,eng';
 
 	const selectedLanguagesStore: Writable<Array<string>> = writable(storedLanguagesList.split(','));
@@ -41,38 +41,40 @@
 	}
 </script>
 
-{#await languagePromise}
-	<div class="text-primary-500 font-bold uppercase">Languages</div>
-	<div class="text-sm">
-		<div class="placeholder animate-pulse w-32" />
-	</div>
-{:then data}
-	<span class="md:hidden">
-		<SvgIcon class="!w-10" name="icon" />
-		<SvgIcon class="!w-40" name="hadithHub" />
-	</span>
+<aside>
+	{#await languagePromise}
+		<div class="text-primary-500 font-bold uppercase">Languages</div>
+		<div class="text-sm">
+			<div class="placeholder animate-pulse w-32" />
+		</div>
+	{:then data}
+		<span class="md:hidden">
+			<SvgIcon class="!w-10" name="icon" />
+			<SvgIcon class="!w-40" name="hadithHub" />
+		</span>
 
-	<div class="text-primary-500 font-bold uppercase pt-4">Languages</div>
-	<div class="text-sm">
-		{getSelectedLanguages(data, $selectedLanguagesStore)}
-	</div>
+		<div class="text-primary-500 font-bold uppercase pt-4">Languages</div>
+		<div class="text-sm">
+			{getSelectedLanguages(data, $selectedLanguagesStore)}
+		</div>
 
-	<ListBox
-		multiple
-		active="variant-filled-primary"
-		hover="hover:variant-soft-primary"
-		class="p-4 pointer-events-auto"
-	>
-		{#each Object.keys(data) as languageObject}
-			<ListBoxItem
-				bind:group={$selectedLanguagesStore}
-				name={data[languageObject]['Prefix']}
-				value={data[languageObject]['Prefix']}
-			>
-				<div class="max-h-4 pb-5">{data[languageObject]['Name']}</div>
-			</ListBoxItem>
-		{/each}
-	</ListBox>
-{:catch data}
-	Error...Could Not Load Data
-{/await}
+		<ListBox
+			multiple
+			active="variant-filled-primary"
+			hover="hover:variant-soft-primary"
+			class="p-4 pointer-events-auto"
+		>
+			{#each Object.keys(data) as languageObject}
+				<ListBoxItem
+					bind:group={$selectedLanguagesStore}
+					name={data[languageObject]['Prefix']}
+					value={data[languageObject]['Prefix']}
+				>
+					<div class="max-h-4 pb-5">{data[languageObject]['Name']}</div>
+				</ListBoxItem>
+			{/each}
+		</ListBox>
+	{:catch data}
+		Error...Could Not Load Data
+	{/await}
+</aside>
