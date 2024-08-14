@@ -127,9 +127,6 @@
 					</div>
 					<!-- GRADINGS -->
 					<div class="hadithGroup font-medium grid place-items-center">
-						{#if allHadiths[0].hadiths[i].grades.size > 0}
-							<hr />
-						{/if}
 						<!-- [0] because if there are multiple languages selected we only take from the first one, since gradings don't change for different languages -->
 						{#each allHadiths[0].hadiths[i].grades as grade}
 							{#if grade['name'] != ''}
@@ -158,9 +155,8 @@
 							{/if}
 						{/each}
 					</div>
-					<hr />
 					<div class="hadithGroup grid text-sm mx-4">
-						<div class="py-4 px-2 text-center md:text-left">
+						<div class="py-4 px-2 text-center min-[820px]:text-left">
 							{#if allHadiths[0].metadata}
 								{@html allHadiths[0].metadata.name}
 							{:else}
@@ -173,12 +169,12 @@
 						</div>
 						<!-- <span class=""/> -->
 
-						<div class="text-[0px] whitespace-nowrap flex justify-center md:justify-end relative">
+						<div class="text-[0px] whitespace-pre flex justify-center min-[820px]:justify-end relative">
 							<div id="buttonGroup{i}" class="flex">
-								<div class="mx-2">
+								<div class="mx-1">
 									<button
 										id="permalink{i}"
-										class="text-center justify-center px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
+										class="text-center justify-center px-4 min-[480px]:px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
 										on:click={() =>
 											capture(
 												i,
@@ -198,7 +194,7 @@
 										<SvgIcon name="copy" fill="fill-black" />
 									</button>
 									<button
-										class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-8 border-l-2 border-primary-900"
+										class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
 										on:click={() =>
 											capture(
 												i,
@@ -221,11 +217,11 @@
 										<p class="text-sm badge opacity-50">SCREENSHOT</p>
 									</div>
 								</div>
-
-								<div class="mx-2">
+								<br>
+								<div class="mx-1">
 									<button
 										id="permalink{i}"
-										class="text-center justify-center px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
+										class="text-center justify-center px-4 min-[480px]:px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
 										use:clipboard={$page.url.protocol +
 											'//' +
 											$page.url.host +
@@ -240,7 +236,7 @@
 										<SvgIcon name="copy" fill="fill-black" />
 									</button>
 									<a
-										class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-8 border-l-2 border-primary-900"
+										class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
 										href={$page.url.protocol +
 											'//' +
 											$page.url.host +
