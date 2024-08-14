@@ -117,6 +117,9 @@
 							<li class="crumb">
 								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book][
 									'eng-name'
+								] || 
+								data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book][
+									'ara-name'
 								]}
 							</li>
 						</ol>
@@ -125,7 +128,7 @@
 			{/if}
 			{#if unavailableLanguages.length != 0}
 				<div class="p-4">
-					<div class="card p-4 !bg-red-500 max-w-[90rem] m-auto">
+					<div class="card !bg-red-500 max-w-[90rem] relative m-auto">
 						<div class="hadithGroup font-medium p-2 grid text-center">
 							{#await getLanguageFullName(unavailableLanguages)}
 								<div class="placeholder w-40 m-auto animate-pulse my-1" />

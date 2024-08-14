@@ -91,7 +91,10 @@
 				</ol>
 			</div>
 		</div>
-		<div class="card m-4 flex-wrap !bg-transparent">
+			<!-- <div class="p-4">
+			<div class="card variant-glass-primary z-[-1] relative max-w-[90rem] m-auto">
+				<div class="hadithGroup grid"> -->
+		<div class="card variant-glass-primary z-[-1] relative max-w-[90rem] m-auto">
 			<div class="hadithGroup grid">
 				<div class="break-words leading-7 m-3">
 					<div class="placeholder animate-pulse" />
@@ -115,7 +118,8 @@
 						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
 						<li class="crumb anchor">
 							<a href="/{$page.params.collection}/{data.filter((n) => n)[0].hadiths[0].reference.book}">
-								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]["eng-name"]}
+								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]["eng-name"] ||
+								data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]["ara-name"]}
 							</a>
 						</li>
 						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
@@ -127,8 +131,8 @@
 			</div>
 		{/if}
 		{#if unavailableLanguages.length != 0}
-			<div class="card p-4 m-4 !bg-red-500">
-				<div class="hadithGroup font-medium p-2 grid text-center">
+		<div class="p-4">
+			<div class="card p-4 !bg-red-500 relative max-w-[90rem] m-auto text-center">
 					{#await getLanguageFullName(unavailableLanguages)}
 						<div class="placeholder w-40 m-auto animate-pulse my-1" />
 					{:then langauges}
@@ -138,7 +142,7 @@
 			</div>
 		{/if}
 		{#if i != -1}
-			<HadithContainer allHadiths={data} book={$page.params.collection} singleHadithView={true} />
+			<HadithContainer allHadiths={data.filter((n) => n)} book={$page.params.collection} singleHadithView={true} />
 		{/if}
 	{:catch _data}
 		<div class="card p-4 m-4">

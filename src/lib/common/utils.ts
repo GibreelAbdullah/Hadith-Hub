@@ -33,7 +33,7 @@ export async function getLanguageFullName(languageShortName: string[]) {
   return languageFullNames;
 }
 
-export const collectionPromise = getData(`${urlPrefix}${collectionsUrl}`);
+export const collectionPromise = getData(`${urlPrefix}${collectionsUrl}?v=1`);
 
 
 export async function getCollectionFullName(collectionShortName: string[]) {

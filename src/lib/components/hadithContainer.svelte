@@ -8,15 +8,7 @@
 	export let book = '';
 	export let allHadiths: any[] = [];
 	export let singleHadithView: boolean = false;
-	let languageCount = allHadiths.length;
 	let gradingColorClass = '';
-	const clickHandler = (i: number) => {
-		let permalinkButton = document.getElementById('permalink' + i)!;
-		permalinkButton.innerHTML = 'Copied';
-		setTimeout(() => {
-			permalinkButton.innerHTML = 'Copy Link';
-		}, 2000);
-	};
 	const gradingColor = (grade: string) => {
 		if (!grade) {
 			return;
@@ -96,16 +88,13 @@
 		}
 	}
 </script>
-
 {#each { length: allHadiths[0].hadiths.length } as _, i}
 	{#if allHadiths[0].hadiths[i].chapter !== undefined && allHadiths[0].hadiths[i].chapter.id && (singleHadithView || allHadiths[0].hadiths[i].chapter['isFirstHadith'])}
-		<div class="p-4">
+	<div class="p-4">
 			<div class="card variant-glass-primary z-[-1] relative max-w-[90rem] m-auto">
 				<div class="hadithGroup grid">
 					<div class="break-words leading-7 m-3">
-						Chapter {allHadiths[0].hadiths[i].chapter['id']} - {allHadiths[0].hadiths[i].chapter[
-							'eng-name'
-						]}
+						Chapter {allHadiths[0].hadiths[i].chapter['id']} - {allHadiths[0].hadiths[i].chapter['eng-name'] || ''}
 					</div>
 					<div class="break-words leading-7 m-3 text-right">
 						باب {allHadiths[0].hadiths[i].chapter['id']} - {allHadiths[0].hadiths[i].chapter[
@@ -122,14 +111,16 @@
 				<div class="card flex-wrap">
 					<!-- HADITH TEXT -->
 					<div class="hadithGroup font-medium grid">
-						{#each { length: languageCount } as _, j}
+						{#each { length: allHadiths.filter(n => n).length } as _, j}
 							<div class="break-words leading-7 m-3 pb-4">
-								{#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == ''}
-									<center>
-										<code class="!text-white !bg-red-500">Hadith translation not found</code>
-									</center>
-								{:else}
-									<article>{@html allHadiths[j].hadiths[i].text}</article>
+								{#if allHadiths[j]}
+									{#if !allHadiths[j].hadiths[i] || allHadiths[j].hadiths[i].text == ''}
+										<center>
+											<code class="!text-white !bg-red-500">Hadith translation not found</code>
+										</center>
+									{:else}
+										<article>{@html allHadiths[j].hadiths[i].text}</article>
+									{/if}
 								{/if}
 							</div>
 						{/each}

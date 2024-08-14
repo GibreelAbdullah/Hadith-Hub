@@ -100,7 +100,7 @@
 		<HadithPlaceholder />
 	{:then data}
 		{#if data.length != 0}
-			<HadithContainer allHadiths={[formatData(data)]} book={$page.params['book']} />
+			<HadithContainer allHadiths={[formatData(data.filter((n) => n))]} book={$page.params['book']} />
 		{:else}
 			<div class="card p-4 max-w-[90rem] m-auto my-4">
 				<div class="hadithGroup font-medium p-2 grid">
