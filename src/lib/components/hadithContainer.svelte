@@ -126,7 +126,7 @@
 						{/each}
 					</div>
 					<!-- GRADINGS -->
-					<div class="hadithGroup font-medium p-2 grid place-items-center">
+					<div class="hadithGroup font-medium grid place-items-center">
 						{#if allHadiths[0].hadiths[i].grades.size > 0}
 							<hr />
 						{/if}
@@ -276,7 +276,7 @@
 
 <style>
 	.hadithGroup {
-		grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 		word-wrap: normal;
 
 	}
