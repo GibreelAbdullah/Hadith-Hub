@@ -47,28 +47,27 @@
 		</div>
 	</div>
 	{#each Object.keys(data['books']) as bookNumber}
-		{#if data['books'][bookNumber]['eng-name'] != ''}
+		{#if data['books'][bookNumber]['eng-name'] || data['books'][bookNumber]['ara-name'] != ''}
 			<a href="/{bookURL}/{bookNumber}" class="card">
-        <div class="p-4">
+				<div class="p-4">
+					<div class="card p-4 m-auto max-w-[90rem]">
+						<div class="hadithGroup font-medium p-2 grid">
+							<div>
+								{bookNumber} -
+								{data['books'][bookNumber]['eng-name']}
+							</div>
 
-				<div class="card p-4 m-auto max-w-[90rem]">
-					<div class="hadithGroup font-medium p-2 grid">
-						<div>
-							{bookNumber} -
-							{data['books'][bookNumber]['eng-name']}
-						</div>
-
-						<div class="text-right ml-10">
-							{data['books'][bookNumber]['ara-name']}
-						</div>
-						<div class="hidden md:block text-right">
-							<div class="badge bg-gray-500">
-								{data['books'][bookNumber]['minHadith']} to
-								{data['books'][bookNumber]['maxHadith']}
+							<div class="text-right ml-10">
+								{data['books'][bookNumber]['ara-name']}
+							</div>
+							<div class="hidden md:block text-right">
+								<div class="badge bg-gray-500">
+									{data['books'][bookNumber]['minHadith']} to
+									{data['books'][bookNumber]['maxHadith']}
+								</div>
 							</div>
 						</div>
 					</div>
-          </div>
 					<div class="md:hidden text-center">
 						<div class="badge bg-gray-500">
 							{data['books'][bookNumber]['minHadith']} to

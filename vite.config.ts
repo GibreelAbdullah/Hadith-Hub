@@ -6,7 +6,10 @@ const config: UserConfig = {
 	plugins: [sveltekit(), purgeCss()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
-	}
+	},
+	define: {
+        'process.env.ANCHOR_BROWSER': true
+    },
 };
 
 export default config;

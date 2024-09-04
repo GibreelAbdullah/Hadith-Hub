@@ -149,6 +149,7 @@
 										<GradingPopup
 											muhaddithName={loadPopupForMuhaddith}
 											collection={allHadiths[0].hadiths[i].shortName ?? book}
+											source={grade['source']}
 										/>
 									{/if}
 								</div>
