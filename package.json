@@ -15,8 +15,8 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.48.2",
-		"@skeletonlabs/skeleton": "^3.0.0-next.10",
-		"@skeletonlabs/skeleton-svelte": "^1.0.0-next.18",
+		"@skeletonlabs/skeleton": "2.11.0",
+		"@skeletonlabs/tw-plugin": "^0.4.1",
 		"@sveltejs/adapter-node": "^5.2.9",
 		"@sveltejs/kit": "^2.8.1",
 		"@sveltejs/vite-plugin-svelte": "^4.0.1",
