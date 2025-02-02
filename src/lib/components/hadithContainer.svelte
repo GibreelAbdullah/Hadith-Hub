@@ -8,8 +8,10 @@
 	import { onMount } from 'svelte';
 	// import GradingPopup from '$lib/components/gradingPopup.svelte';
 	export let book = '';
-	export let dataRecord: any[] = [];
+	export let dataListRecord: any[] = [];
 	export let singleHadithView: boolean = false;
+	let bookTitle = '';
+	let collectionTitle = '';
 
 	let arabicFontFamily = 'KFGQPC Uthman Taha Naskh';
 	let gradingColorClass = '';
@@ -91,42 +93,78 @@
 			loadPopupForIndex = hadithIndex;
 		}
 	}
-	onMount(() => {
-		const myDocs = document.querySelectorAll('#myDiv') as NodeListOf<HTMLElement>;
-		myDocs.forEach((myDoc) => {
-			myDoc.style.setProperty('color', 'blue', 'important');
-			myDoc.style.setProperty('font-family', 'KFGQPC Uthman Taha Naskh', 'important');
-		});
-	})
-
-  // Add a CSS property with !important
+	// onMount(() => {
+	// 	const myDocs = document.querySelectorAll('#myDiv') as NodeListOf<HTMLElement>;
+	// 	myDocs.forEach((myDoc) => {
+	// 		const parser = new DOMParser();
+	// 		const myDocHtml = parser.parseFromString(myDoc.innerHTML, 'text/html');
+	// 		const qblTags = myDocHtml.querySelectorAll('qbl') as NodeListOf<HTMLElement>;
+	// 		qblTags.forEach((qblTag) => {
+	// 			qblTag.style.setProperty('color', 'red');
+	// 		});
+	// 		// myDoc.innerHTML = myDocHtml.body.innerHTML;
+	// 		myDoc.style.setProperty('font-family', 'KFGQPC Uthman Taha Naskh');
+	// 	});
+	// })
 </script>
 
-{#if dataRecord[4] == 'chapter'}
-	<div class="p-4">
-		<div class="card variant-glass-primary z-[-1] relative max-w-[90rem] m-auto">
-			<div class="hadithGroup grid">
-				<div class="break-words leading-7 m-3">
-					{dataRecord[6]}
+{#each dataListRecord as data}
+	{#if data[5] == 'collection'}
+		{@const dummy = collectionTitle = data[7]}
+		<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
+			<div class="hadithGroup grid px-5">
+				<ol class="breadcrumb">
+					<li class="crumb anchor"><a href="/">Home</a></li>
+					<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
+					<li class="crumb anchor">
+						<a href="/{$page.params.collection}">{data[7]}</a>
+					</li>
+					<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
+					<li id="bookCrumb" class="crumb">{bookTitle}</li>
+				</ol>
+			</div>
+		</div>
+	{:else if data[5] == 'book'}
+		{@const dummy = bookTitle = data[7]}
+	{:else if data[5] == 'chapter'}
+		<div class="p-4">
+			<div class="card variant-glass-primary z-[-1] relative max-w-[90rem] m-auto">
+				<div class="hadithGroup grid">
+					<div class="break-words leading-7 m-3">
+						{data[4]}
+						{#each { length: languageStore.value.length ? languageStore.value.length : 2 } as _, i}
+							<div class="break-words leading-7 m-3 pb-4">
+								<article id="myDiv">{@html data[i + 7]}</article>
+							</div>
+						{/each}
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-{:else if dataRecord[4] == 'hadith'}
-	<div class="p-4">
-		<div class="p-4 card max-w-[90rem] m-auto">
-			<div class="card flex-wrap">
-				<div class="hadithGroup font-medium grid">
-					{#each { length: languageStore.value.length ? languageStore.value.length : 2 } as _, i}
-						<div class="break-words leading-7 m-3 pb-4">
-							<article id="myDiv">{@html dataRecord[i + 6]}</article>
-						</div>
-					{/each}
+	{:else if data[5] == 'hadith'}
+		<div class="p-4">
+			<div class="p-4 card max-w-[90rem] m-auto ">
+				<div class="font-bold lgcd :flex justify-between items-center px-3 pb-2 text-primary-700 dark:text-primary-400 text-lg">
+					<div>
+						{collectionTitle} : {data[1]}
+					</div>
+					<div>
+						{bookTitle} (Book {data[2]}) : {data[3]}
+					</div>
+				</div>
+				<div class="card flex-wrap">
+					<div class="hadithGroup font-medium grid">
+						{#each { length: languageStore.value.length ? languageStore.value.length : 2 } as _, i}
+							<div class="break-words leading-7 m-3 pb-4">
+								<article id="myDiv">{@html data[i + 7]}</article>
+							</div>
+						{/each}
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-{/if}
+	{/if}
+{/each}
 
 <style>
 	.hadithGroup {
@@ -134,22 +172,19 @@
 		word-wrap: normal;
 	}
 
-	:global(pre, post) {
-    	text-wrap: auto;
-		--tw-text-opacity: 1;
-		color: rgb(var(--color-error-700) / var(--tw-text-opacity, 1));
+	:global(qbl, b3d) {
+		text-wrap: auto;
 		display: block;
-		/* font-family: "KFGQPC Uthman Taha Naskh" */
-		}
-
-	:global(.dark pre, .dark post) {
-    	text-wrap: auto;
-		--tw-text-opacity: 1;
-		color: rgb(var(--color-error-300) / var(--tw-text-opacity, 1));
+		color: rgb(var(--color-primary-900));
+		font-family: 'KFGQPC Uthman Taha Naskh';
 	}
-	
+
+	:global(.dark qbl, .dark b3d) {
+		text-wrap: auto;
+		color: rgb(var(--color-primary-300));
+	}
+
 	:global(text) {
-    	text-wrap: auto;
-		font-size: large;
+		text-wrap: auto;
 	}
 </style>

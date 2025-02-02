@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { urlPrefix } from '$lib/data/constantsV2';
-	import { selectedLanguagesStore } from '$lib/functions/store.svelte';
+	import { singleHadith, urlPrefix } from '$lib/data/constantsV2';
+	import { languageStore } from '$lib/functions/store.svelte';
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
-	import { getLanguageFullName, getData } from '$lib/functions/utilsV2';
+	import { getData } from '$lib/functions/utilsV2';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
+	import { getLanguageFullName } from '$lib/components/common/sideBarContents.svelte';
 
 	let title = `${$page.params.collection}:${$page.params.hadithNumber} | HadithHub`;
 
@@ -14,8 +15,9 @@
 	///variable i will be used to track that
 	let i: number = 0;
 
-	let hadithGroupPromise: { language: string; promise: Promise<any> }[] = [];
-
+	// let hadithGroupPromise: { language: string; promise: Promise<any> }[] = [];
+	// let hadith = ;
+	// const hadithPromise = ;
 	let unavailableLanguages: string[] = [];
 
 	///If the promises are rejected, need to move forward ignoring those promises.
@@ -39,18 +41,18 @@
 		);
 	}
 
-	$: {
-		i = 0;
-		hadithGroupPromise = [];
-		for (const language in $selectedLanguagesStore) {
-			let hadith = `${urlPrefix}/editions/${$selectedLanguagesStore[language]}-${$page.params.collection}/${$page.params.hadithNumber}.min.json`;
-			const hadithPromise = getData(hadith);
-			hadithGroupPromise.push({
-				language: $selectedLanguagesStore[language],
-				promise: hadithPromise
-			});
-		}
-	}
+	// $: {
+	// 	i = 0;
+	// 	hadithGroupPromise = [];
+	// 	for (const language in languageStore.value) {
+	// 		let hadith = `${urlPrefix}${singleHadith}&langs=${languageStore.value.toString()}&collection=${$page.params.collection}&hadith_number=${$page.params.hadithNumber}`;
+	// 		const hadithPromise = getData(hadith);
+	// 		hadithGroupPromise.push({
+	// 			language: language,
+	// 			promise: hadithPromise
+	// 		});
+	// 	}
+	// }
 </script>
 
 <svelte:head>
@@ -80,70 +82,33 @@
 	/>
 </svelte:head>
 
-{#if hadithGroupPromise.length != 0}
-	{#await allResolvingErrors(hadithGroupPromise)}
+{#if languageStore.value.length != 0}
+	{#await getData(`${urlPrefix}${singleHadith}&langs=${languageStore.value.toString()}&collection=${$page.params.collection}&hadith_number=${$page.params.hadithNumber}`)}
 		<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
 			<div class="hadithGroupgrid px-5">
 				<ol class="breadcrumb">
 					<li class="crumb anchor"><a href="/">Home</a></li>
-					<li class="crumb-separator" aria-hidden>&rsaquo;</li>
-					<div class="placeholder w-52 m-auto animate-pulse" />
+					<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
+					<div class="placeholder w-52 m-auto animate-pulse"></div>
 				</ol>
 			</div>
 		</div>
-			<!-- <div class="p-4">
+		<!-- <div class="p-4">
 			<div class="card variant-glass-primary z-[-1] relative max-w-[90rem] m-auto">
 				<div class="hadithGroup grid"> -->
 		<div class="card variant-glass-primary z-[-1] relative max-w-[90rem] m-auto">
 			<div class="hadithGroup grid">
 				<div class="break-words leading-7 m-3">
-					<div class="placeholder animate-pulse" />
+					<div class="placeholder animate-pulse"></div>
 				</div>
 				<div class="break-words leading-7 m-3 text-right justify-end">
-					<div class="placeholder animate-pulse" />
+					<div class="placeholder animate-pulse"></div>
 				</div>
 			</div>
 		</div>
 		<HadithPlaceholder />
-	{:then data}
-		{#if i != -1}
-			<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
-				<div class="hadithGroup grid px-5 pt-1">
-					<ol class="breadcrumb">
-						<li class="crumb anchor"><a href="/">Home</a></li>
-						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
-						<li class="crumb anchor">
-							<a href="/{$page.params.collection}">{data.filter((n) => n)[0].metadata.name}</a>
-						</li>
-						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
-						<li class="crumb anchor">
-							<a href="/{$page.params.collection}/{data.filter((n) => n)[0].hadiths[0].reference.book}">
-								{data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]["eng-name"] ||
-								data.filter((n) => n)[0].metadata.section[data[i].hadiths[0].reference.book]["ara-name"]}
-							</a>
-						</li>
-						<li class="crumb-separator" aria-hidden>&rsaquo;</li>
-						<li class="crumb">
-							Hadith {data.filter((n) => n)[0].hadiths[0].reference.hadith}
-						</li>
-					</ol>
-				</div>
-			</div>
-		{/if}
-		{#if unavailableLanguages.length != 0}
-		<div class="p-4">
-			<div class="card p-4 !bg-red-500 relative max-w-[90rem] m-auto text-center">
-					{#await getLanguageFullName(unavailableLanguages)}
-						<div class="placeholder w-40 m-auto animate-pulse my-1" />
-					{:then langauges}
-						This book is not available in {langauges}
-					{/await}
-				</div>
-			</div>
-		{/if}
-		{#if i != -1}
-			<HadithContainer allHadiths={data.filter((n) => n)} book={$page.params.collection} singleHadithView={true} />
-		{/if}
+	{:then dataList}
+		<HadithContainer dataListRecord={dataList} book={$page.params.collection} />
 	{:catch _data}
 		<div class="card p-4 m-4">
 			<div class="hadithGroup font-medium p-2 grid">

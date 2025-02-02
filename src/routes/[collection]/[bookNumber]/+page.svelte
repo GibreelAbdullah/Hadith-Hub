@@ -106,27 +106,28 @@
 			</div>
 			<HadithPlaceholder />
 		{:then dataList}
-			{#each dataList as data}
-				{#if data[4] == 'collection'}
+		<HadithContainer dataListRecord={dataList} book={$page.params.collection} />
+
+			<!-- {#each dataList as data}
+				{#if data[5] == 'collection'}
 					<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
 						<div class="hadithGroup grid px-5">
 							<ol class="breadcrumb">
 								<li class="crumb anchor"><a href="/">Home</a></li>
 								<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 								<li class="crumb anchor">
-									<a href="/{$page.params.collection}">{data[6]}</a>
+									<a href="/{$page.params.collection}">{data[7]}</a>
 								</li>
 								<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 								<li id="bookCrumb" class="crumb">{bookTitle}</li>
 							</ol>
 						</div>
 					</div>
-				{:else if data[4] == 'book'}
-					{@const dummy = bookTitle = data[6]}
+				{:else if data[5] == 'book'}
+					{@const dummy = bookTitle = data[7]}
 				{:else}
-					<HadithContainer dataRecord={data} book={$page.params.collection} />
 				{/if}
-			{/each}
+			{/each} -->
 		{:catch data}
 			<div class="card p-4 m-4">
 				<div class="hadithGroup font-medium p-2 grid">

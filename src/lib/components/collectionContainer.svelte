@@ -2,7 +2,7 @@
 	import { popup } from '@skeletonlabs/skeleton';		
 	let {collectionPromise} = $props()
 	import { languageStore } from '$lib/functions/store.svelte';
-	import { getLanguageFullName } from './common/sideBarContents.svelte';
+	import { getLanguageFullName } from '$lib/components/common/sideBarContents.svelte';
 	
 	function getUnavailableCollections(availbleLanguagesOfCollection: string[], selectedLanguagesStore: string[]) {
 		let unavailableLanguagesShortName: string[] = [];
