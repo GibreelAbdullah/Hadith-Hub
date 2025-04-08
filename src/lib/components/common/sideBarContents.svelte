@@ -24,7 +24,7 @@
 		<div class="text-sm">
 			<div class="placeholder animate-pulse w-32"></div>
 		</div>
-	{:then data : { [key: string]: string }}
+	{:then languageList}
 		<span class="md:hidden">
 			<SvgIcon class="!w-10" name="icon" />
 			<SvgIcon class="!w-40" name="hadithHub" />
@@ -35,13 +35,13 @@
 			hover="hover:variant-soft-primary"
 			class="p-4 pointer-events-auto"
 		>
-			{#each Object.keys(data) as languageObject}
+			{#each languageList as languageObject}
 				<ListBoxItem
 					bind:group={languageStore.value}
-					name={languageObject}
-					value={languageObject}
+					name={languageObject[0]}
+					value={languageObject[0]}
 				>
-					<div class="max-h-4 pb-5">{data[languageObject]}</div>
+					<div class="max-h-4 pb-5">{languageObject[1]}</div>
 				</ListBoxItem>
 			{/each}
 		</ListBox>

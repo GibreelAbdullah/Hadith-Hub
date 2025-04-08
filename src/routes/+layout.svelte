@@ -26,12 +26,14 @@
 
 	import Footer from '$lib/components/common/footer.svelte';
 	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { enhance } from '$app/forms';
 	import SvgIcon from '$lib/components/common/svgIcon.svelte';
 	import SearchModal from '$lib/components/searchModalComponents/searchModal.svelte';
 	import SideBarContents from '$lib/components/common/sideBarContents.svelte';
+	import { languageStore } from '$lib/functions/store.svelte';
 
 	export const storeTheme: Writable<string> = localStorageStore('storeTheme', 'skeleton');
 
@@ -84,6 +86,21 @@
 		};
 		modalStore.trigger(d);
 	}
+
+	onMount(() => {
+        if (browser) {
+            const url = new URL(window.location.href);
+            if (!url.searchParams.has('lang')) {
+                url.searchParams.set('lang', languageStore.value.toString());
+                window.location.href = url.toString();
+            } else {
+				const langParam = url.searchParams.get('lang');
+				if (langParam) {
+					languageStore.value = langParam.split(',');
+				}
+			}
+        }
+    });
 </script>
 
 <Drawer open={drawerOpen} position="left">
@@ -95,13 +112,16 @@
 		<AppBar>
 			<svelte:fragment slot="lead">
 				<button on:click={drawerOpen} class="md:hidden mr-2 p-1 cursor-pointer text-3xl">≡ </button>
-				<a href="/">
+				<a href="/?lang={languageStore.value.toString()}">
 					<span>
 						<SvgIcon class="!w-10" name="icon" />
 						<SvgIcon class="!w-40 hidden md:inline-block" name="hadithHub" />
 					</span>
 				</a>
-				<button class="ml-4 btn variant-soft hover:variant-soft-primary h-10" on:click={triggerSearch}>
+				<button
+					class="ml-4 btn variant-soft hover:variant-soft-primary h-10"
+					on:click={triggerSearch}
+				>
 					<span class="text-3xl p-0 pb-2">⌕</span>
 					<span class="text-sm hidden md:inline-block badge variant-soft">Search</span>
 				</button>
