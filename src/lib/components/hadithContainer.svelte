@@ -207,13 +207,12 @@
 								class="card p-4 w-72 shadow-xl variant-filled-secondary z-[1]"
 								data-popup="popupFeatured{grade[0]}{i}{data[1]}"
 							>
-							<div><p>Demo Content</p></div>
 								<!-- Why is it not working for  loadPopupForIndex = i -->
 								<!-- {#if loadPopupForMuhaddith == grade[0] && loadPopupForIndex >= grade[1]} -->
-								<!-- <GradingPopup
+								<GradingPopup
 									muhaddithName={grade[4]}
 									source={grade[2]}
-								/> -->
+								/>
 								<!-- {/if} -->
 							</div>
 						{/if}
