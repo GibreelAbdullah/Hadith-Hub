@@ -2,17 +2,36 @@
 	import { scholarQueryString, urlPrefix } from '$lib/data/constantsV2';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import { getData } from '$lib/functions/utilsV2';
-
+	import { Avatar } from '@skeletonlabs/skeleton';
+	import { writable } from 'svelte/store';
+	
 	export let muhaddithName: string;
 	export let source: string;
-
-	import { Avatar } from '@skeletonlabs/skeleton';
-
+	
+	// Create a cache object to store muhaddith details
+	const muhaddithCache = writable<Record<string, any>>({});
+	
 	let MuhaddithDetailsPromise: Promise<any>;
+	
 	$: {
+	  const cacheKey = `${muhaddithName}_${languageStore.value.toString()}`;
+	  
+	  if ($muhaddithCache[cacheKey]) {
+		console.log('Cache hit :', cacheKey);
+		// Use cached data if available
+		MuhaddithDetailsPromise = Promise.resolve($muhaddithCache[cacheKey]);
+	  } else {
+		console.log('Cache miss :', cacheKey);
+		// Fetch data and store in cache
 		MuhaddithDetailsPromise = getData(`${urlPrefix}${scholarQueryString}&langs=${languageStore.value.toString()}&name=${muhaddithName}`)
+		  .then(data => {
+			// Update the cache with the new data
+			$muhaddithCache[cacheKey] = data;
+			return data;
+		  });
+	  }
 	}
-</script>
+  </script>
 
 {#await MuhaddithDetailsPromise}
 	<div class="space-y-4">
