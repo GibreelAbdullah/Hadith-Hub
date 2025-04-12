@@ -1,37 +1,56 @@
 <script lang="ts">
-	import { scholarQueryString, urlPrefix } from '$lib/data/constantsV2';
-	import { languageStore } from '$lib/functions/store.svelte';
-	import { getData } from '$lib/functions/utilsV2';
-	import { Avatar } from '@skeletonlabs/skeleton';
-	import { writable } from 'svelte/store';
-	
-	export let muhaddithName: string;
-	export let source: string;
-	
-	// Create a cache object to store muhaddith details
-	const muhaddithCache = writable<Record<string, any>>({});
-	
-	let MuhaddithDetailsPromise: Promise<any>;
-	
-	$: {
-	  const cacheKey = `${muhaddithName}_${languageStore.value.toString()}`;
-	  
-	  if ($muhaddithCache[cacheKey]) {
-		console.log('Cache hit :', cacheKey);
-		// Use cached data if available
-		MuhaddithDetailsPromise = Promise.resolve($muhaddithCache[cacheKey]);
-	  } else {
-		console.log('Cache miss :', cacheKey);
-		// Fetch data and store in cache
-		MuhaddithDetailsPromise = getData(`${urlPrefix}${scholarQueryString}&langs=${languageStore.value.toString()}&name=${muhaddithName}`)
-		  .then(data => {
-			// Update the cache with the new data
-			$muhaddithCache[cacheKey] = data;
-			return data;
-		  });
-	  }
-	}
-  </script>
+    import { scholarQueryString, urlPrefix } from '$lib/data/constantsV2';
+    import { languageStore } from '$lib/functions/store.svelte';
+    import { getData } from '$lib/functions/utilsV2';
+    export let muhaddithName: string;
+    export let source: string;
+    import { Avatar } from '@skeletonlabs/skeleton';
+
+    // Cache settings (7 day expiration)
+    const CACHE_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
+    const getCacheKey = (lang: string, name: string) => `muhaddith_${lang}_${name}`;
+    
+    let MuhaddithDetailsPromise: Promise<any>;
+    
+    $: {
+        const lang = languageStore.value.at(0) || 'eng';
+        const cacheKey = getCacheKey(lang, muhaddithName);
+        let shouldFetch = true;
+        
+        // Check cache first
+        const cachedItem = localStorage.getItem(cacheKey);
+        if (cachedItem) {
+            try {
+                const { data, timestamp } = JSON.parse(cachedItem);
+                if (Date.now() - timestamp < CACHE_EXPIRY_MS) {
+                    MuhaddithDetailsPromise = Promise.resolve(data);
+                    shouldFetch = false;
+                }
+            } catch (e) {
+                console.error('Cache parse error', e);
+            }
+        }
+        
+        // Fetch fresh data if no valid cache
+        if (shouldFetch) {
+            MuhaddithDetailsPromise = getData(
+                `${urlPrefix}${scholarQueryString}&langs=${lang}&name=${muhaddithName}`
+            ).then(data => {
+                // Cache the fresh data with timestamp
+                try {
+                    localStorage.setItem(cacheKey, JSON.stringify({
+                        data,
+                        timestamp: Date.now()
+                    }));
+                } catch (e) {
+                    console.error('Cache write error', e);
+                    // Handle storage full if needed
+                }
+                return data;
+            });
+        }
+    }
+</script>
 
 {#await MuhaddithDetailsPromise}
 	<div class="space-y-4">
@@ -52,7 +71,7 @@
 			<span class="px-2 my-auto">{muhaddithName}</span>
 		</div>
 		<p class="text-xs">{@html data[0][2]}</p>
-		<p class="text-xs">{@html "Grading Source : " + source}</p>
+		<p class="text-xs">{@html 'Grading Source : ' + source}</p>
 		<p>{data[0][3]}</p>
 	</div>
 	<div class="arrow variant-filled-secondary"></div>
@@ -68,7 +87,7 @@
 			{#if source === undefined}
 				No Data Found
 			{:else}
-				{@html "Grading Source : " + source}
+				{@html 'Grading Source : ' + source}
 			{/if}
 		</p>
 	</div>
