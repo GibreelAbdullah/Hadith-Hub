@@ -183,7 +183,6 @@
 								<article id="myDiv">{@html data[i + 7]}</article>
 							</div>
 						{/each}
-					</div>
 				</div>
 				<!-- GRADINGS -->
 				<!-- <div class="flex flex-wrap justify-between items-center px-3 pt-2 pb-2">
@@ -300,6 +299,7 @@
 						<SvgIcon class="!w-10" name="icon" />
 						<SvgIcon class="!w-40" name="hadithHub" />
 						<SvgIcon class="!w-20 !fill-error-500 pt-1" name="com" />
+						</div>
 					</div>
 				</div>
 			</div>
