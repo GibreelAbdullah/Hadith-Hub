@@ -1,11 +1,11 @@
-<!-- <script lang="ts">
+<script lang="ts">
 	import {getModalStore } from '@skeletonlabs/skeleton';
 	import { page } from '$app/stores';
-	import LanguageFilter from '$lib/searchModalComponents/languageFilter.svelte';
-	import { selectedLanguagesSearchStore } from '$lib/searchModalComponents/languageFilter.svelte';
+	import LanguageFilter from '$lib/components/searchModalComponents/languageFilter.svelte';
+	import { selectedLanguagesSearchStore } from '$lib/components/searchModalComponents/languageFilter.svelte';
 	import CollectionFilter, {
 		selectedcollectionsSearchStore
-	} from '$lib/searchModalComponents/collectionFilter.svelte';
+	} from '$lib/components/searchModalComponents/collectionFilter.svelte';
 	
 	const modalStore = getModalStore();
 
@@ -71,4 +71,4 @@
 		<div><kbd>Esc</kbd> to close</div>
 		<div><kbd>Enter</kbd> to search</div>
 	</footer>
-</div> -->
+</div>

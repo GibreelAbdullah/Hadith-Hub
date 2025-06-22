@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
 	import { Accordion, AccordionItem, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import { writable, type Writable } from 'svelte/store';
-	import { languagePromise } from '$lib/common/utilsV2';
+	import { languagePromise } from '../common/sideBarContents.svelte';
 
 	let selectedLanguagesSearchStore: Writable<Array<string>> = writable();
 

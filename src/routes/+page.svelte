@@ -6,6 +6,7 @@
 	import { collectionsQueryString, urlPrefix } from '$lib/data/constantsV2';
 	import { languageStore } from '$lib/functions/store.svelte';
 
+	export const collectionPromise = getData(`${urlPrefix}${collectionsQueryString}&langs=${languageStore.value.toString()}`);
 </script>
 
 <svelte:head>
@@ -42,5 +43,5 @@
 </svelte:head>
 
 <main>
-	<CollectionContainer collectionPromise={getData(`${urlPrefix}${collectionsQueryString}&langs=${languageStore.value.toString()}`)} />
+	<CollectionContainer collectionPromise={collectionPromise} />
 </main>
