@@ -1,4 +1,5 @@
 import { urlPrefix, collectionsQueryString } from "../data/constantsV2";
+import { languageStore } from '$lib/functions/store.svelte';
 
 export const getData = async (url: string) => {
   console.log('url {}', url)
@@ -6,6 +7,8 @@ export const getData = async (url: string) => {
     return response.json();
   });
 }
+
+export const collectionPromise = getData(`${urlPrefix}${collectionsQueryString}&langs=${languageStore.value.toString()}`);
 
 
 // export async function getCollectionPromise() {

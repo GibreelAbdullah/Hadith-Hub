@@ -1,4 +1,4 @@
-<script lang="ts" context="module">
+<!-- <script lang="ts" context="module">
 	import { Accordion, AccordionItem, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import { writable, type Writable } from 'svelte/store';
 	import { languagePromise } from '../common/sideBarContents.svelte';
@@ -32,7 +32,7 @@
 {#await languagePromise}
 	<div class="text-primary-500 font-bold uppercase">Languages</div>
 	<div class="text-sm">
-		<div class="placeholder animate-pulse w-32" />
+		<div class="placeholder animate-pulse w-32"></div>
 	</div>
 {:then data}
 <Accordion>
@@ -66,4 +66,4 @@
 </Accordion>
 {:catch data}
 	Error...Could Not Load Data
-{/await}
+{/await} -->

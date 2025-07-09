@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import {getModalStore } from '@skeletonlabs/skeleton';
 	import { page } from '$app/stores';
 	import LanguageFilter from '$lib/components/searchModalComponents/languageFilter.svelte';
@@ -71,4 +71,4 @@
 		<div><kbd>Esc</kbd> to close</div>
 		<div><kbd>Enter</kbd> to search</div>
 	</footer>
-</div>
+</div> -->
