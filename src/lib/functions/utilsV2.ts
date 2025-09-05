@@ -1,8 +1,8 @@
-import { urlPrefix, collectionsQueryString } from "../data/constantsV2";
+import { urlPrefix, collectionsQueryString, languageQueryString } from "../data/constantsV2";
 import { languageStore } from '$lib/functions/store.svelte';
 
 export const getData = async (url: string) => {
-  console.log('url {}', url)
+//   console.log('url {}', url)
   return await fetch(url).then((response) => {
     return response.json();
   });
@@ -10,6 +10,21 @@ export const getData = async (url: string) => {
 
 export const collectionPromise = getData(`${urlPrefix}${collectionsQueryString}&langs=${languageStore.value.toString()}`);
 
+export const languagePromise = getData(`${urlPrefix}${languageQueryString}`);
+
+export async function getLanguageFullName(languageShortName: string[]) {
+		let languageFullNames: string[] = [];
+		let languageObject = await languagePromise;
+
+		languageShortName.forEach(shortName => {
+			const lang = languageObject.find((item: any[]) => item[0] === shortName);
+			if (lang) {
+				languageFullNames.push(lang[1]);
+			}
+		});
+
+	return languageFullNames;
+}
 
 // export async function getCollectionPromise() {
 //   var languages:string = ''; 

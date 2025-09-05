@@ -5,7 +5,6 @@
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
 	import { getData } from '$lib/functions/utilsV2';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
-	import { getLanguageFullName } from '$lib/components/common/sideBarContents.svelte';
 
 	let title = `${$page.params.collection}:${$page.params.hadithNumber} | HadithHub`;
 

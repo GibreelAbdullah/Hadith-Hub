@@ -13,7 +13,7 @@
     let MuhaddithDetailsPromise: Promise<any>;
     
     $: {
-        const lang = languageStore.value.at(0) || 'eng';
+        const lang = languageStore.value.at(0) || 'en';
         const cacheKey = getCacheKey(lang, muhaddithName);
         let shouldFetch = true;
         
@@ -27,7 +27,7 @@
                     shouldFetch = false;
                 }
             } catch (e) {
-                console.error('Cache parse error', e);
+                // console.error('Cache parse error', e);
             }
         }
         
@@ -43,7 +43,7 @@
                         timestamp: Date.now()
                     }));
                 } catch (e) {
-                    console.error('Cache write error', e);
+                    // console.error('Cache write error', e);
                     // Handle storage full if needed
                 }
                 return data;

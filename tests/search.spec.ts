@@ -7,7 +7,7 @@ test('Search Page Test', async ({ page }) => {
 	await page.getByPlaceholder('Search...').fill('greed');
 	await page.getByPlaceholder('Search...').press('Enter');
 
-	await expect(page).toHaveURL('/search?q=greed&lang=ara%2Ceng');
+	await expect(page).toHaveURL('/search?q=greed&lang=ar%2Cen');
 	const textContainer = page.locator('.card').nth(2)
 	await expect(textContainer).toContainText('greed')
 })

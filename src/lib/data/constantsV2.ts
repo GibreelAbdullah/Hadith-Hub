@@ -5,3 +5,4 @@ export const booksQueryString = "type=books";
 export const hadithInBookQueryString = "type=ahadith_in_book";
 export const singleHadith = "type=hadith";
 export const scholarQueryString = "type=scholar";
+export const searchQueryString = "type=search";

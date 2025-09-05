@@ -2,17 +2,13 @@
 	import { popup } from '@skeletonlabs/skeleton';		
 	let {collectionPromise} = $props()
 	import { languageStore } from '$lib/functions/store.svelte';
-	import { getLanguageFullName } from '$lib/components/common/sideBarContents.svelte';
+	import { getLanguageFullName } from '$lib/functions/utilsV2';
+	// import { log } from 'console';
 	
 	function getUnavailableCollections(availbleLanguagesOfCollection: string[], selectedLanguagesStore: string[]) {
-		let unavailableLanguagesShortName: string[] = [];
-			selectedLanguagesStore.forEach((collection) => {
-				if (!availbleLanguagesOfCollection.includes(collection)) {
-					unavailableLanguagesShortName.push(collection);
-				}
-			});
-
-		unavailableLanguagesShortName = unavailableLanguagesShortName;
+		const unavailableLanguagesShortName = selectedLanguagesStore.filter(
+			(language) => !availbleLanguagesOfCollection.includes(language)
+		);
 		return getLanguageFullName(unavailableLanguagesShortName);
 	}
 

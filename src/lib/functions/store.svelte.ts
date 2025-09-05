@@ -34,4 +34,4 @@ export class LocalStore<T> {
 //   return new LocalStore(key, value);
 // }
 
-export let languageStore = new LocalStore("selectedLanguages",["eng,ara"])
+export let languageStore = new LocalStore("selectedLanguages",["en,ar"])

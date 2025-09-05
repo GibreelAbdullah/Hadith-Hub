@@ -2,19 +2,7 @@
 	import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import SvgIcon from './svgIcon.svelte';
 	import { languageStore } from '$lib/functions/store.svelte';
-	import { languageQueryString, urlPrefix } from '$lib/data/constantsV2';
-	import { getData } from '$lib/functions/utilsV2';
-
-	export const languagePromise = getData(`${urlPrefix}${languageQueryString}`);
-
-	export async function getLanguageFullName(languageShortName: string[]) {
-		let languageFullNames: string[] = [];
-		let languageObject = await languagePromise;
-		languageShortName.forEach((language) => {
-			languageFullNames.push(languageObject[language]);
-		});
-	return languageFullNames;
-}
+	import { languagePromise } from '$lib/functions/utilsV2';
 
 </script>
 

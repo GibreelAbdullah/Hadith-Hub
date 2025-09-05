@@ -31,7 +31,7 @@
 				{#if loadedPopups.has(grade[0] + i + hadithIndex)}
 					<GradingPopup muhaddithName={grade[4]} source={grade[2]} />
 				{:else}
-					{console.log('Popup not loaded yet')}
+					<!-- {console.log('Popup not loaded yet')} -->
 				{/if}
 			</div>
 		{/if}

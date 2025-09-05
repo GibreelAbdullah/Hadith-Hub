@@ -2,8 +2,7 @@
 	import CollectionContainer from '$lib/components/collectionContainer.svelte';
 	import { page } from '$app/stores';
 	
-	import { collectionPromise, getData } from '$lib/functions/utilsV2';
-	import { collectionsQueryString, urlPrefix } from '$lib/data/constantsV2';
+	import { collectionPromise } from '$lib/functions/utilsV2';
 
 </script>
 

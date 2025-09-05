@@ -54,7 +54,12 @@
 	<svelte:fragment slot="sidebarLeft">
 		<SideBarContents />
 	</svelte:fragment>
-	<slot />
-	<Footer />
+	<!-- <slot /> -->
+	<div class="flex flex-col min-h-[95%]">
+		<div class="flex-1">
+			<slot />
+		</div>
+		<Footer />
+	</div>
 </AppShell>
 <!-- <SearchBar/> -->
