@@ -67,7 +67,7 @@
 			<!-- {@const dummy2 = bookTitle = hadith[2]} -->
 			<div class="p-4">
 				<div class="p-4 card max-w-[90rem] m-auto">
-					<div class="card flex-wrap">
+					<div class="card flex-wrap"  id="hadith{hadith[0]}{hadith[1][0]}">
 						<div class="hadithGroup font-medium grid">
 							<div class="break-words leading-7 m-3 pb-4">
 								<article id="myDiv">{@html hadith[6]}</article>

@@ -14,6 +14,12 @@
 	export let hadithNumberInBook: string;
 	export let bookNumber: any;
 
+	function showAndHideCopiedAlert() {
+		visible = true;
+		setTimeout(() => {
+			visible = false;
+		}, 3000);
+	}
 
     function captureHadithScreenshot(
 		elementId: string,
@@ -34,8 +40,8 @@
 				if (!copy) {
 					download(dataUrl, fileName);
 				} else {
-					visible = true;
 					// Copy the image to clipboard
+					visible = true;
 					const img = new Image();
 					img.onload = function () {
 						const canvas = document.createElement('canvas');
@@ -44,7 +50,6 @@
 						const ctx = canvas.getContext('2d');
 						if (!ctx) return;
 						ctx.drawImage(img, 0, 0);
-
 						canvas.toBlob(function (blob) {
 							if (!blob) return;
 							const item = new ClipboardItem({ 'image/png': blob });
@@ -67,9 +72,11 @@
 			.finally(() => {
 				buttonGroup.setAttribute('class', 'flex');
 				watermark.setAttribute('class', 'hidden');
-				setTimeout(() => {
-					visible = false;
-				}, 3000);
+										visible = true;
+						setTimeout(() => {
+							visible = false;
+						}, 3000);
+				// showAndHideCopiedAlert();
 			});
 	}
 </script>
@@ -133,6 +140,9 @@
 							.toString()
 							.replace('<span style="color:red;">', '')
 							.replace('</span>', '')}
+					on:click={() => {
+						showAndHideCopiedAlert();
+					}}
 				>
 					<SvgIcon name="copy" fill="fill-black" />
 				</button>

@@ -72,9 +72,9 @@
 			<!-- </div> -->
 		</div>
 	{:else if data[5] == 'hadith'}
-		<div class="p-4" id="hadith{data[0]}{data[1]}">
+		<div class="p-4">
 			<div class="p-4 card max-w-[90rem] m-auto">
-				<div class="card flex-wrap">
+				<div class="card flex-wrap" id="hadith{data[0]}{data[1]}">
 					<div class="hadithGroup font-medium grid">
 						{#each { length: languageStore.value.length ? languageStore.value.length : 2 } as _, i}
 							<div class="break-words leading-7 m-3 pb-4">
