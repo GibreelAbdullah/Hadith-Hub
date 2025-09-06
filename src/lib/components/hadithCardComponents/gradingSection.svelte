@@ -28,11 +28,10 @@
 				class="card p-4 w-72 shadow-xl variant-filled-secondary z-[1]"
 				data-popup="popupFeatured{grade[0]}{i}{hadithIndex}"
 			>
-				{#if loadedPopups.has(grade[0] + i + hadithIndex)}
-					<GradingPopup muhaddithName={grade[4]} source={grade[2]} />
+			<GradingPopup muhaddithName={grade[4]} source={grade[2]} />
+				<!-- {#if loadedPopups.has(grade[0] + i + hadithIndex)}
 				{:else}
-					<!-- {console.log('Popup not loaded yet')} -->
-				{/if}
+				{/if} -->
 			</div>
 		{/if}
 	{/each}
