@@ -28,6 +28,31 @@
 					bind:group={languageStore.value}
 					name={languageObject[0]}
 					value={languageObject[0]}
+					on:click={() => {
+						const params = new URLSearchParams(window.location.search);
+						let selected = [...languageStore.value];
+
+						// Get current languages from params
+						let currentLangs = params.get('lang')?.split(',').filter(Boolean) ?? [];
+
+						// Toggle logic: add or remove languageObject[0] from currentLangs
+						if (currentLangs.includes(languageObject[0])) {
+							currentLangs = currentLangs.filter(l => l !== languageObject[0]);
+						} else {
+							currentLangs = [...currentLangs, languageObject[0]];
+						}
+
+						// Remove duplicates and empty values
+						currentLangs = Array.from(new Set(currentLangs)).filter(Boolean);
+
+						if (currentLangs.length > 0) {
+							params.set('lang', currentLangs.join(','));
+						} else {
+							params.delete('lang');
+						}
+						const newUrl = `${window.location.pathname}?${params.toString()}`;
+						window.history.replaceState({}, '', newUrl);
+					}}
 				>
 					<div class="max-h-4 pb-5">{languageObject[1]}</div>
 				</ListBoxItem>

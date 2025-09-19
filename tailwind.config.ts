@@ -16,6 +16,11 @@ const config = {
 			'../**/*.{html,js,svelte,ts}'
 		)
 	],
+	safelist: [
+		{
+			pattern: /bg-(emerald|red|blue|yellow|green|purple|pink)-500/,
+		},
+	],
 	theme: {
 		extend: {},
 	},

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { languageStore } from '$lib/functions/store.svelte';
 	let { bookPromise, bookURL } = $props();
 </script>
@@ -43,7 +44,7 @@
 						<div class="sticky top-0 card p-4 m-auto !variant-glass-secondary max-w-[90rem]">
 							<div class="grid px-3">
 								<ol class="breadcrumb">
-									<li class="crumb anchor"><a href="/?lang={languageStore.value.toString()}">Home</a></li>
+									<li class="crumb anchor"><a href="/{$page.params.home}?lang={languageStore.value.toString()}">Home</a></li>
 									<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 									<li class="crumb">{data[4]}</li>
 								</ol>

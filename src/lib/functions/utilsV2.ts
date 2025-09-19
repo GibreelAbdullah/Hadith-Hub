@@ -1,4 +1,4 @@
-import { urlPrefix, collectionsQueryString, languageQueryString } from "../data/constantsV2";
+import { urlPrefix, collectionsQueryString, languageQueryString, hadithInBookQueryString } from "../data/constantsV2";
 import { languageStore } from '$lib/functions/store.svelte';
 
 export const getData = async (url: string) => {
@@ -26,27 +26,23 @@ export async function getLanguageFullName(languageShortName: string[]) {
 	return languageFullNames;
 }
 
-// export async function getCollectionPromise() {
-//   var languages:string = ''; 
-//   selectedLanguagesStore.subscribe((selectedLanguages) => {
-//     languages = selectedLanguages.filter(lang => lang !== '').toString();
-//   });
-  
-//   return getData(`${urlPrefix}${collectionsQueryString}&langs=${languages}`);
-// }
+export const getHadithData = async (collection: string, book : string, languageStoreValue: string[]) => {
+    const selectedLanguages = languageStoreValue.toString().split(',');
+    const collectionsData = await collectionPromise;
+    const collectionEntry = collectionsData.find((item: any[]) => item[0] === collection);
+	const unavailableLanguages = selectedLanguages.filter(lang => !collectionEntry[1].includes(lang));
+	const availableLanguages = selectedLanguages.filter(lang => collectionEntry[1].includes(lang));
+	console.log('availableLanguages {}', availableLanguages);
+	console.log('unavailableLanguages {}', unavailableLanguages);
+	return [availableLanguages, unavailableLanguages, await getData(`${urlPrefix}${hadithInBookQueryString}&langs=${availableLanguages.toString()}&collection=${collection}&book_number=${book}`)];
+}
 
-// export const collectionUrl = `${urlPrefix}${collectionsQueryString}`
-
-// export async function getCollectionFullName(collectionShortName: string[]) {
-//   let collectionFullNames: string[] = [];
-//   let collectionObject = await getCollectionPromise();
-
-//   collectionObject.collections.forEach((collectionCategories: { [x: string]: { [x: string]: string; }[]; }) => {
-//     collectionCategories["books"].forEach((collection: { [x: string]: string; }) => {
-//       if (collectionShortName.includes(collection["name"]!)) {
-//         collectionFullNames.push(collection["eng-name"]);
-//       }
-//     });
-//   });
-//   return collectionFullNames;
-// }
+export async function isRtl(languageShortName: string) {
+    let languageObject = await languagePromise;
+    const lang = languageObject.find((item: any[]) => item[0] === languageShortName);
+    if (!lang) {
+        console.warn(`isRtl: languageShortName '${languageShortName}' not found in languageObject.`);
+        return false;
+    }
+    return lang[2];
+}

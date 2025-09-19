@@ -31,6 +31,5 @@
 </svelte:head>
 
 <main>
-	<!-- <CollectionContainer collectionPromise={getData(`${urlPrefix}${collectionsQueryString}&langs=${languageStore.value.toString()}`)} /> -->
 	<BookContainer bookPromise={getData(`${urlPrefix}${booksQueryString}&langs=${languageStore.value.toString()}&collection=${$page.params.collection}`)} bookURL={$page.params.collection} />
 </main>
