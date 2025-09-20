@@ -59,7 +59,7 @@ let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | Hadi
 			</div>
 			<HadithPlaceholder />
 		{:then dataList}
-		<HadithContainer dataListRecord={dataList} book={$page.params.collection} />
+		<HadithContainer dataListRecord={dataList} />
 		{:catch data}
 			<div class="card p-4 m-4">
 				<div class="hadithGroup font-medium p-2 grid">

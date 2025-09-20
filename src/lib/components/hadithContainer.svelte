@@ -3,6 +3,7 @@
 	import { languageStore } from '$lib/functions/store.svelte';
 	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
 	import Reference from './hadithCardComponents/reference.svelte';
+	import { isRtl } from '$lib/functions/utilsV2';
 	export let dataListRecord: any[] = [];
 	let bookTitle = '';
 	let collectionTitle = '';
@@ -36,22 +37,27 @@
 			>
 				<div class="hadithGroup font-medium grid">
 					{#each { length: languageStore.value.length ? languageStore.value.length : 2 } as _, i}
-						<div class="break-words leading-7 m-3 pb-4">
-							<article id="myDiv">({data[4]}) {@html data[i + 7]}</article>
-						</div>
+						{#await isRtl(languageStore.value[i]) then rtl}
+							<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'}>
+								<article id="myDiv">{@html data[i + 7]}</article>
+							</div>
+						{/await}
 					{/each}
 				</div>
 			</div>
 		</div>
+
 	{:else if data[5] == 'hadith'}
 		<div class="p-4">
 			<div class="p-4 card max-w-[90rem] m-auto">
 				<div class="card flex-wrap" id="hadith{data[0]}{data[1]}">
 					<div class="hadithGroup font-medium grid">
 						{#each { length: languageStore.value.length ? languageStore.value.length : 2 } as _, i}
-							<div class="break-words leading-7 m-3 pb-4">
-								<article id="myDiv">{@html data[i + 7]}</article>
-							</div>
+							{#await isRtl(languageStore.value[i]) then rtl}
+								<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'}>
+									<article id="myDiv">{@html data[i + 7]}</article>
+								</div>
+							{/await}
 						{/each}
 					</div>
 					<!-- GRADINGS -->
