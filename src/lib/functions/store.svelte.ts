@@ -1,37 +1,55 @@
 import { browser } from '$app/environment';
 
-export class LocalStore<T> {
-  value = $state<T>() as T;
-  key = '';
-
-  constructor(key: string, value: T) {
-    this.key = key;
-    this.value = value;
-
-    if (browser) {
-      const item = localStorage.getItem(key);
-      if (item) this.value = this.deserialize(item);
+export function localStore<T>(key: string, defaultValue: T) {
+  let value = $state<T>(defaultValue);
+  
+  // Initialize from localStorage
+  if (browser) {
+    const stored = localStorage.getItem(key);
+    if (stored) {
+      try {
+        value = JSON.parse(stored);
+      } catch (error) {
+        console.warn(`Failed to parse localStorage item "${key}":`, error);
+      }
     }
+  }
 
-    $effect.root(() => {
-      $effect(() => {
-        localStorage.setItem(this.key, this.serialize(this.value));
-      });
-      return () => { };
+  // Auto-save to localStorage
+  $effect.root(() => {
+    $effect(() => {
+      if (browser) {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+        } catch (error) {
+          console.warn(`Failed to save to localStorage "${key}":`, error);
+        }
+      }
     });
-  }
+    return () => {};
+  });
 
-  serialize(value: T): string {
-    return JSON.stringify(value);
-  }
-
-  deserialize(item: string): T {
-    return JSON.parse(item);
-  }
+  return {
+    get value() {
+      return value;
+    },
+    set value(newValue: T) {
+      value = newValue;
+    },
+    update(updater: (value: T) => T) {
+      value = updater(value);
+    },
+    reset() {
+      value = defaultValue;
+    },
+    clear() {
+      if (browser) {
+        localStorage.removeItem(key);
+      }
+      value = defaultValue;
+    }
+  };
 }
 
-// export function localStore<T>(key: string, value: T) {
-//   return new LocalStore(key, value);
-// }
-
-export let languageStore = new LocalStore("selectedLanguages",["en,ar"])
+// Usage
+export const languageStore = localStore("selectedLanguages", ["en", "ar"]);
