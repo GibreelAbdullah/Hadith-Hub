@@ -8,7 +8,9 @@ export const getData = async (url: string) => {
   });
 }
 
-export const collectionPromise = getData(`${urlPrefix}${collectionsQueryString}&langs=${languageStore.value.toString()}`);
+export function getCollectionPromise() {
+  return getData(`${urlPrefix}${collectionsQueryString}&langs=${languageStore.value.toString()}`);
+}
 
 export const languagePromise = getData(`${urlPrefix}${languageQueryString}`);
 
@@ -28,6 +30,7 @@ export async function getLanguageFullName(languageShortName: string[]) {
 
 export const getHadithData = async (collection: string, book : string, languageStoreValue: string[]) => {
     const selectedLanguages = languageStoreValue.toString().split(',');
+	const collectionPromise = $derived(getCollectionPromise());
     const collectionsData = await collectionPromise;
     const collectionEntry = collectionsData.find((item: any[]) => item[0] === collection);
 	const unavailableLanguages = selectedLanguages.filter(lang => !collectionEntry[1].includes(lang));

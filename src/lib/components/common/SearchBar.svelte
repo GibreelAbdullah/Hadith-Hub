@@ -1,13 +1,16 @@
 <script lang="ts">
-	import { collectionPromise, languagePromise } from '$lib/functions/utilsV2';
+	import { getCollectionPromise, languagePromise } from '$lib/functions/utilsV2';
 	import { goto } from '$app/navigation';
+  	
+	const collectionPromise = $derived(getCollectionPromise());
 
-	let expandSearchBar = false;
+	let expandSearchBar = $state(false);
+	// let expandSearchBar = false;
 	let isSearchBarFocused = false;
-	let searchQuery = '';
+	let searchQuery = $state('');
 
-	let selectedCollection = '';
-	let selectedLanguage = '';
+	let selectedCollection = $state('');
+	let selectedLanguage = $state('');
 
 	function handleSearchFocus() {
 		expandSearchBar = true;

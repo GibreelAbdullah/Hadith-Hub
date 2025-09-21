@@ -2,8 +2,8 @@
 	import CollectionContainer from '$lib/components/collectionContainer.svelte';
 	import { page } from '$app/stores';
 	
-	import { collectionPromise } from '$lib/functions/utilsV2';
-
+	import { getCollectionPromise } from '$lib/functions/utilsV2';
+  	const collectionPromise = $derived(getCollectionPromise());
 </script>
 
 <svelte:head>
