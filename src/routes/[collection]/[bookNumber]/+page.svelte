@@ -2,11 +2,12 @@
 import { page } from '$app/stores';
 import HadithContainer from '$lib/components/hadithContainer.svelte';
 import { languageStore } from '$lib/functions/store.svelte';
-import { hadithInBookQueryString, urlPrefix } from '$lib/data/constantsV2';
-import { getData } from '$lib/functions/utilsV2';
 import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
+	import { getHadithPromise } from '$lib/functions/utilsV2';
 
 let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`;
+const hadithPromise = $derived(getHadithPromise($page.params));
+
 </script>
 
 <svelte:head>
@@ -37,7 +38,7 @@ let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | Hadi
 </svelte:head>
 	<main>
 	{#if languageStore.value.length != 0}
-		{#await getData(`${urlPrefix}${hadithInBookQueryString}&langs=${languageStore.value.toString()}&collection=${$page.params.collection}&book_number=${$page.params.bookNumber}`)}
+		{#await hadithPromise}
 			<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
 				<div class="hadithGroup grid px-5">
 					<ol class="breadcrumb">
