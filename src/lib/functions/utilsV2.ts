@@ -11,9 +11,13 @@ export function getCollectionPromise() {
   return getData(`${urlPrefix}${collectionsQueryString}&langs=${languageStore.value.toString()}`);
 }
 
-export function getHadithPromise(params: Record<string, string>) {
-	
-  return getData(`${urlPrefix}${hadithInBookQueryString}&langs=${languageStore.value.toString()}&collection=${params.collection}&book_number=${params.bookNumber}`);
+export async function getHadithPromise(params: Record<string, string>) {
+  const selectedLanguages = languageStore.value.toString().split(',');
+  const collectionsData = await getCollectionPromise();
+  const collectionEntry = collectionsData.find((item: any[]) => item[0] === params.collection);
+	const unavailableLanguages = selectedLanguages.filter(lang => !collectionEntry[1].includes(lang));
+	const availableLanguages = selectedLanguages.filter(lang => collectionEntry[1].includes(lang));
+	return [availableLanguages, unavailableLanguages, await getData(`${urlPrefix}${hadithInBookQueryString}&langs=${availableLanguages.toString()}&collection=${params.collection}&book_number=${params.bookNumber}`)];
 }
 
 
@@ -34,9 +38,9 @@ export async function getLanguageFullName(languageShortName: string[]) {
 }
 
 export const getHadithData = async (collection: string, book : string, languageStoreValue: string[]) => {
-    const selectedLanguages = languageStoreValue.toString().split(',');
-    const collectionsData = await $derived(getCollectionPromise());
-    const collectionEntry = collectionsData.find((item: any[]) => item[0] === collection);
+  const selectedLanguages = languageStoreValue.toString().split(',');
+  const collectionsData = await $derived(getCollectionPromise());
+  const collectionEntry = collectionsData.find((item: any[]) => item[0] === collection);
 	const unavailableLanguages = selectedLanguages.filter(lang => !collectionEntry[1].includes(lang));
 	const availableLanguages = selectedLanguages.filter(lang => collectionEntry[1].includes(lang));
 	console.log('availableLanguages {}', availableLanguages);

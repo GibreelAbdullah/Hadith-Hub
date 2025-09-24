@@ -1,13 +1,12 @@
 <script lang="ts">
-import { page } from '$app/stores';
-import HadithContainer from '$lib/components/hadithContainer.svelte';
-import { languageStore } from '$lib/functions/store.svelte';
-import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
-	import { getHadithPromise } from '$lib/functions/utilsV2';
+	import { page } from '$app/stores';
+	import HadithContainer from '$lib/components/hadithContainer.svelte';
+	import { languageStore } from '$lib/functions/store.svelte';
+	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
+	import { getHadithPromise, getLanguageFullName } from '$lib/functions/utilsV2';
 
-let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`;
-const hadithPromise = $derived(getHadithPromise($page.params));
-
+	let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`;
+	const hadithPromise = $derived(getHadithPromise($page.params));
 </script>
 
 <svelte:head>
@@ -36,7 +35,7 @@ const hadithPromise = $derived(getHadithPromise($page.params));
 		content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg"
 	/>
 </svelte:head>
-	<main>
+<main>
 	{#if languageStore.value.length != 0}
 		{#await hadithPromise}
 			<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
@@ -60,7 +59,25 @@ const hadithPromise = $derived(getHadithPromise($page.params));
 			</div>
 			<HadithPlaceholder />
 		{:then dataList}
-		<HadithContainer dataListRecord={dataList} />
+			{#if dataList[1].length != 0}
+				<div class="p-4">
+					<div class="px-4 card max-w-[90rem] m-auto">
+						<div class="hadithGroup font-medium grid">
+							<div class="break-words leading-7 m-3 pb-4">
+								<article id="myDiv">
+									{#await getLanguageFullName(dataList[1]) then unavailableLanguages}
+											The selected language(s) {unavailableLanguages} is/are not available in this collection.
+											Please select different language(s).
+									{:catch error}
+										Error: {error.message}
+									{/await}
+								</article>
+							</div>
+						</div>
+					</div>
+				</div>
+			{/if}
+			<HadithContainer dataListRecord={dataList[2]} />
 		{:catch data}
 			<div class="card p-4 m-4">
 				<div class="hadithGroup font-medium p-2 grid">
