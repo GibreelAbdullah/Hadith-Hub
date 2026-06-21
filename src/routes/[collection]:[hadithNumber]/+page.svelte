@@ -1,14 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { singleHadith, urlPrefix } from '$lib/data/constantsV2';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
-	import { getData } from '$lib/functions/utilsV2';
+	import { getSingleHadith } from '$lib/functions/utilsV2';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 
 	let title = `${$page.params.collection}:${$page.params.hadithNumber} | HadithHub`;
 
-	const getHadithData = getData(`${urlPrefix}${singleHadith}&langs=${languageStore.value.toString()}&collection=${$page.params.collection}&hadith_number=${$page.params.hadithNumber}`)
+	const getHadithData = getSingleHadith(
+		$page.params.collection,
+		$page.params.hadithNumber,
+		languageStore.value.length ? languageStore.value : ["ar", "en"]
+	);
 </script>
 
 <svelte:head>

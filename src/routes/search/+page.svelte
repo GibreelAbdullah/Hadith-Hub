@@ -1,27 +1,16 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { getData } from '$lib/functions/utilsV2';
+	import { searchHadith } from '$lib/functions/utilsV2';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
-	import { searchQueryString, urlPrefix } from '$lib/data/constantsV2';
 	import Reference from '$lib/components/hadithCardComponents/reference.svelte';
 	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
 
 	const title = `Search for "${$page.url.searchParams.get('text')}" | HadithHub`;
 	const language = $page.url.searchParams.get('language');
 	const collection = $page.url.searchParams.get('collection');
+	const text = $page.url.searchParams.get('text') || '';
 
-	let url = '';
-	
-	$: {
-		let params = [];
-		const text = $page.url.searchParams.get('text');
-		if (text) params.push(`text=${encodeURIComponent(text)}`);
-		if (language) params.push(`language=${encodeURIComponent(language)}`);
-		if (collection) params.push(`collection=${encodeURIComponent(collection)}`);
-		url = `${urlPrefix}${searchQueryString}${params.length ? '&' + params.join('&') : ''}`;
-	}
-
-	$: allHadithPromises = getData(url);
+	$: allHadithPromises = searchHadith(text, language, collection);
 
 </script>
 

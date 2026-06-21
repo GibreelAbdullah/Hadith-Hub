@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { scholarQueryString, urlPrefix } from '$lib/data/constantsV2';
     import { languageStore } from '$lib/functions/store.svelte';
-    import { getData } from '$lib/functions/utilsV2';
+    import { getScholar } from '$lib/functions/utilsV2';
     export let muhaddithName: string;
     export let source: string;
     import { Avatar } from '@skeletonlabs/skeleton';
@@ -33,18 +32,13 @@
         
         // Fetch fresh data if no valid cache
         if (shouldFetch) {
-            MuhaddithDetailsPromise = getData(
-                `${urlPrefix}${scholarQueryString}&langs=${lang}&name=${muhaddithName}`
-            ).then(data => {
-                // Cache the fresh data with timestamp
+            MuhaddithDetailsPromise = getScholar(lang, muhaddithName).then(data => {
                 try {
                     localStorage.setItem(cacheKey, JSON.stringify({
                         data,
                         timestamp: Date.now()
                     }));
                 } catch (e) {
-                    // console.error('Cache write error', e);
-                    // Handle storage full if needed
                 }
                 return data;
             });

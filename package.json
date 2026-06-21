@@ -46,6 +46,7 @@
 	"dependencies": {
 		"@floating-ui/dom": "1.6.12",
 		"downloadjs": "^1.4.7",
-		"html-to-image": "^1.11.11"
+		"html-to-image": "^1.11.11",
+		"sql.js-httpvfs": "^0.8.12"
 	}
 }

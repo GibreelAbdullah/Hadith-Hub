@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import BookContainer from '$lib/components/bookContainer.svelte';
-	import { booksQueryString, urlPrefix } from '$lib/data/constantsV2';
 	import { languageStore } from '$lib/functions/store.svelte';
-	import { getData } from '$lib/functions/utilsV2';
+	import { getBooks } from '$lib/functions/utilsV2';
 
 	let title = `${$page.params.collection} | HadithHub`;
 
@@ -31,5 +30,5 @@
 </svelte:head>
 
 <main>
-	<BookContainer bookPromise={getData(`${urlPrefix}${booksQueryString}&langs=${languageStore.value.toString()}&collection=${$page.params.collection}`)} bookURL={$page.params.collection} />
+	<BookContainer bookPromise={getBooks($page.params.collection)} bookURL={$page.params.collection} />
 </main>
