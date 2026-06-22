@@ -5,7 +5,7 @@ import preprocess from "svelte-preprocess";
 const config = {
 	kit: {
 		adapter: adapter({
-			fallback: '404.html'
+			fallback: 'index.html'
 		}),
 		paths: {
 			base: process.env.BASE_PATH || ''
