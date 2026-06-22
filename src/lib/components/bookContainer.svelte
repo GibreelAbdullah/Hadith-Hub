@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { languageStore } from '$lib/functions/store.svelte';
+	import { base } from '$app/paths';
 	let { bookPromise, bookURL } = $props();
 </script>
 
@@ -8,7 +9,7 @@
 	<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
 		<div class="grid px-3">
 			<ol class="breadcrumb">
-				<li class="crumb anchor"><a href="/?lang={languageStore.value.toString()}">Home</a></li>
+				<li class="crumb anchor"><a href="{base}/?lang={languageStore.value.toString()}">Home</a></li>
 				<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 				<div class="placeholder w-52 m-auto animate-pulse"></div>
 			</ol>
@@ -44,7 +45,7 @@
 						<div class="sticky top-0 card p-4 m-auto !variant-glass-secondary max-w-[90rem]">
 							<div class="grid px-3">
 								<ol class="breadcrumb">
-									<li class="crumb anchor"><a href="/{$page.params.home}?lang={languageStore.value.toString()}">Home</a></li>
+									<li class="crumb anchor"><a href="{base}/{$page.params.home}?lang={languageStore.value.toString()}">Home</a></li>
 									<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 									<li class="crumb">{data[4]}</li>
 								</ol>
@@ -52,7 +53,7 @@
 						</div>
 					</div>
 				{:else if data[3] == 'book'}
-					<a class="card p-4 text-center relative flex flex-col h-full" href="/{bookURL}/{data[0]}?lang={languageStore.value.toString()}">
+					<a class="card p-4 text-center relative flex flex-col h-full" href="{base}/{bookURL}/{data[0]}?lang={languageStore.value.toString()}">
 						{data[0]}
 						<hr />
 						{#each { length: languageStore.value.length ? languageStore.value.length : 2 } as _, i}

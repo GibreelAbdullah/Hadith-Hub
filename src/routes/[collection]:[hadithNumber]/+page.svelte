@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { base } from '$app/paths';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
 	import { getSingleHadith } from '$lib/functions/utilsV2';
@@ -46,7 +47,7 @@
 		<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
 			<div class="hadithGroupgrid px-5">
 				<ol class="breadcrumb">
-					<li class="crumb anchor"><a href="/">Home</a></li>
+					<li class="crumb anchor"><a href="{base}/">Home</a></li>
 					<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 					<div class="placeholder w-52 m-auto animate-pulse"></div>
 				</ol>

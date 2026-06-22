@@ -1,5 +1,6 @@
 <!-- <script lang="ts">
     import { selectedLanguagesStore } from "$lib/common/sideBarContents.svelte";
+	import { base } from '$app/paths';
     import { getLanguageFullName } from "$lib/common/utils";
     export let dataPromise: Promise<any>;
   
@@ -26,7 +27,7 @@
       {/each}
     {:then data}
       {#each data["collections"] as collection}
-        <a class="card p-4 text-center" href="/{collection['name']}">
+        <a class="card p-4 text-center" href="{base}/{collection['name']}">
           {collection["eng-name"]}
           <br />
           {collection["ara-name"]}

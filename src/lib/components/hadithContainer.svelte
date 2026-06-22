@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { languageStore } from '$lib/functions/store.svelte';
+	import { base } from '$app/paths';
 	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
 	import Reference from './hadithCardComponents/reference.svelte';
 	import { isRtl } from '$lib/functions/utilsV2';
@@ -17,11 +18,11 @@
 			<div class="hadithGroup grid px-5">
 				<ol class="breadcrumb">
 					<li class="crumb anchor">
-						<a href="/{$page.params.home}?lang={languageStore.value.toString()}">Home</a>
+						<a href="{base}/{$page.params.home}?lang={languageStore.value.toString()}">Home</a>
 					</li>
 					<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 					<li class="crumb anchor">
-						<a href="/{$page.params.collection}?lang={languageStore.value.toString()}">{data[7]}</a>
+						<a href="{base}/{$page.params.collection}?lang={languageStore.value.toString()}">{data[7]}</a>
 					</li>
 					<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 					<li id="bookCrumb" class="crumb">{bookTitle}</li>

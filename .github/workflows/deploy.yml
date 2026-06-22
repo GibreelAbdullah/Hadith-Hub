@@ -32,7 +32,10 @@ jobs:
         run: npm run build
 
       - name: Fix SPA routing for GitHub Pages
-        run: cp build/index.html build/404.html
+        run: |
+          cp build/index.html build/404.html
+          # Add .nojekyll to prevent GitHub Pages from ignoring files starting with _
+          touch build/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
