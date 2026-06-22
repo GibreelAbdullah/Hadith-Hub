@@ -3,7 +3,6 @@
 	let {collectionPromise} = $props()
 	import { languageStore } from '$lib/functions/store.svelte';
 	import { getLanguageFullName } from '$lib/functions/utilsV2';
-	// import { log } from 'console';
 	
 	function getUnavailableCollections(availbleLanguagesOfCollection: string[], selectedLanguagesStore: string[]) {
 		const unavailableLanguagesShortName = selectedLanguagesStore.filter(
@@ -13,7 +12,6 @@
 	}
 
 	function filterCollections() {
-		// Declare variables
 		var input, filter, collection, collectionlist, collectionName, i, j, txtValue, display;
 		input = <HTMLInputElement>document.getElementById('filterCollections');
 		filter = input.value.toUpperCase();
@@ -66,7 +64,6 @@
 		<div class="collection grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 p-4">
 			{#each dataList as data}
 				<a class="card p-4 text-center relative" href="/{data[0]}?lang={languageStore.value.toString()}">
-						<!-- If no language is selected then it should take 2 -->
 						{#each {length: languageStore.value.length ? languageStore.value.length : 2} as _, i}
 							{#if data[2 + i] != null}
 								{data[2 + i]}
@@ -92,7 +89,6 @@
 						>⋮
 					</button>
 				</a>
-				<span class="absolute top-0 right-0"> </span>
 				<div
 					class="card p-4 shadow-xl z-10 w-96 variant-filled-primary"
 					data-popup="popupFeatured-{data[0]}"

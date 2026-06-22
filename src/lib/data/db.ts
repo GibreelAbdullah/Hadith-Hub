@@ -1,37 +1,83 @@
-import { browser } from '$app/environment';
+import { browser } from "$app/environment";
 
-const DB_BASE_URL =
-	'https://raw.githubusercontent.com/GibreelAbdullah/hadith-db/refs/heads/master/';
-const PAGE_SIZE = 1024;
+const DATA_BASE_URL = import.meta.env.VITE_DB_BASE_URL || "/db";
 
-let masterWorker: any = null;
-const bookWorkers: Map<string, any> = new Map();
-
-async function createWorker(url: string) {
-	const mod = await import('sql.js-httpvfs');
-	const createDbWorker = mod.createDbWorker || mod.default?.createDbWorker;
-	const workerUrl = new URL('sql.js-httpvfs/dist/sqlite.worker.js', import.meta.url);
-	const wasmUrl = new URL('sql.js-httpvfs/dist/sql-wasm.wasm', import.meta.url);
-	return await createDbWorker(
-		[{ from: 'inline', config: { serverMode: 'full', requestChunkSize: PAGE_SIZE, url } }],
-		workerUrl.toString(),
-		wasmUrl.toString()
-	);
+interface CollectionsData {
+  languages: { short_name: string; full_name: string; rtl: boolean }[];
+  collections: { short_name: string; ar: string; en: string }[];
 }
 
-export async function getMasterDb() {
-	if (!browser) return null;
-	if (!masterWorker) {
-		masterWorker = await createWorker(`${DB_BASE_URL}/master/master.db`);
-	}
-	return masterWorker;
+interface BookMeta {
+  number: string;
+  ar: string;
+  en: string;
+  hadith_start: number;
+  hadith_end: number;
 }
 
-export async function getBookDb(collection: string) {
-	if (!browser) return null;
-	if (!bookWorkers.has(collection)) {
-		const worker = await createWorker(`${DB_BASE_URL}/books/${collection}.db`);
-		bookWorkers.set(collection, worker);
-	}
-	return bookWorkers.get(collection)!;
+interface Record {
+  line: number;
+  cat: string;
+  book?: string;
+  chapter?: string;
+  num?: string;
+  num_book?: number;
+}
+
+export interface Metadata {
+  collection: string;
+  languages: string[];
+  books: BookMeta[];
+  records: Record[];
+  offsets: { [lang: string]: number[] };
+  collection_info: { [lang: string]: string };
+  collection_intro: { [lang: string]: string };
+}
+
+// Cache
+let collectionsCache: CollectionsData | null = null;
+const metadataCache: Map<string, Metadata> = new Map();
+
+export async function getCollections(): Promise<CollectionsData> {
+  if (!browser) return { languages: [], collections: [] };
+  if (collectionsCache) return collectionsCache;
+  const res = await fetch(`${DATA_BASE_URL}/collections.json`);
+  collectionsCache = await res.json();
+  return collectionsCache!;
+}
+
+export async function getMetadata(collection: string): Promise<Metadata | null> {
+  if (!browser) return null;
+  if (metadataCache.has(collection)) return metadataCache.get(collection)!;
+  const res = await fetch(`${DATA_BASE_URL}/${collection}/metadata.json`);
+  const meta: Metadata = await res.json();
+  metadataCache.set(collection, meta);
+  return meta;
+}
+
+export async function fetchTextRange(collection: string, lang: string, startByte: number, endByte: number): Promise<string> {
+  const url = `${DATA_BASE_URL}/${collection}/${lang}.txt`;
+  const res = await fetch(url, {
+    headers: { Range: `bytes=${startByte}-${endByte}` },
+  });
+  const buf = await res.arrayBuffer();
+  return new TextDecoder("utf-8").decode(buf);
+}
+
+export async function fetchLines(collection: string, lang: string, startLine: number, endLine: number, meta: Metadata): Promise<string[]> {
+  const offsets = meta.offsets[lang];
+  if (!offsets) return [];
+  const startByte = offsets[startLine];
+  const endByte = offsets[endLine + 1] - 1;
+  const text = await fetchTextRange(collection, lang, startByte, endByte);
+  return text.split("\n")
+    .filter((_, i, arr) => i < arr.length - 1 || arr[arr.length - 1] !== "")
+    .map((line) => {
+      // Strip "category|num|" prefix
+      const firstPipe = line.indexOf("|");
+      if (firstPipe === -1) return line;
+      const secondPipe = line.indexOf("|", firstPipe + 1);
+      if (secondPipe === -1) return line;
+      return line.slice(secondPipe + 1).replace(/\\n/g, "<br>");
+    });
 }

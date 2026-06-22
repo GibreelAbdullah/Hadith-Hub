@@ -11,12 +11,6 @@ const config = {
 			postcss: true,
 		}),
 	],
-	vitePlugin: {
-		inspector: {
-			holdMode: true,
-		}
-	}
-
 };
 
 export default config;

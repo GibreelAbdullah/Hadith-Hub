@@ -30,3 +30,4 @@ _actual*.*
 _output
 /types
 /build/
+static/db

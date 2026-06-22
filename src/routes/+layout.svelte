@@ -43,7 +43,7 @@
 	});
 </script>
 
-<Drawer open={drawerOpen} position="left">
+<Drawer>
 	<div class="px-4 pt-8"><SideBarContents /></div>
 </Drawer>
 <Modal />
@@ -54,7 +54,6 @@
 	<svelte:fragment slot="sidebarLeft">
 		<SideBarContents />
 	</svelte:fragment>
-	<!-- <slot /> -->
 	<div class="flex flex-col min-h-[95%]">
 		<div class="flex-1">
 			<slot />
@@ -62,4 +61,3 @@
 		<Footer />
 	</div>
 </AppShell>
-<!-- <SearchBar/> -->

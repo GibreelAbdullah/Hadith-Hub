@@ -10,12 +10,6 @@ const config: UserConfig = {
 	define: {
         'process.env.ANCHOR_BROWSER': true
     },
-	optimizeDeps: {
-		include: ['sql.js-httpvfs']
-	},
-	ssr: {
-		noExternal: ['sql.js-httpvfs']
-	}
 };
 
 export default config;

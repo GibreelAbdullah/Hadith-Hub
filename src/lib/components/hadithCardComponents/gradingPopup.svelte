@@ -5,7 +5,6 @@
     export let source: string;
     import { Avatar } from '@skeletonlabs/skeleton';
 
-    // Cache settings (7 day expiration)
     const CACHE_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
     const getCacheKey = (lang: string, name: string) => `muhaddith_${lang}_${name}`;
     
@@ -16,7 +15,6 @@
         const cacheKey = getCacheKey(lang, muhaddithName);
         let shouldFetch = true;
         
-        // Check cache first
         const cachedItem = localStorage.getItem(cacheKey);
         if (cachedItem) {
             try {
@@ -25,12 +23,9 @@
                     MuhaddithDetailsPromise = Promise.resolve(data);
                     shouldFetch = false;
                 }
-            } catch (e) {
-                // console.error('Cache parse error', e);
-            }
+            } catch (e) {}
         }
         
-        // Fetch fresh data if no valid cache
         if (shouldFetch) {
             MuhaddithDetailsPromise = getScholar(lang, muhaddithName).then(data => {
                 try {
@@ -38,8 +33,7 @@
                         data,
                         timestamp: Date.now()
                     }));
-                } catch (e) {
-                }
+                } catch (e) {}
                 return data;
             });
         }
@@ -53,20 +47,25 @@
 			<p class="font-bold">{muhaddithName}</p>
 		</div>
 		<div class="placeholder animate-pulse m-1"></div>
-		<div class="placeholder animate-pulse m-1"></div>
 	</div>
 	<div class="arrow variant-filled-secondary"></div>
 {:then data}
 	<div class="space-y-4">
 		<div class="flex">
 			<span class="float-left">
-				<Avatar src={'data:image/jpeg;base64,' + data[0][1]} width="w-16" />
+				{#if data[0]}
+					<Avatar src={'data:image/jpeg;base64,' + data[0][1]} width="w-16" />
+				{:else}
+					<Avatar initials={muhaddithName} width="w-16" />
+				{/if}
 			</span>
 			<span class="px-2 my-auto">{muhaddithName}</span>
 		</div>
-		<p class="text-xs">{@html data[0][2]}</p>
-		<p class="text-xs">{@html 'Grading Source : ' + source}</p>
-		<p>{data[0][3]}</p>
+		{#if data[0]}
+			<p class="text-xs">{@html data[0][2]}</p>
+			<p class="text-xs">{@html 'Grading Source : ' + source}</p>
+			<p>{data[0][3]}</p>
+		{/if}
 	</div>
 	<div class="arrow variant-filled-secondary"></div>
 {:catch}
