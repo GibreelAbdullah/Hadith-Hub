@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
-	import { popup, LightSwitch, getModalStore, localStorageStore } from "@skeletonlabs/skeleton";
+	import { popup, LightSwitch, localStorageStore } from "@skeletonlabs/skeleton";
 	import SvgIcon from "./svgIcon.svelte";
-	import type { SubmitFunction } from "@sveltejs/kit";
 	import { browser } from "$app/environment";
 	import type { Writable } from "svelte/store";
 
@@ -20,7 +18,6 @@
 	];
 
 	export const storeTheme: Writable<string> = localStorageStore('storeTheme', 'skeleton');
-	const modalStore = getModalStore();
 
 	storeTheme.subscribe(setBodyThemeAttribute);
 	function setBodyThemeAttribute(): void {
@@ -28,14 +25,8 @@
 		document.body.setAttribute('data-theme', $storeTheme);
 	}
 
-	const setTheme: SubmitFunction = () => {
-		return async ({ result, update }) => {
-			await update();
-			if (result.type === 'success') {
-				const theme = result.data?.theme as string;
-				storeTheme.set(theme);
-			}
-		};
+	const setTheme = (type: string) => {
+		storeTheme.set(type);
 	};
 </script>
 
@@ -53,24 +44,20 @@
 		</section>
 		<hr class="my-4" />
 		<nav class="list-nav p-4 -m-4 max-h-64 lg:max-h-[500px] overflow-y-auto">
-			<form action="/?/setTheme" method="POST" use:enhance={setTheme}>
-				<ul>
-					{#each themes as { icon, name, type }}
-						<li>
-							<button
-								class="option w-full h-full"
-								type="submit"
-								name="theme"
-								value={type}
-								class:bg-primary-active-token={$storeTheme === type}
-							>
-								<span>{icon}</span>
-								<span>{name}</span>
-							</button>
-						</li>
-					{/each}
-				</ul>
-			</form>
+			<ul>
+				{#each themes as { icon, name, type }}
+					<li>
+						<button
+							class="option w-full h-full"
+							on:click={() => setTheme(type)}
+							class:bg-primary-active-token={$storeTheme === type}
+						>
+							<span>{icon}</span>
+							<span>{name}</span>
+						</button>
+					</li>
+				{/each}
+			</ul>
 		</nav>
 	</div>
 </div>
