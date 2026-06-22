@@ -55,13 +55,28 @@ export async function getMetadata(collection: string): Promise<Metadata | null> 
   return meta;
 }
 
+const fileCache: Map<string, ArrayBuffer> = new Map();
+
 export async function fetchTextRange(collection: string, lang: string, startByte: number, endByte: number): Promise<string> {
   const url = `${DATA_BASE_URL}/${collection}/${lang}.txt`;
-  const res = await fetch(url, {
-    headers: { Range: `bytes=${startByte}-${endByte}` },
-  });
-  const buf = await res.arrayBuffer();
-  return new TextDecoder("utf-8").decode(buf);
+  const cacheKey = `${collection}/${lang}`;
+
+  // Try range request first
+  if (!fileCache.has(cacheKey)) {
+    const res = await fetch(url, {
+      headers: { Range: `bytes=${startByte}-${endByte}` },
+    });
+    if (res.status === 206) {
+      const buf = await res.arrayBuffer();
+      return new TextDecoder("utf-8").decode(buf);
+    }
+    // Server doesn't support range requests — cache the full file
+    fileCache.set(cacheKey, await res.arrayBuffer());
+  }
+
+  const buf = fileCache.get(cacheKey)!;
+  const slice = buf.slice(startByte, endByte + 1);
+  return new TextDecoder("utf-8").decode(slice);
 }
 
 export async function fetchLines(collection: string, lang: string, startLine: number, endLine: number, meta: Metadata): Promise<string[]> {
