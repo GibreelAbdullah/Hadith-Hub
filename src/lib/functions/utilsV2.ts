@@ -63,43 +63,32 @@ export async function getHadithPromise(params: Record<string, string>) {
 }
 
 async function getHadithInBook(collection: string, bookNumber: string, langs: string[], meta: Metadata): Promise<any[]> {
-  // Get all records for this book + the collection record
-  const records = meta.records.filter(
-    (r) => r.cat === "collection" || r.book === bookNumber
-  );
-  if (!records.length) return [];
+  // Get all records for this book (excluding collection — we'll use metadata for its name)
+  const bookRecords = meta.records.filter((r) => r.book === bookNumber);
+  if (!bookRecords.length) return [];
 
-  // Fetch text for contiguous book records (excluding the collection record which is at line 0)
-  const bookOnlyRecords = records.filter((r) => r.cat !== "collection");
-  const collectionRecord = records.find((r) => r.cat === "collection");
+  const firstLine = bookRecords[0].line;
+  const lastLine = bookRecords[bookRecords.length - 1].line;
 
-  const textByLang: { [lang: string]: { collection: string; book: string[] } } = {};
+  const textByLang: { [lang: string]: string[] } = {};
   await Promise.all(
     langs.map(async (lang) => {
       if (!meta.offsets[lang]) return;
-      // Fetch collection line
-      const collText = collectionRecord ? (await fetchLines(collection, lang, collectionRecord.line, collectionRecord.line, meta))[0] || "" : "";
-      // Fetch contiguous book block
-      let bookTexts: string[] = [];
-      if (bookOnlyRecords.length) {
-        const firstLine = bookOnlyRecords[0].line;
-        const lastLine = bookOnlyRecords[bookOnlyRecords.length - 1].line;
-        bookTexts = await fetchLines(collection, lang, firstLine, lastLine, meta);
-      }
-      textByLang[lang] = { collection: collText, book: bookTexts };
+      textByLang[lang] = await fetchLines(collection, lang, firstLine, lastLine, meta);
     })
   );
 
-  return records.map((rec) => {
-    let langValues: string[];
-    if (rec.cat === "collection") {
-      langValues = langs.map((l) => textByLang[l]?.collection || "");
-    } else {
-      const idx = rec.line - bookOnlyRecords[0].line;
-      langValues = langs.map((l) => textByLang[l]?.book[idx] || "");
-    }
+  // Build collection row from metadata
+  const collLangValues = langs.map((l) => meta.collection_info[l] || "");
+  const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
+
+  // Build book/chapter/hadith rows from fetched text
+  const dataRows = bookRecords.map((rec, idx) => {
+    const langValues = langs.map((l) => textByLang[l]?.[idx] || "");
     return [collection, rec.num || null, rec.book || null, rec.num_book || null, rec.chapter || null, rec.cat, null, ...langValues];
   });
+
+  return [collRow, ...dataRows];
 }
 
 // Single hadith: returns dataRows for HadithContainer
@@ -111,10 +100,9 @@ export async function getSingleHadith(collection: string, hadithNumber: string, 
   const hadithRec = meta.records.find((r) => r.cat === "hadith" && r.num === hadithNumber);
   if (!hadithRec) return [];
 
-  // Get context: collection + book + chapter + the hadith itself
+  // Get context: book + chapter + the hadith itself (collection name from metadata)
   const records = meta.records.filter(
     (r) =>
-      r.cat === "collection" ||
       (r.cat === "book" && r.book === hadithRec.book) ||
       (r.cat === "book_intro" && r.book === hadithRec.book) ||
       (r.cat === "chapter" && r.book === hadithRec.book && r.chapter === hadithRec.chapter) ||
@@ -137,10 +125,16 @@ export async function getSingleHadith(collection: string, hadithNumber: string, 
     })
   );
 
-  return records.map((rec, idx) => {
+  // Build collection row from metadata
+  const collLangValues = langs.map((l) => meta.collection_info[l] || "");
+  const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
+
+  const dataRows = records.map((rec, idx) => {
     const langValues = langs.map((l) => textByLang[l]?.[idx] || "");
     return [collection, rec.num || null, rec.book || null, rec.num_book || null, rec.chapter || null, rec.cat, null, ...langValues];
   });
+
+  return [collRow, ...dataRows];
 }
 
 // Helpers
