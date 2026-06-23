@@ -6,14 +6,13 @@
 	import Reference from './hadithCardComponents/reference.svelte';
 	import { isRtl } from '$lib/functions/utilsV2';
 	export let dataListRecord: any[] = [];
-	let bookTitle = '';
-	let collectionTitle = '';
-	let collectionShortName: string = '';
+
+	$: collectionTitle = dataListRecord.find(d => d[5] === 'collection')?.[7] || '';
+	$: collectionShortName = dataListRecord.find(d => d[5] === 'collection')?.[0] || '';
+	$: bookTitle = dataListRecord.find(d => d[5] === 'book')?.[7] || '';
 </script>
 {#each dataListRecord as data}
 	{#if data[5] == 'collection'}
-		{@const dummy1 = collectionTitle = data[7]}
-		{@const dummy2 = collectionShortName = data[0]}
 		<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
 			<div class="hadithGroup grid px-5">
 				<ol class="breadcrumb">
@@ -30,7 +29,6 @@
 			</div>
 		</div>
 	{:else if data[5] == 'book'}
-		{@const dummy = bookTitle = data[7]}
 	{:else if ['chapter', 'chapter_intro'].includes(data[5])}
 		<div class="p-4">
 			<div
