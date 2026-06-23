@@ -1,4 +1,4 @@
-[![ReadMeSupportPalestine](https://raw.githubusercontent.com/Safouene1/support-palestine-banner/master/banner-support.svg)](https://github.com/Safouene1/support-palestine-banner)
+[![ReadMeSupportPalestine](https://raw.githubusercontent.com/Safouene1/support-palestine-banner/master/banner-support.svg)](https://techforpalestine.org/)
 
 ![FROM THE RIVER TO THE SEA, PALESTINE WILL BE FREE](https://img.shields.io/badge/%F0%9F%87%B5%F0%9F%87%B8_FROM_THE_RIVER_TO_THE_SEA,_PALESTINE_WILL_BE_FREE-techforpalestine.org-000?labelColor=grey&color=D83838&link=https%3A%2F%2Ftechforpalestine.org%2Flearn-more)
 
@@ -57,4 +57,3 @@ You may raise a PR, give suggestions, raise issues for any of them.
 3. run ```npm run dev``` to run the application in dev mode.
 
 4. Goto ```http://localhost:5173``` in your browser.
-
