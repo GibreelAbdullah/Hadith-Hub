@@ -5,6 +5,7 @@
 	import { languageStore } from '$lib/functions/store.svelte';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 	import { getHadithPromise, getLanguageFullName } from '$lib/functions/utilsV2';
+	import { getMetadata } from '$lib/data/db';
 
 	let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`;
 	const hadithPromise = $derived(getHadithPromise($page.params));
@@ -78,7 +79,23 @@
 					</div>
 				</div>
 			{/if}
-			<HadithContainer dataListRecord={dataList[2]} />
+			{#if dataList[2].length === 0}
+				{#await getMetadata($page.params.collection) then meta}
+				<div class="card p-4 m-4 max-w-[90rem] mx-auto text-center">
+					<div class="py-8">
+						<h2 class="text-2xl font-bold mb-2">Book Not Found</h2>
+						<p class="text-surface-600 dark:text-surface-400 mb-4">
+							Book <strong>{$page.params.bookNumber}</strong> does not exist in this collection.
+						</p>
+						<a href="{base}/{$page.params.collection}?lang={languageStore.value.toString()}" class="btn variant-filled-primary">
+							Browse {meta?.collection_info?.[languageStore.value[0]] || meta?.collection_info?.en || $page.params.collection}
+						</a>
+					</div>
+				</div>
+				{/await}
+			{:else}
+				<HadithContainer dataListRecord={dataList[2]} />
+			{/if}
 		{:catch data}
 			<div class="card p-4 m-4">
 				<div class="hadithGroup font-medium p-2 grid">

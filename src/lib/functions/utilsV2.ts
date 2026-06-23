@@ -97,7 +97,7 @@ export async function getSingleHadith(collection: string, hadithNumber: string, 
   if (!meta) return [];
 
   // Find the hadith record
-  const hadithRec = meta.records.find((r) => r.cat === "hadith" && r.num === hadithNumber);
+  const hadithRec = meta.records.find((r) => r.cat === "hadith" && r.num?.split(",").includes(hadithNumber));
   if (!hadithRec) return [];
 
   // Get context: book + chapter + the hadith itself (collection name from metadata)
@@ -107,7 +107,7 @@ export async function getSingleHadith(collection: string, hadithNumber: string, 
       (r.cat === "book_intro" && r.book === hadithRec.book) ||
       (r.cat === "chapter" && r.book === hadithRec.book && r.chapter === hadithRec.chapter) ||
       (r.cat === "chapter_intro" && r.book === hadithRec.book && r.chapter === hadithRec.chapter) ||
-      (r.cat === "hadith" && r.num === hadithNumber)
+      (r.cat === "hadith" && r.num?.split(",").includes(hadithNumber))
   );
 
   // Fetch text for each relevant line

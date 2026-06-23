@@ -1,6 +1,7 @@
 <!-- ReferenceSection.svelte -->
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { base } from '$app/paths';
 	import { clipboard } from '@skeletonlabs/skeleton';
 	import SvgIcon from '../common/svgIcon.svelte';
     import * as htmlToImage from 'html-to-image';
@@ -133,11 +134,11 @@
 					use:clipboard={$page.url.protocol +
 						'//' +
 						$page.url.host +
+						base +
 						'/' +
 						collectionShortName +
 						':' +
-						(Number(hadithNumberInCollection) | 0)
-							.toString()
+						hadithNumberInCollection
 							.replace('<span style="color:red;">', '')
 							.replace('</span>', '')}
 					on:click={() => {
@@ -151,11 +152,11 @@
 					href={$page.url.protocol +
 						'//' +
 						$page.url.host +
+						base +
 						'/' +
 						collectionShortName +
 						':' +
-						(Number(hadithNumberInCollection) | 0)
-							.toString()
+						hadithNumberInCollection
 							.replace('<span style="color:red;">', '')
 							.replace('</span>', '')}
 					target="_blank"
