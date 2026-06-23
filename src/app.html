@@ -9,6 +9,13 @@
 </head>
 
 <body data-theme="skeleton">
+  <script>
+    // Sync dark mode with system preference or saved preference
+    const saved = localStorage.getItem('modeCurrent');
+    if (saved === 'false' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+  </script>
   <div class="h-full overflow-hidden">%sveltekit.body%</div>
 </body>
 

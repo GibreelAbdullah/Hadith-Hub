@@ -55,13 +55,19 @@ export async function getMetadata(collection: string): Promise<Metadata | null> 
   return meta;
 }
 
+const rangeCache: Map<string, string> = new Map();
+
 export async function fetchTextRange(collection: string, lang: string, startByte: number, endByte: number): Promise<string> {
+  const key = `${collection}/${lang}/${startByte}-${endByte}`;
+  if (rangeCache.has(key)) return rangeCache.get(key)!;
   const url = `${DATA_BASE_URL}/${collection}/${lang}.txt`;
   const res = await fetch(url, {
     headers: { Range: `bytes=${startByte}-${endByte}` },
   });
   const buf = await res.arrayBuffer();
-  return new TextDecoder("utf-8").decode(buf);
+  const text = new TextDecoder("utf-8").decode(buf);
+  rangeCache.set(key, text);
+  return text;
 }
 
 export async function fetchLines(collection: string, lang: string, startLine: number, endLine: number, meta: Metadata): Promise<string[]> {

@@ -9,11 +9,11 @@
 
 	let title = `${$page.params.collection}:${$page.params.hadithNumber} | HadithHub`;
 
-	const getHadithData = getSingleHadith(
+	const getHadithData = $derived(getSingleHadith(
 		$page.params.collection,
 		$page.params.hadithNumber,
 		languageStore.value.length ? languageStore.value : ["ar", "en"]
-	);
+	));
 </script>
 
 <svelte:head>
