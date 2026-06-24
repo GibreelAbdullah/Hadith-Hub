@@ -7,8 +7,19 @@
 	import { getHadithPromise, getLanguageFullName } from '$lib/functions/utilsV2';
 	import { getMetadata } from '$lib/data/db';
 
-	let title = `Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`;
+	let title = $state(`Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`);
 	const hadithPromise = $derived(getHadithPromise($page.params));
+
+	$effect(() => {
+		getMetadata($page.params.collection).then(meta => {
+			if (!meta) return;
+			const lang = languageStore.value[0] || 'en';
+			const collName = meta.collection_info?.[lang] || meta.collection_info?.en || $page.params.collection;
+			const book = meta.books.find(b => b.number === $page.params.bookNumber);
+			const bookName = book ? (book as any)[lang] || (book as any).en || `Book ${$page.params.bookNumber}` : `Book ${$page.params.bookNumber}`;
+			title = `${bookName} - ${collName} | HadithHub`;
+		});
+	});
 </script>
 
 <svelte:head>

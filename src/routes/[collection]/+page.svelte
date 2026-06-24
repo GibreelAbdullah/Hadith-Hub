@@ -3,8 +3,18 @@
 	import BookContainer from '$lib/components/bookContainer.svelte';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import { getBooks } from '$lib/functions/utilsV2';
+	import { getMetadata } from '$lib/data/db';
 
-	let title = `${$page.params.collection} | HadithHub`;
+	let title = $state(`${$page.params.collection} | HadithHub`);
+
+	$effect(() => {
+		getMetadata($page.params.collection).then(meta => {
+			if (!meta) return;
+			const lang = languageStore.value[0] || 'en';
+			const collName = meta.collection_info?.[lang] || meta.collection_info?.en || $page.params.collection;
+			title = `${collName} | HadithHub`;
+		});
+	});
 
 </script>
 
