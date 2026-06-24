@@ -83,9 +83,11 @@ async function getHadithInBook(collection: string, bookNumber: string, langs: st
   const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
 
   // Build book/chapter/hadith rows from fetched text
+  const gradings = (meta as any).gradings || {};
   const dataRows = bookRecords.map((rec, idx) => {
     const langValues = langs.map((l) => textByLang[l]?.[idx] || "");
-    return [collection, rec.num || null, rec.book || null, rec.num_book || null, rec.chapter || null, rec.cat, null, ...langValues];
+    const grades = rec.cat === "hadith" && rec.num ? gradings[rec.num] || null : null;
+    return [collection, rec.num || null, rec.book || null, rec.num_book || null, rec.chapter || null, rec.cat, grades, ...langValues];
   });
 
   return [collRow, ...dataRows];
@@ -129,9 +131,11 @@ export async function getSingleHadith(collection: string, hadithNumber: string, 
   const collLangValues = langs.map((l) => meta.collection_info[l] || "");
   const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
 
+  const gradings = (meta as any).gradings || {};
   const dataRows = records.map((rec, idx) => {
     const langValues = langs.map((l) => textByLang[l]?.[idx] || "");
-    return [collection, rec.num || null, rec.book || null, rec.num_book || null, rec.chapter || null, rec.cat, null, ...langValues];
+    const grades = rec.cat === "hadith" && rec.num ? gradings[rec.num] || null : null;
+    return [collection, rec.num || null, rec.book || null, rec.num_book || null, rec.chapter || null, rec.cat, grades, ...langValues];
   });
 
   return [collRow, ...dataRows];
