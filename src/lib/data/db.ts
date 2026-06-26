@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 
-// const DATA_BASE_URL = import.meta.env.VITE_DB_BASE_URL || "https://raw.githubusercontent.com/GibreelAbdullah/hadith-db/refs/heads/master/data";
-const DATA_BASE_URL = import.meta.env.VITE_DB_BASE_URL || '/db';
+export const DATA_BASE_URL = import.meta.env.VITE_DB_BASE_URL || "https://raw.githubusercontent.com/GibreelAbdullah/hadith-db/refs/heads/master/data";
+// export const DATA_BASE_URL = import.meta.env.VITE_DB_BASE_URL || '/db';
 
 interface CollectionsData {
 	languages: { short_name: string; full_name: string; rtl: boolean }[];
