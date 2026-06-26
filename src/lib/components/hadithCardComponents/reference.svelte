@@ -92,9 +92,9 @@
 	</aside>
 {/if}
 <div
-	class="font-thin lgcd flex justify-between items-center px-3 pb-2 text-primary-700 dark:text-primary-400 text-sm"
+	class="lgcd flex flex-col sm:flex-row sm:justify-between sm:items-center items-center px-3 pb-2 text-black dark:text-white text-sm gap-2"
 >
-	<div>
+	<div class="text-center sm:text-left">
 		<div>
 			{collectionTitle} : {hadithNumberInCollection}
 		</div>
