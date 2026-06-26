@@ -92,14 +92,14 @@
 	</aside>
 {/if}
 <div
-	class="lgcd flex flex-col sm:flex-row sm:justify-between sm:items-center items-center px-3 pb-2 text-black dark:text-white text-sm gap-2"
+	class="lgcd flex flex-col sm:flex-row sm:justify-between sm:items-center items-center px-3 py-3 mt-3 border-t border-surface-300 dark:border-surface-600 text-black dark:text-white text-sm gap-2"
 >
 	<div class="text-center sm:text-left">
-		<div>
-			{collectionTitle} : {hadithNumberInCollection}
+		<div class="flex items-center gap-1 justify-center sm:justify-start">
+			<span>{collectionTitle}</span><span dir="ltr">: {hadithNumberInCollection}</span>
 		</div>
-		<div>
-			{bookTitle} : {hadithNumberInBook}
+		<div class="flex items-center gap-1 justify-center sm:justify-start">
+			<span>{bookTitle}</span><span dir="ltr">: {hadithNumberInBook}</span>
 		</div>
 		<div>
 			Book {bookNumber} : {hadithNumberInBook}

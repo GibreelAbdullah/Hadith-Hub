@@ -29,6 +29,7 @@ jobs:
       - name: Build
         env:
           BASE_PATH: '/Hadith-Hub'
+          VITE_DB_BASE_URL: 'https://raw.githubusercontent.com/GibreelAbdullah/hadith-db/refs/heads/master/data'
         run: npm run build
 
       - name: Fix SPA routing for GitHub Pages

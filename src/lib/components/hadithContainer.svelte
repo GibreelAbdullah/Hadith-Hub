@@ -49,6 +49,13 @@
 	{:else if data[5] == 'hadith'}
 		<div class="p-4">
 			<div class="p-4 card max-w-[90rem] m-auto">
+				<!-- Compact reference at top center -->
+				<div class="text-center mb-3">
+					<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-500/15 text-primary-700 dark:text-primary-300 text-sm font-medium">
+						<span>{collectionTitle}</span>
+						<span dir="ltr">: {data[1]}</span>
+					</span>
+				</div>
 				<div class="card flex-wrap" id="hadith{data[0]}{data[1]}">
 					<div class="hadithGroup font-medium grid">
 						{#each { length: languageStore.value.length ? languageStore.value.length : 2 } as _, i}
@@ -61,7 +68,7 @@
 					</div>
 					<!-- GRADINGS -->
 					<GradingSection grades={data[6]} hadithIndex={data[1]} />
-					<!-- REFERENCE AND BUTTONS -->
+					<!-- FULL REFERENCE AND BUTTONS at bottom -->
 					<Reference
 						{collectionShortName}
 						hadithNumberInCollection={data[1]}
