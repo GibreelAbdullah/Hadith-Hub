@@ -23,8 +23,20 @@ async function getCollectionsList(): Promise<any[]> {
   const langs = languageStore.value.length ? languageStore.value : ["ar", "en"];
   return data.collections.map((coll: any) => {
     const availableLangs = coll.languages || ["ar", "en"];
-    const langValues = langs.map((l: string) => coll[l] || "");
-    return [coll.short_name, availableLangs, ...langValues, ...langValues, coll.short_name];
+    // Get unique names for display (only ar and en exist in collections.json)
+    const names: string[] = [];
+    const seen = new Set();
+    for (const l of langs) {
+      const name = coll[l];
+      if (name && !seen.has(name)) {
+        seen.add(name);
+        names.push(name);
+      }
+    }
+    if (names.length === 0) names.push(coll["en"] || coll["ar"] || coll.short_name);
+    // Pad to languageStore length with nulls so template's null check works
+    const padded = Array.from({length: langs.length}, (_, i) => names[i] || null);
+    return [coll.short_name, availableLangs, ...padded];
   });
 }
 

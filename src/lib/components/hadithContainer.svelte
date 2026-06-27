@@ -67,7 +67,11 @@
 						{#each { length: langCount } as _, i}
 							{#await isRtl(displayLanguages[i]) then rtl}
 								<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'}>
-									<article id="myDiv">{@html data[i + 7]}</article>
+									{#if data[i + 7]}
+										<article id="myDiv">{@html data[i + 7]}</article>
+									{:else}
+										<center><code class="!text-white !bg-red-500">Hadith translation not found</code></center>
+									{/if}
 								</div>
 							{/await}
 						{/each}

@@ -46,7 +46,7 @@
 						window.history.replaceState({}, '', newUrl);
 					}}
 				>
-					<div class="max-h-4 pb-5">{languageObject[1]}</div>
+					<div>{languageObject[1]}</div>
 				</ListBoxItem>
 			{/each}
 		</ListBox>
