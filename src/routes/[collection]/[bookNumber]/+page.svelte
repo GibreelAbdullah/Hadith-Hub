@@ -6,6 +6,7 @@
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 	import { getHadithPromise, getLanguageFullName } from '$lib/functions/utilsV2';
 	import { getMetadata } from '$lib/data/db';
+	import UnavailableLanguagesNotice from '$lib/components/common/UnavailableLanguagesNotice.svelte';
 
 	let title = $state(`Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`);
 	const hadithPromise = $derived(getHadithPromise($page.params));
@@ -72,24 +73,7 @@
 			</div>
 			<HadithPlaceholder />
 		{:then dataList}
-			{#if dataList[1].length != 0}
-				<div class="p-4">
-					<div class="px-4 card max-w-[90rem] m-auto">
-						<div class="hadithGroup font-medium grid">
-							<div class="break-words leading-7 m-3 pb-4">
-								<article id="myDiv">
-									{#await getLanguageFullName(dataList[1]) then unavailableLanguages}
-											The selected language(s) {unavailableLanguages} is/are not available in this collection.
-											Please select different language(s).
-									{:catch error}
-										Error: {error.message}
-									{/await}
-								</article>
-							</div>
-						</div>
-					</div>
-				</div>
-			{/if}
+			<UnavailableLanguagesNotice unavailableLanguages={dataList[1]} />
 			{#if dataList[2].length === 0}
 				{#await getMetadata($page.params.collection) then meta}
 				<div class="card p-4 m-4 max-w-[90rem] mx-auto text-center">
@@ -105,7 +89,9 @@
 				</div>
 				{/await}
 			{:else}
-				<HadithContainer dataListRecord={dataList[2]} />
+				{#if dataList[0].length > 0}
+					<HadithContainer dataListRecord={dataList[2]} availableLanguages={dataList[0]} />
+				{/if}
 			{/if}
 		{:catch data}
 			<div class="card p-4 m-4">

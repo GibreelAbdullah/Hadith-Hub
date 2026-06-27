@@ -4,14 +4,6 @@
 
 <footer>
 	<div class="p-8 sticky top-[100vh]">
-		<div class="p-4">
-			<div class="card p-4 variant-filled-error max-w-[90rem] m-auto">
-				<div class="hadithGroup font-medium p-2 grid text-center">
-					Requesting Talib Ul-Ilm to help in adding more books, Takhreej and Tahqeeq. Connect with
-					me on any of the platforms below.
-				</div>
-			</div>
-		</div>
 		<section
 			class="flex flex-col lg:flex-row justify-between items-center lg:items-start space-y-5 lg:space-y-0"
 		>

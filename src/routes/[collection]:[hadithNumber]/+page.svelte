@@ -6,6 +6,7 @@
 	import { getSingleHadith } from '$lib/functions/utilsV2';
 	import { getMetadata } from '$lib/data/db';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
+	import UnavailableLanguagesNotice from '$lib/components/common/UnavailableLanguagesNotice.svelte';
 
 	let title = `${$page.params.collection}:${$page.params.hadithNumber} | HadithHub`;
 
@@ -81,7 +82,13 @@
 			</div>
 			{/await}
 		{:else}
-			<HadithContainer dataListRecord={dataList} />
+			{#await getMetadata($page.params.collection) then meta}
+				{@const unavailable = languageStore.value.filter(l => !(meta?.languages || []).includes(l))}
+				<UnavailableLanguagesNotice unavailableLanguages={unavailable} />
+				{#if unavailable.length < languageStore.value.length}
+					<HadithContainer dataListRecord={dataList} availableLanguages={meta?.languages || []} />
+				{/if}
+			{/await}
 		{/if}
 	{:catch _data}
 		<div class="card p-4 m-4">

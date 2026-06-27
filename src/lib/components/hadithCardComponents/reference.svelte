@@ -24,7 +24,6 @@
 
     function captureHadithScreenshot(
 		elementId: string,
-		fileName: string | undefined,
 		copy: boolean = false
 	) {
 		const hadithGroup = document.getElementById('hadith' + elementId);
@@ -32,14 +31,23 @@
 		const watermark = document.getElementById('watermark' + elementId)!;
 		if (!hadithGroup) return;
 
-		buttonGroup.setAttribute('class', 'hidden');
-		watermark.setAttribute('class', 'flex');
+		// Temporarily show watermark and hide buttons (visibility preserves layout)
+		watermark.classList.remove('hidden');
+		watermark.classList.add('flex');
+		buttonGroup.style.visibility = 'hidden';
+		visible = false;
 
 		htmlToImage
-			.toPng(hadithGroup)
+			.toPng(hadithGroup, {
+				style: { margin: '0' },
+				filter: (node) => {
+					if (node === buttonGroup) return false;
+					return true;
+				}
+			})
 			.then((dataUrl) => {
 				if (!copy) {
-					download(dataUrl, fileName);
+					download(dataUrl, `${collectionTitle} : ${hadithNumberInCollection}.png`);
 				} else {
 					// Copy the image to clipboard
 					visible = true;
@@ -71,12 +79,13 @@
 				console.error('Error capturing screenshot:', error);
 			})
 			.finally(() => {
-				buttonGroup.setAttribute('class', 'flex');
-				watermark.setAttribute('class', 'hidden');
-										visible = true;
-						setTimeout(() => {
-							visible = false;
-						}, 3000);
+				watermark.classList.remove('flex');
+				watermark.classList.add('hidden');
+				buttonGroup.style.visibility = '';
+				visible = true;
+				setTimeout(() => {
+					visible = false;
+				}, 3000);
 				// showAndHideCopiedAlert();
 			});
 	}
@@ -92,7 +101,7 @@
 	</aside>
 {/if}
 <div
-	class="lgcd flex flex-col sm:flex-row sm:justify-between sm:items-center items-center px-3 py-3 mt-3 border-t border-surface-300 dark:border-surface-600 text-black dark:text-white text-sm gap-2"
+	class="lgcd flex flex-col sm:flex-row sm:justify-between sm:items-center items-center px-3 py-3 mt-3 border-t border-surface-300 dark:border-surface-600 text-black dark:text-white text-sm gap-2 relative"
 >
 	<div class="text-center sm:text-left">
 		<div class="flex items-center gap-1 justify-center sm:justify-start">
@@ -111,14 +120,14 @@
 				<button
 					id="permalink{collectionShortName}{hadithNumberInCollection}"
 					class="text-center justify-center px-4 min-[480px]:px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
-					on:click={() => captureHadithScreenshot(collectionShortName + hadithNumberInCollection, 'hadith-screenshot.png', true)}
+					on:click={() => captureHadithScreenshot(collectionShortName + hadithNumberInCollection, true)}
 				>
 					<SvgIcon name="copy" fill="fill-black" />
 				</button>
 				<button
 					class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
 					on:click={() =>
-						captureHadithScreenshot(collectionShortName + hadithNumberInCollection, 'hadith-screenshot.png', false)}
+						captureHadithScreenshot(collectionShortName + hadithNumberInCollection, false)}
 				>
 					<SvgIcon name="download" fill="fill-black" />
 				</button>
@@ -170,7 +179,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="watermark{collectionShortName}{hadithNumberInCollection}" class="hidden pt-6 pr-10">
+	<div id="watermark{collectionShortName}{hadithNumberInCollection}" class="hidden absolute top-[65%] sm:top-[45%] -translate-y-1/2 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-3">
 		<SvgIcon class="!w-10" name="icon" />
 		<SvgIcon class="!w-40" name="hadithHub" />
 		<SvgIcon class="!w-20 !fill-error-500 pt-1" name="com" />

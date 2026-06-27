@@ -6,6 +6,10 @@
 	import Reference from './hadithCardComponents/reference.svelte';
 	import { isRtl } from '$lib/functions/utilsV2';
 	export let dataListRecord: any[] = [];
+	export let availableLanguages: string[] = [];
+
+	$: displayLanguages = languageStore.value.filter(l => availableLanguages.includes(l));
+	$: langCount = displayLanguages.length || 2;
 
 	$: collectionTitle = dataListRecord.find(d => d[5] === 'collection')?.[7] || '';
 	$: collectionShortName = dataListRecord.find(d => d[5] === 'collection')?.[0] || '';
@@ -13,7 +17,8 @@
 </script>
 {#each dataListRecord as data}
 	{#if data[5] == 'collection'}
-		<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
+	<div class="p-4">
+		<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto">
 			<div class="hadithGroup grid px-5">
 				<ol class="breadcrumb">
 					<li class="crumb anchor">
@@ -28,6 +33,7 @@
 				</ol>
 			</div>
 		</div>
+	</div>
 	{:else if data[5] == 'book'}
 	{:else if ['chapter', 'chapter_intro'].includes(data[5])}
 		<div class="p-4">
@@ -35,8 +41,8 @@
 				class="px-4 card max-w-[90rem] m-auto {data[5] == 'chapter' ? 'variant-glass-primary' : ''}"
 			>
 				<div class="hadithGroup font-medium grid">
-					{#each { length: languageStore.value.length ? languageStore.value.length : 2 } as _, i}
-						{#await isRtl(languageStore.value[i]) then rtl}
+					{#each { length: langCount } as _, i}
+						{#await isRtl(displayLanguages[i]) then rtl}
 							<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'}>
 								<article id="myDiv">{@html data[i + 7]}</article>
 							</div>
@@ -48,7 +54,7 @@
 
 	{:else if data[5] == 'hadith'}
 		<div class="p-4">
-			<div class="p-4 card max-w-[90rem] m-auto">
+			<div class="p-4 card max-w-[90rem] m-auto" id="hadith{data[0]}{data[1]}">
 				<!-- Compact reference at top center -->
 				<div class="text-center mb-3">
 					<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-500/15 text-primary-700 dark:text-primary-300 text-sm font-medium">
@@ -56,10 +62,10 @@
 						<span dir="ltr">: {data[1]}</span>
 					</span>
 				</div>
-				<div class="card flex-wrap" id="hadith{data[0]}{data[1]}">
+				<div class="card flex-wrap">
 					<div class="hadithGroup font-medium grid">
-						{#each { length: languageStore.value.length ? languageStore.value.length : 2 } as _, i}
-							{#await isRtl(languageStore.value[i]) then rtl}
+						{#each { length: langCount } as _, i}
+							{#await isRtl(displayLanguages[i]) then rtl}
 								<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'}>
 									<article id="myDiv">{@html data[i + 7]}</article>
 								</div>
