@@ -110,6 +110,9 @@ export async function getSingleHadith(collection: string, hadithNumber: string, 
   const meta = await getMetadata(collection);
   if (!meta) return [];
 
+  // Filter to only available languages
+  langs = langs.filter((l) => meta.offsets[l]);
+
   // Find the hadith record
   const hadithRec = meta.records.find((r) => r.cat === "hadith" && r.num?.split(",").includes(hadithNumber));
   if (!hadithRec) return [];
