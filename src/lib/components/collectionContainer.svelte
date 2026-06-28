@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { popup } from '@skeletonlabs/skeleton';		
 	import { base } from '$app/paths';
 	let {collectionPromise} = $props()
 	import { languageStore } from '$lib/functions/store.svelte';
@@ -12,35 +11,38 @@
 		return getLanguageFullName(unavailableLanguagesShortName);
 	}
 
+	function getCollectionNames(coll: any): string[] {
+		const langs = languageStore.value.length ? languageStore.value : ["ar", "en"];
+		const names: string[] = [];
+		const seen = new Set();
+		for (const l of langs) {
+			const name = coll[l];
+			if (name && !seen.has(name)) {
+				seen.add(name);
+				names.push(name);
+			}
+		}
+		if (names.length === 0) names.push(coll["en"] || coll["ar"] || coll.short_name);
+		return names;
+	}
+
 	function filterCollections() {
-		var input, filter, collection, collectionlist, collectionName, i, j, txtValue, display;
+		var input, filter, cards, i, txtValue;
 		input = <HTMLInputElement>document.getElementById('filterCollections');
 		filter = input.value.toUpperCase();
-		collectionlist = document.getElementById('collectionlist');
+		const collectionlist = document.getElementById('collectionlist');
 		if (collectionlist != null) {
-			collection = collectionlist.querySelectorAll<HTMLElement>('.collection');
-			for (i = 0; i < collection.length; i++) {
-				display = 'none';
-				collectionName = collection[i].getElementsByTagName('a');
-				for (j = 0; j < collectionName.length; j++) {
-					if (collectionName[j]) {
-						txtValue = collectionName[j].textContent || collectionName[j].innerText;
-						if (txtValue.toUpperCase().indexOf(filter) > -1) {
-							collectionName[j].style.display = '';
-							display = '';
-						} else {
-							collectionName[j].style.display = 'none';
-						}
-					}
-				}
-				collection[i].style.display = display;
+			cards = collectionlist.querySelectorAll<HTMLElement>('.collection-card');
+			for (i = 0; i < cards.length; i++) {
+				txtValue = cards[i].textContent || cards[i].innerText;
+				cards[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? '' : 'none';
 			}
 		}
 	}
 
-	function clickHandler(event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
-		event.preventDefault();
-		event.stopPropagation();
+	function getCategoryName(category: any): string {
+		const lang = languageStore.value[0] || 'en';
+		return category.name[lang] || category.name['en'] || category.name['ar'] || '';
 	}
 </script>
 
@@ -60,55 +62,32 @@
 			</div>
 		{/each}
 	</div>
-{:then dataList}
+{:then result}
 	<div id="collectionlist" class="max-w-[90rem] m-auto">
-		<div class="collection grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 p-4">
-			{#each dataList as data}
-				<a class="card p-4 text-center relative" href="{base}/{data[0]}?lang={languageStore.value.toString()}">
-						{#each {length: languageStore.value.length ? languageStore.value.length : 2} as _, i}
-							{#if data[2 + i] != null}
-								{data[2 + i]}
-								<br />
-							{/if}
-						{/each}
-					{#await getUnavailableCollections(data[1], languageStore.value)}
-						<div class="placeholder w-40 m-auto animate-pulse"></div>
-					{:then collectionNames}
-						{#if collectionNames.length != 0}
-							<code class="break-words !text-error-500">Not available in {collectionNames}</code>
-						{/if}
-					{/await}
-					<button
-						type="button"
-						class="btn-icon text-lg place-self-center absolute top-0 right-0"
-						onclick={clickHandler}
-						use:popup={{
-							event: 'click',
-							target: 'popupFeatured-' + data[0],
-							placement: 'bottom'
-						}}
-						>⋮
-					</button>
-				</a>
-				<div
-					class="card p-4 shadow-xl z-10 w-96 variant-filled-primary"
-					data-popup="popupFeatured-{data[0]}"
-				>
-					<div class="break-words">
-						<div class="uppercase text-center">{data[4]}</div>
-						{#await getLanguageFullName(data[1])}
-							<div class="placeholder w-40 m-auto animate-pulse"></div>
-						{:then collectionNames}
-							{#if collectionNames.length != 0}
-								<p class="font-semibold">Available Langauges</p>
-								<p class="pl-6">{collectionNames}</p>
-							{/if}
-						{/await}
-					</div>
-					<div class="arrow bg-surface-100-800-token"></div>
+		{#each result.categories as category}
+			{@const categoryCollections = result.collections.filter((c) => category.collections.includes(c.short_name))}
+			{#if categoryCollections.length > 0}
+				<div class="px-4 pt-6 pb-2">
+					<h2 class="text-lg font-bold text-primary-600 dark:text-primary-400">{getCategoryName(category)}</h2>
 				</div>
-			{/each}
-		</div>
+				<div class="collection grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 px-4 pb-4">
+					{#each categoryCollections as coll}
+						<a class="collection-card card p-4 text-center relative" href="{base}/{coll.short_name}?lang={languageStore.value.toString()}">
+							{#each getCollectionNames(coll) as name}
+								{name}<br />
+							{/each}
+							{#await getUnavailableCollections(coll.languages || ["ar","en"], languageStore.value)}
+								<div class="placeholder w-40 m-auto animate-pulse"></div>
+							{:then collectionNames}
+								{#if collectionNames.length != 0}
+									<code class="break-words !text-error-500">Not available in {collectionNames}</code>
+								{/if}
+							{/await}
+						</a>
+					{/each}
+				</div>
+			{/if}
+		{/each}
 	</div>
 {:catch error}
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">

@@ -13,31 +13,15 @@ export const languagePromise: Promise<any[]> = browser
   ? ((_languagePromise = getLanguages()), _languagePromise)
   : Promise.resolve([]);
 
-// Collections: returns [[short_name, available_langs, name_lang1, name_lang2, ...], ...]
+// Collections: returns {collections: [...], categories: [...]}
 export function getCollectionPromise() {
   return getCollectionsList();
 }
 
-async function getCollectionsList(): Promise<any[]> {
+async function getCollectionsList() {
   const data = await getCollections();
-  const langs = languageStore.value.length ? languageStore.value : ["ar", "en"];
-  return data.collections.map((coll: any) => {
-    const availableLangs = coll.languages || ["ar", "en"];
-    // Get unique names for display (only ar and en exist in collections.json)
-    const names: string[] = [];
-    const seen = new Set();
-    for (const l of langs) {
-      const name = coll[l];
-      if (name && !seen.has(name)) {
-        seen.add(name);
-        names.push(name);
-      }
-    }
-    if (names.length === 0) names.push(coll["en"] || coll["ar"] || coll.short_name);
-    // Pad to languageStore length with nulls so template's null check works
-    const padded = Array.from({length: langs.length}, (_, i) => names[i] || null);
-    return [coll.short_name, availableLangs, ...padded];
-  });
+  // Return raw collection data - template handles language display
+  return { collections: data.collections, categories: data.categories || [] };
 }
 
 // Books page: returns rows for BookContainer
