@@ -1,109 +1,79 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { searchHadith } from '$lib/functions/utilsV2';
+	import { base } from '$app/paths';
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
-	import Reference from '$lib/components/hadithCardComponents/reference.svelte';
-	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
 
-	const title = `Search for "${$page.url.searchParams.get('text')}" | HadithHub`;
-	const language = $page.url.searchParams.get('language');
-	const collection = $page.url.searchParams.get('collection');
-	const text = $page.url.searchParams.get('text') || '';
+	let searchQuery = $state($page.url.searchParams.get('text') || '');
+	let results = $state<any[]>([]);
+	let loading = $state(false);
+	let pagefind: any = null;
 
-	$: allHadithPromises = searchHadith(text, language, collection);
+	onMount(async () => {
+		if (!browser) return;
+		pagefind = await import(/* @vite-ignore */ `${base}/pagefind/pagefind.js`);
+		await pagefind.init();
+		if (searchQuery) doSearch();
+	});
 
+	async function doSearch() {
+		if (!pagefind || !searchQuery.trim()) {
+			results = [];
+			return;
+		}
+		loading = true;
+		const search = await pagefind.search(searchQuery);
+		const loaded = await Promise.all(search.results.slice(0, 30).map((r: any) => r.data()));
+		results = loaded;
+		loading = false;
+	}
+
+	function handleSubmit(e: Event) {
+		e.preventDefault();
+		const url = new URL(window.location.href);
+		url.searchParams.set('text', searchQuery);
+		window.history.replaceState({}, '', url.toString());
+		doSearch();
+	}
 </script>
 
 <svelte:head>
-	<title>{title}</title>
-	<meta name="description" content="A Multi Language collection of Hadith" />
-
-	<meta property="og:url" content={$page.url.toString()} />
-	<meta property="og:type" content="website" />
-	<meta property="og:title" content={title} />
-	<meta property="og:description" content="A Multi Language collection of Hadith" />
-	<meta
-		property="og:image"
-		content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg"
-	/>
-
-	<meta property="twitter:card" content="summary_large_image" />
-	<meta property="twitter:domain" content={$page.url.hostname} />
-	<meta property="twitter:url" content={$page.url.toString()} />
-	<meta property="twitter:title" content={title} />
-	<meta property="twitter:description" content="A Multi Language collection of Hadith" />
-	<meta
-		property="twitter:image"
-		content="https://raw.githubusercontent.com/GibreelAbdullah/Hadith-Hub/master/Header.jpg"
-	/>
+	<title>Search{searchQuery ? ` for "${searchQuery}"` : ''} | HadithHub</title>
 </svelte:head>
-<main>
-	<div class="card flex-wrap variant-glass-primary z-[-1] relative max-w-[90rem] m-auto my-4">
-		<div class="hadithGroup grid">
-			<div class="break-words leading-7 m-3">
-				{#if $page.url.searchParams.get('text') != null}
-					<span class="chip variant-ringed block w-full break-words whitespace-pre-line">
-						Search For : {$page.url.searchParams.get('text')}
-					</span>
-				{/if}
-			</div>
-		</div>
-	</div>
-	{#await allHadithPromises}
+
+<main class="max-w-[90rem] m-auto p-4">
+	<form class="mb-4" onsubmit={handleSubmit}>
+		<input
+			class="input w-full"
+			type="text"
+			placeholder="Search hadith..."
+			bind:value={searchQuery}
+		/>
+	</form>
+
+	{#if loading}
 		<HadithPlaceholder />
-	{:then data}
-		{#each data as hadith}
-			<!-- {@const dummy2 = bookTitle = hadith[2]} -->
-			<div class="p-4">
-				<div class="p-4 card max-w-[90rem] m-auto">
-					<div class="card flex-wrap"  id="hadith{hadith[0]}{hadith[1][0]}">
-						<div class="hadithGroup font-medium grid">
-							<div class="break-words leading-7 m-3 pb-4">
-								<article id="myDiv">{@html hadith[6]}</article>
-							</div>
-						</div>
-						<GradingSection grades={hadith[5]} hadithIndex={hadith[1][0]} />
-						<Reference collectionShortName={hadith[0]} hadithNumberInCollection={hadith[1][0]} hadithNumberInBook={hadith[3]} bookNumber={hadith[2]} collectionTitle={hadith[7]} bookTitle={hadith[8]} />
+	{:else if results.length > 0}
+		<p class="text-sm opacity-70 mb-4">{results.length} results</p>
+		{#each results as result}
+			<div class="card p-4 mb-4">
+				<a href="{result.url}" class="block">
+					<div class="flex items-center gap-2 mb-2">
+						<span class="text-sm font-medium text-primary-600 dark:text-primary-400">
+							{result.meta.title}
+						</span>
+						{#if result.meta.book}
+							<span class="text-xs opacity-60">· {result.meta.book}</span>
+						{/if}
 					</div>
-				</div>
+					<p class="text-sm leading-relaxed">{@html result.excerpt}</p>
+				</a>
 			</div>
 		{/each}
-	{:catch error}
-		<div class="card p-4 max-w-[90rem] m-auto my-4">
-			<div class="hadithGroup font-medium p-2 grid">
-				<div class="break-words leading-7 m-3">
-					Something went wrong. Kindly report this to our twitter account <a
-						href="https://twitter.com/TheHadithHub"
-						target="blank">TheHadithHub</a
-					>
-				</div>
-				<div class="break-words leading-7 m-3">
-					{error}
-				</div>
-			</div>
+	{:else if searchQuery && !loading}
+		<div class="card p-4 text-center">
+			<p>No results found for "{searchQuery}"</p>
 		</div>
-	{/await}
+	{/if}
 </main>
-
-<style>
-	:global(.hadithGroup) {
-		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-		word-wrap: normal;
-	}
-
-	:global(qbl, b3d) {
-		text-wrap: auto;
-		display: block;
-		color: rgb(var(--color-primary-900));
-		font-family: 'KFGQPC Uthman Taha Naskh';
-	}
-
-	:global(.dark qbl, .dark b3d) {
-		text-wrap: auto;
-		color: rgb(var(--color-primary-300));
-	}
-
-	:global(text) {
-		text-wrap: auto;
-	}
-</style>

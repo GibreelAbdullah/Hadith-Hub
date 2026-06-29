@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getCollectionPromise, languagePromise } from '$lib/functions/utilsV2';
 	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
   	
 	const collectionPromise = $derived(getCollectionPromise());
 
@@ -40,7 +41,7 @@
 			const languageParam = selectedLanguage
 				? `&language=${encodeURIComponent(selectedLanguage)}`
 				: '';
-			goto(`/search?text=${encodeURIComponent(searchQuery)}${collectionParam}${languageParam}`);
+			goto(`${base}/search?text=${encodeURIComponent(searchQuery)}${collectionParam}${languageParam}`);
 		}
 	}
 </script>
