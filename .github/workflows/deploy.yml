@@ -30,7 +30,7 @@ jobs:
         env:
           BASE_PATH: '/Hadith-Hub'
           VITE_DB_BASE_URL: 'https://raw.githubusercontent.com/GibreelAbdullah/hadith-db/refs/heads/master/data'
-          VITE_PAGEFIND_URL: 'https://gibreelabdullah.github.io/hadith-db'
+          VITE_PAGEFIND_URL: 'https://raw.githubusercontent.com/GibreelAbdullah/hadith-db/refs/heads/master/data/pagefind'
         run: npm run build
 
       - name: Fix SPA routing for GitHub Pages

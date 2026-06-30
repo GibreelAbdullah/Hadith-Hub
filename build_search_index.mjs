@@ -1,5 +1,5 @@
 import * as pagefind from "pagefind";
-import { readFileSync } from "fs";
+import { readFileSync, rmSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -82,6 +82,10 @@ async function main() {
 
   await index.writeFiles({ outputPath: OUTPUT_DIR });
   console.log(`Index written to ${OUTPUT_DIR}`);
+
+  // Remove fragments to reduce size
+  rmSync(join(OUTPUT_DIR, "fragment"), { recursive: true, force: true });
+  console.log("Removed fragments directory");
 
   await pagefind.close();
 }

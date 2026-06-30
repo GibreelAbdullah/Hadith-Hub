@@ -6,6 +6,7 @@
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 
 	import { DATA_BASE_URL } from '$lib/data/db';
+	import { languageStore } from '$lib/functions/store.svelte';
 
 	const PAGEFIND_URL = import.meta.env.VITE_PAGEFIND_URL || '/pagefind';
 
@@ -32,7 +33,15 @@
 		}
 		loading = true;
 		const search = await pagefind.search(searchQuery);
-		const loaded = await Promise.all(search.results.slice(0, 30).map((r: any) => r.data()));
+		// Load metadata only (no excerpts since fragments are removed)
+		const loaded = await Promise.all(search.results.slice(0, 30).map(async (r: any) => {
+			try {
+				return await r.data();
+			} catch {
+				// Fragment not available - return metadata from the result ID
+				return { url: r.id, meta: {}, excerpt: "" };
+			}
+		}));
 		results = loaded;
 		loading = false;
 	}
@@ -66,16 +75,15 @@
 		<p class="text-sm opacity-70 mb-4">{results.length} results</p>
 		{#each results as result}
 			<div class="card p-4 mb-4">
-				<a href="{result.url}" class="block">
-					<div class="flex items-center gap-2 mb-2">
-						<span class="text-sm font-medium text-primary-600 dark:text-primary-400">
-							{result.meta.title}
+				<a href="{base}{result.url}?lang={languageStore.value.toString()}" class="block">
+					<div class="flex items-center gap-2">
+						<span class="font-medium text-primary-600 dark:text-primary-400">
+							{result.meta?.title || result.url}
 						</span>
-						{#if result.meta.book}
+						{#if result.meta?.book}
 							<span class="text-xs opacity-60">· {result.meta.book}</span>
 						{/if}
 					</div>
-					<p class="text-sm leading-relaxed">{@html result.excerpt}</p>
 				</a>
 			</div>
 		{/each}
