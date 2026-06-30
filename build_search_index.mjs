@@ -7,7 +7,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Use the symlinked data from hadith-db
 const DATA_DIR = join(__dirname, "static", "db");
-const OUTPUT_DIR = join(__dirname, "build", "pagefind");
+// Write to build/ if PAGEFIND_OUTPUT=build, otherwise static/ (for dev)
+import { existsSync } from "fs";
+const BUILD_DIR = join(__dirname, "build");
+const OUTPUT_DIR = join(__dirname, "static", "pagefind");
 
 async function main() {
   const collectionsData = JSON.parse(readFileSync(join(DATA_DIR, "collections.json"), "utf-8"));

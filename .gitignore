@@ -32,3 +32,4 @@ _output
 /build/
 static/db
 build
+static/pagefind

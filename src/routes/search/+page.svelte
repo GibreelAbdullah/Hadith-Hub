@@ -5,6 +5,10 @@
 	import { browser } from '$app/environment';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 
+	import { DATA_BASE_URL } from '$lib/data/db';
+
+	const PAGEFIND_URL = import.meta.env.VITE_PAGEFIND_URL || '/pagefind';
+
 	let searchQuery = $state($page.url.searchParams.get('text') || '');
 	let results = $state<any[]>([]);
 	let loading = $state(false);
@@ -12,9 +16,13 @@
 
 	onMount(async () => {
 		if (!browser) return;
-		pagefind = await import(/* @vite-ignore */ `${base}/pagefind/pagefind.js`);
-		await pagefind.init();
-		if (searchQuery) doSearch();
+		try {
+			pagefind = await import(/* @vite-ignore */ `${PAGEFIND_URL}/pagefind.js`);
+			await pagefind.init();
+		} catch (e) {
+			console.error('Failed to load pagefind:', e);
+		}
+		if (searchQuery && pagefind) doSearch();
 	});
 
 	async function doSearch() {
