@@ -1,16 +1,13 @@
 import * as pagefind from "pagefind";
-import { readFileSync, rmSync } from "fs";
+import { readFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// Use the symlinked data from hadith-db
 const DATA_DIR = join(__dirname, "static", "db");
-// Write to build/ if PAGEFIND_OUTPUT=build, otherwise static/ (for dev)
-import { existsSync } from "fs";
-const BUILD_DIR = join(__dirname, "build");
-const OUTPUT_DIR = join(__dirname, "static", "pagefind");
+const OUTPUT_DIR = process.env.PAGEFIND_DEV
+  ? join(__dirname, "static", "pagefind")
+  : join(__dirname, "build", "pagefind");
 
 async function main() {
   const collectionsData = JSON.parse(readFileSync(join(DATA_DIR, "collections.json"), "utf-8"));
@@ -56,9 +53,12 @@ async function main() {
       const book = meta.books.find(b => b.number === rec.book);
       const bookName = book ? (book.en || book.ar || `Book ${rec.book}`) : "";
 
+      // Boost collection name and hadith number by repeating them
+      const boostText = `${collName} ${rec.num} `.repeat(10);
+
       await index.addCustomRecord({
         url: `${basePath}/${coll.short_name}:${rec.num}`,
-        content: contentParts.join(" "),
+        content: boostText + contentParts.join(" "),
         language: "en",
         meta: {
           title: `${collName} : ${rec.num}`,
@@ -82,10 +82,6 @@ async function main() {
 
   await index.writeFiles({ outputPath: OUTPUT_DIR });
   console.log(`Index written to ${OUTPUT_DIR}`);
-
-  // Remove fragments to reduce size
-  rmSync(join(OUTPUT_DIR, "fragment"), { recursive: true, force: true });
-  console.log("Removed fragments directory");
 
   await pagefind.close();
 }

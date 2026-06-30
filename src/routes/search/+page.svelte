@@ -3,12 +3,14 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import { languageStore } from '$lib/functions/store.svelte';
+	import { getMetadata, fetchLines } from '$lib/data/db';
+	import { isRtl } from '$lib/functions/utilsV2';
+	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
+	import Reference from '$lib/components/hadithCardComponents/reference.svelte';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 
-	import { DATA_BASE_URL } from '$lib/data/db';
-	import { languageStore } from '$lib/functions/store.svelte';
-
-	const PAGEFIND_URL = import.meta.env.VITE_PAGEFIND_URL || '/pagefind';
+	const PAGEFIND_BASE = `${base}/pagefind`;
 
 	let searchQuery = $state($page.url.searchParams.get('text') || '');
 	let results = $state<any[]>([]);
@@ -18,12 +20,20 @@
 	onMount(async () => {
 		if (!browser) return;
 		try {
-			pagefind = await import(/* @vite-ignore */ `${PAGEFIND_URL}/pagefind.js`);
+			pagefind = await import(/* @vite-ignore */ `${PAGEFIND_BASE}/pagefind.js`);
 			await pagefind.init();
 		} catch (e) {
 			console.error('Failed to load pagefind:', e);
 		}
 		if (searchQuery && pagefind) doSearch();
+	});
+
+	$effect(() => {
+		const text = $page.url.searchParams.get('text') || '';
+		if (text !== searchQuery) {
+			searchQuery = text;
+			if (pagefind && searchQuery) doSearch();
+		}
 	});
 
 	async function doSearch() {
@@ -33,25 +43,62 @@
 		}
 		loading = true;
 		const search = await pagefind.search(searchQuery);
-		// Load metadata only (no excerpts since fragments are removed)
-		const loaded = await Promise.all(search.results.slice(0, 30).map(async (r: any) => {
+		const loaded = [];
+		for (const r of search.results.slice(0, 20)) {
 			try {
-				return await r.data();
-			} catch {
-				// Fragment not available - return metadata from the result ID
-				return { url: r.id, meta: {}, excerpt: "" };
-			}
-		}));
-		results = loaded;
-		loading = false;
-	}
+				loaded.push(await r.data());
+			} catch {}
+		}
 
-	function handleSubmit(e: Event) {
-		e.preventDefault();
-		const url = new URL(window.location.href);
-		url.searchParams.set('text', searchQuery);
-		window.history.replaceState({}, '', url.toString());
-		doSearch();
+		const searchTerms = searchQuery.trim().split(/\s+/).filter(t => t.length > 1);
+		const highlightRegex = searchTerms.length > 0
+			? new RegExp(`(${searchTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi')
+			: null;
+
+		function highlightText(text: string): string {
+			if (!highlightRegex || !text) return text;
+			return text.replace(highlightRegex, '<span class="text-error-500 font-semibold">$1</span>');
+		}
+
+		const allLangs = languageStore.value.length ? languageStore.value : ["ar", "en"];
+		const enriched = [];
+
+		for (const result of loaded) {
+			const collShort = result.meta?.collection_short;
+			const hadithNum = result.meta?.hadith_num;
+			if (!collShort || !hadithNum) continue;
+
+			const meta = await getMetadata(collShort);
+			if (!meta) continue;
+
+			const rec = meta.records.find(r => r.cat === "hadith" && r.num?.split(",").includes(hadithNum));
+			if (!rec) continue;
+
+			const availLangs = allLangs.filter(l => meta.offsets[l]);
+			const texts = await Promise.all(availLangs.map(async (lang) => {
+				const lines = await fetchLines(collShort, lang, rec.line, rec.line, meta);
+				return { lang, text: highlightText(lines[0] || "") };
+			}));
+
+			const gradings = (meta as any).gradings?.[rec.num] || null;
+			const book = meta.books.find(b => b.number === rec.book);
+			const collTitle = meta.collection_info?.[availLangs[0]] || meta.collection_info?.en || collShort;
+			const bookTitle = book?.[availLangs[0] as keyof typeof book] || book?.en || book?.ar || '';
+
+			enriched.push({
+				collShort,
+				hadithNum: rec.num,
+				bookNum: rec.book,
+				numBook: rec.num_book,
+				collTitle,
+				bookTitle,
+				texts,
+				gradings,
+			});
+		}
+
+		results = enriched;
+		loading = false;
 	}
 </script>
 
@@ -59,37 +106,57 @@
 	<title>Search{searchQuery ? ` for "${searchQuery}"` : ''} | HadithHub</title>
 </svelte:head>
 
-<main class="max-w-[90rem] m-auto p-4">
-	<form class="mb-4" onsubmit={handleSubmit}>
-		<input
-			class="input w-full"
-			type="text"
-			placeholder="Search hadith..."
-			bind:value={searchQuery}
-		/>
-	</form>
-
+<main>
 	{#if loading}
 		<HadithPlaceholder />
 	{:else if results.length > 0}
-		<p class="text-sm opacity-70 mb-4">{results.length} results</p>
 		{#each results as result}
-			<div class="card p-4 mb-4">
-				<a href="{base}{result.url}?lang={languageStore.value.toString()}" class="block">
-					<div class="flex items-center gap-2">
-						<span class="font-medium text-primary-600 dark:text-primary-400">
-							{result.meta?.title || result.url}
+			<div class="p-4">
+				<div class="p-4 card max-w-[90rem] m-auto" id="hadith{result.collShort}{result.hadithNum}">
+					<!-- Top reference -->
+					<div class="text-center mb-3">
+						<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-500/15 text-primary-700 dark:text-primary-300 text-sm font-medium">
+							<span>{result.collTitle}</span>
+							<span dir="ltr">: {result.hadithNum}</span>
 						</span>
-						{#if result.meta?.book}
-							<span class="text-xs opacity-60">· {result.meta.book}</span>
-						{/if}
 					</div>
-				</a>
+					<div class="card flex-wrap">
+						<div class="hadithGroup font-medium grid">
+							{#each result.texts as { lang, text }}
+								{#await isRtl(lang) then rtl}
+									<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'}>
+										{#if text}
+											<article>{@html text}</article>
+										{:else}
+											<center><code class="!text-white !bg-red-500">Hadith translation not found</code></center>
+										{/if}
+									</div>
+								{/await}
+							{/each}
+						</div>
+						<GradingSection grades={result.gradings} hadithIndex={result.hadithNum} />
+						<Reference
+							collectionShortName={result.collShort}
+							hadithNumberInCollection={result.hadithNum}
+							hadithNumberInBook={result.numBook}
+							bookNumber={result.bookNum}
+							collectionTitle={result.collTitle}
+							bookTitle={result.bookTitle}
+						/>
+					</div>
+				</div>
 			</div>
 		{/each}
 	{:else if searchQuery && !loading}
-		<div class="card p-4 text-center">
+		<div class="card p-4 m-4 text-center">
 			<p>No results found for "{searchQuery}"</p>
 		</div>
 	{/if}
 </main>
+
+<style>
+	:global(.hadithGroup) {
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		word-wrap: normal;
+	}
+</style>

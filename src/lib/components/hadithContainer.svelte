@@ -7,6 +7,7 @@
 	import { isRtl } from '$lib/functions/utilsV2';
 	export let dataListRecord: any[] = [];
 	export let availableLanguages: string[] = [];
+	export let hideBreadcrumb: boolean = false;
 
 	$: displayLanguages = languageStore.value.filter(l => availableLanguages.includes(l));
 	$: langCount = displayLanguages.length || 2;
@@ -17,6 +18,7 @@
 </script>
 {#each dataListRecord as data}
 	{#if data[5] == 'collection'}
+	{#if !hideBreadcrumb}
 	<div class="p-4">
 		<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto">
 			<div class="hadithGroup grid px-5">
@@ -34,6 +36,7 @@
 			</div>
 		</div>
 	</div>
+	{/if}
 	{:else if data[5] == 'book'}
 	{:else if ['chapter', 'chapter_intro'].includes(data[5])}
 		<div class="p-4">

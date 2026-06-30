@@ -30,8 +30,18 @@ jobs:
         env:
           BASE_PATH: '/Hadith-Hub'
           VITE_DB_BASE_URL: 'https://raw.githubusercontent.com/GibreelAbdullah/hadith-db/refs/heads/master/data'
-          VITE_PAGEFIND_URL: 'https://raw.githubusercontent.com/GibreelAbdullah/hadith-db/refs/heads/master/data/pagefind'
         run: npm run build
+
+      - name: Clone hadith-db data for search index
+        run: |
+          git clone --depth 1 https://github.com/GibreelAbdullah/hadith-db.git /tmp/hadith-db
+          rm -rf static/db
+          cp -r /tmp/hadith-db/data static/db
+
+      - name: Build search index
+        env:
+          BASE_PATH: '/Hadith-Hub'
+        run: node build_search_index.mjs
 
       - name: Fix SPA routing for GitHub Pages
         run: |
