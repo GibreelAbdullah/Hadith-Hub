@@ -84,9 +84,9 @@
 					<option value="">All Collections</option>
 					{#await collectionPromise}
 						<option disabled>Loading...</option>
-					{:then dataList}
-						{#each dataList as data}
-							<option value={data[0]}>{data[2]}</option>
+					{:then result}
+						{#each result.collections as coll}
+							<option value={coll.short_name}>{coll.en || coll.ar || coll.short_name}</option>
 						{/each}
 					{:catch error}
 						<option disabled>Error loading Collections</option>

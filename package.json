@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"build:search": "PAGEFIND_DEV=1 node build_search_index.mjs",
+		"build:search": "PAGEFIND_DEV=1 PAGEFIND_LANGS=en,ar node build_search_index.mjs",
 		"preview": "vite preview",
 		"test": "playwright test",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",

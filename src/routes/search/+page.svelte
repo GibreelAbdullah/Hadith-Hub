@@ -15,41 +15,115 @@
 	let searchQuery = $state($page.url.searchParams.get('text') || '');
 	let results = $state<any[]>([]);
 	let loading = $state(false);
-	let pagefind: any = null;
+	let pagefindInstances: Map<string, any> = new Map();
+
+	async function loadPagefindForLang(lang: string) {
+		if (pagefindInstances.has(lang)) return pagefindInstances.get(lang);
+		try {
+			const pf = await import(/* @vite-ignore */ `${PAGEFIND_BASE}/${lang}/pagefind.js`);
+			await pf.init();
+			pagefindInstances.set(lang, pf);
+			return pf;
+		} catch {
+			return null;
+		}
+	}
 
 	onMount(async () => {
 		if (!browser) return;
-		try {
-			pagefind = await import(/* @vite-ignore */ `${PAGEFIND_BASE}/pagefind.js`);
-			await pagefind.init();
-		} catch (e) {
-			console.error('Failed to load pagefind:', e);
-		}
-		if (searchQuery && pagefind) doSearch();
+		if (searchQuery) doSearch();
 	});
 
 	$effect(() => {
 		const text = $page.url.searchParams.get('text') || '';
+		const _collection = $page.url.searchParams.get('collection') || '';
+		const _language = $page.url.searchParams.get('language') || '';
 		if (text !== searchQuery) {
 			searchQuery = text;
-			if (pagefind && searchQuery) doSearch();
 		}
+		if (browser && searchQuery) doSearch();
 	});
 
 	async function doSearch() {
-		if (!pagefind || !searchQuery.trim()) {
+		if (!searchQuery.trim()) {
 			results = [];
 			return;
 		}
-		loading = true;
-		const search = await pagefind.search(searchQuery);
-		const loaded = [];
-		for (const r of search.results.slice(0, 20)) {
-			try {
-				loaded.push(await r.data());
-			} catch {}
+
+		// Check if the query is a direct hadith reference (e.g., "bukhari 1", "muslim 224a")
+		const directMatch = searchQuery.trim().match(/^(\w+)[:\s]+(\d+\w*)$/i);
+		if (directMatch) {
+			const [, collName, num] = directMatch;
+			// Try to find the collection by short_name or partial name
+			const { getCollections } = await import('$lib/data/db');
+			const data = await getCollections();
+			const coll = data.collections.find((c: any) => 
+				c.short_name.toLowerCase() === collName.toLowerCase() ||
+				c.en?.toLowerCase().includes(collName.toLowerCase()) ||
+				c.short_name.toLowerCase().includes(collName.toLowerCase())
+			);
+			if (coll) {
+				const meta = await getMetadata(coll.short_name);
+				if (meta) {
+					const rec = meta.records.find(r => r.cat === "hadith" && r.num?.split(",").includes(num));
+					if (rec) {
+						// Direct navigation
+						window.location.href = `${base}/${coll.short_name}:${num}?lang=${languageStore.value.toString()}`;
+						return;
+					}
+				}
+			}
 		}
 
+		loading = true;
+
+		const collectionFilter = $page.url.searchParams.get('collection') || '';
+		const languageFilter = $page.url.searchParams.get('language') || '';
+
+		// Determine which language indexes to search
+		// Language filter from search bar = specific language only
+		// No filter = search ALL available languages (sidebar selection doesn't affect search)
+		const allAvailableLanguages = ['ar', 'en', 'bn', 'fr', 'id', 'ru', 'ta', 'tr', 'ur'];
+		const langsToSearch = languageFilter
+			? [languageFilter]
+			: allAvailableLanguages;
+
+		const searchOptions: any = {};
+		if (collectionFilter) {
+			searchOptions.filters = { collection: [collectionFilter] };
+		}
+
+		// Search across selected language indexes and merge results
+		const allResults: { url: string; lang: string; score: number; collShort: string; hadithNum: string }[] = [];
+
+		for (const lang of langsToSearch) {
+			const pf = await loadPagefindForLang(lang);
+			if (!pf) continue;
+
+			const search = await pf.search(searchQuery, searchOptions);
+			for (const r of search.results.slice(0, 15)) {
+				try {
+					const data = await r.data();
+					// Parse URL to get collection and hadith number
+					const match = data.url.match(/\/([^/:]+):([^?]+)$/);
+					if (match) {
+						allResults.push({ url: data.url, lang, score: r.score || 0, collShort: match[1], hadithNum: match[2] });
+					}
+				} catch {}
+			}
+		}
+
+		// Deduplicate by collection:hadithNum
+		const seen = new Map();
+		for (const r of allResults) {
+			const key = `${r.collShort}:${r.hadithNum}`;
+			if (!seen.has(key) || r.score > seen.get(key).score) {
+				seen.set(key, r);
+			}
+		}
+		const uniqueResults = [...seen.values()].slice(0, 20);
+
+		// Build highlight regex
 		const searchTerms = searchQuery.trim().split(/\s+/).filter(t => t.length > 1);
 		const highlightRegex = searchTerms.length > 0
 			? new RegExp(`(${searchTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi')
@@ -60,30 +134,23 @@
 			return text.replace(highlightRegex, '<span class="text-error-500 font-semibold">$1</span>');
 		}
 
-		const allLangs = languageStore.value.length ? languageStore.value : ["ar", "en"];
+		// Enrich results with hadith text
 		const enriched = [];
-
-		for (const result of loaded) {
-			const collShort = result.meta?.collection_short;
-			const hadithNum = result.meta?.hadith_num;
-			if (!collShort || !hadithNum) continue;
-
+		for (const { collShort, hadithNum, lang: matchedLang } of uniqueResults) {
 			const meta = await getMetadata(collShort);
 			if (!meta) continue;
 
 			const rec = meta.records.find(r => r.cat === "hadith" && r.num?.split(",").includes(hadithNum));
 			if (!rec) continue;
 
-			const availLangs = allLangs.filter(l => meta.offsets[l]);
-			const texts = await Promise.all(availLangs.map(async (lang) => {
-				const lines = await fetchLines(collShort, lang, rec.line, rec.line, meta);
-				return { lang, text: highlightText(lines[0] || "") };
-			}));
+			// Show only the matched language
+			const lines = await fetchLines(collShort, matchedLang, rec.line, rec.line, meta);
+			const text = highlightText(lines[0] || "");
 
 			const gradings = (meta as any).gradings?.[rec.num] || null;
 			const book = meta.books.find(b => b.number === rec.book);
-			const collTitle = meta.collection_info?.[availLangs[0]] || meta.collection_info?.en || collShort;
-			const bookTitle = book?.[availLangs[0] as keyof typeof book] || book?.en || book?.ar || '';
+			const collTitle = meta.collection_info?.en || meta.collection_info?.[matchedLang] || collShort;
+			const bookTitle = book?.en || book?.[matchedLang as keyof typeof book] || book?.ar || '';
 
 			enriched.push({
 				collShort,
@@ -92,7 +159,7 @@
 				numBook: rec.num_book,
 				collTitle,
 				bookTitle,
-				texts,
+				texts: [{ lang: matchedLang, text }],
 				gradings,
 			});
 		}
