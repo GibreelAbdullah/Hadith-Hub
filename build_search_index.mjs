@@ -40,6 +40,9 @@ async function buildLanguageIndex(lang, collectionsData) {
       const clean = text.replace(/<[^>]*>/g, "").replace(/\\n/g, " ");
       if (!clean) continue;
 
+      // Also index a normalized version (without apostrophes/diacritics) for fuzzy matching
+      const normalized = clean.replace(/[''`ʿʾ]/g, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
       const collName = coll.en || coll.ar || coll.short_name;
       const book = meta.books.find(b => b.number === rec.book);
       const bookName = book ? (book.en || book.ar || `Book ${rec.book}`) : "";
@@ -49,7 +52,7 @@ async function buildLanguageIndex(lang, collectionsData) {
 
       await index.addCustomRecord({
         url: `${basePath}/${coll.short_name}:${rec.num}`,
-        content: boostText + clean,
+        content: boostText + clean + " " + normalized,
         language: lang,
         meta: {
           title: `${collName} : ${rec.num}`,

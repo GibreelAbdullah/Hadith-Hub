@@ -10,9 +10,14 @@
 		storePopup,
 		Modal
 	} from '@skeletonlabs/skeleton';
+	import SearchModal from '$lib/components/searchModal.svelte';
 
 	initializeStores();
 	const drawerStore = getDrawerStore();
+
+	const modalComponentRegistry: Record<string, any> = {
+		searchModal: { ref: SearchModal }
+	};
 
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
@@ -46,7 +51,7 @@
 <Drawer>
 	<div class="px-4 pt-8"><SideBarContents /></div>
 </Drawer>
-<Modal />
+<Modal components={modalComponentRegistry} />
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4 hidden md:block">
 	<svelte:fragment slot="header">
 		<Header />
