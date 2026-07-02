@@ -9,6 +9,7 @@
 	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
 	import Reference from '$lib/components/hadithCardComponents/reference.svelte';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
+	import { detectAll } from 'tinyld/light';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { ModalSettings } from '@skeletonlabs/skeleton';
 
@@ -21,6 +22,63 @@
 			meta: { query: searchQuery },
 		};
 		modalStore.trigger(modal);
+	}
+
+	function detectLanguages(query: string): string[] {
+		const text = query.trim();
+		if (!text) return ['en', 'ar'];
+
+		const OUR_LANGUAGES = ['ar', 'en', 'bn', 'fr', 'id', 'ru', 'ta', 'tr', 'ur'];
+
+		// Try tinyld first
+		try {
+			const results = detectAll(text);
+			// Filter to only our languages
+			const matches = results.filter((r: any) => OUR_LANGUAGES.includes(r.lang));
+			if (matches.length > 0 && matches[0].accuracy > 0.3) {
+				// High confidence - use just that language
+				return [matches[0].lang];
+			}
+			if (matches.length > 0 && matches[0].accuracy > 0.15) {
+				// Medium confidence - use top 2-3 matches
+				return matches.slice(0, 3).map((r: any) => r.lang);
+			}
+		} catch {}
+
+		// Fallback: script-based detection
+		return detectByScript(text);
+	}
+
+	function detectByScript(text: string): string[] {
+		let hasArabic = false;
+		let hasBengali = false;
+		let hasTamil = false;
+		let hasCyrillic = false;
+		let hasLatin = false;
+
+		for (const char of text) {
+			const code = char.codePointAt(0) || 0;
+			if ((code >= 0x0600 && code <= 0x06FF) || (code >= 0x0750 && code <= 0x077F) || (code >= 0xFB50 && code <= 0xFDFF) || (code >= 0xFE70 && code <= 0xFEFF)) {
+				hasArabic = true;
+			} else if (code >= 0x0980 && code <= 0x09FF) {
+				hasBengali = true;
+			} else if (code >= 0x0B80 && code <= 0x0BFF) {
+				hasTamil = true;
+			} else if (code >= 0x0400 && code <= 0x04FF) {
+				hasCyrillic = true;
+			} else if ((code >= 0x0041 && code <= 0x007A) || (code >= 0x00C0 && code <= 0x024F)) {
+				hasLatin = true;
+			}
+		}
+
+		const langs: string[] = [];
+		if (hasArabic) langs.push('ar', 'ur');
+		if (hasBengali) langs.push('bn');
+		if (hasTamil) langs.push('ta');
+		if (hasCyrillic) langs.push('ru');
+		if (hasLatin) langs.push('en', 'fr', 'id', 'tr');
+
+		return langs.length > 0 ? [...new Set(langs)] : ['en', 'ar'];
 	}
 
 	const PAGEFIND_BASE = `${base}/pagefind`;
@@ -104,11 +162,13 @@
 
 		// Determine which language indexes to search
 		// Language filter from search bar = specific language only
-		// No filter = search ALL available languages (sidebar selection doesn't affect search)
+		// No filter = auto-detect from the script of the typed text
 		const allAvailableLanguages = ['ar', 'en', 'bn', 'fr', 'id', 'ru', 'ta', 'tr', 'ur'];
 		const langsToSearch = languageFilter
 			? [languageFilter]
-			: allAvailableLanguages;
+			: detectLanguages(searchQuery);
+
+		console.log(`[Search] Query: "${searchQuery}" → Languages: [${langsToSearch.join(', ')}]`);
 
 		const searchOptions: any = {};
 		if (collectionFilter) {
