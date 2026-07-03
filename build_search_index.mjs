@@ -1,5 +1,5 @@
 import * as pagefind from "pagefind";
-import { readFileSync, rmSync, mkdirSync } from "fs";
+import { readFileSync, rmSync, mkdirSync, existsSync, writeFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -92,10 +92,33 @@ async function main() {
 
   mkdirSync(OUTPUT_BASE, { recursive: true });
 
+  // Load previous build hashes for change detection
+  const hashFile = join(OUTPUT_BASE, ".build_hashes.json");
+  let prevHashes = {};
+  try { prevHashes = JSON.parse(readFileSync(hashFile, "utf-8")); } catch {}
+
   console.log(`Building search indexes for ${languages.length} languages...\n`);
 
+  const newHashes = {};
   let grandTotal = 0;
   for (const lang of languages) {
+    // Compute hash of all txt files for this language
+    const { createHash } = await import("crypto");
+    const hash = createHash("md5");
+    for (const coll of collectionsData.collections) {
+      const txtPath = join(DATA_DIR, coll.short_name, `${lang}.txt`);
+      try { hash.update(readFileSync(txtPath)); } catch {}
+    }
+    const currentHash = hash.digest("hex");
+    newHashes[lang] = currentHash;
+
+    // Skip if unchanged and index already exists
+    const indexExists = existsSync(join(OUTPUT_BASE, lang, "pagefind-entry.json"));
+    if (currentHash === prevHashes[lang] && indexExists) {
+      console.log(`  [${lang}] Unchanged, skipping\n`);
+      continue;
+    }
+
     console.log(`  [${lang}]`);
     const count = await buildLanguageIndex(lang, collectionsData);
     if (count > 0) {
@@ -108,6 +131,9 @@ async function main() {
 
   console.log(`\nGrand total: ${grandTotal} hadiths across ${languages.length} languages`);
   console.log(`Index written to ${OUTPUT_BASE}`);
+
+  // Save hashes for next run
+  writeFileSync(hashFile, JSON.stringify(newHashes, null, 2));
 
   await pagefind.close();
 }
