@@ -196,7 +196,8 @@
 				seen.set(key, r);
 			}
 		}
-		const uniqueResults = [...seen.values()];
+		// Sort by score descending so best matches come first regardless of language
+		const uniqueResults = [...seen.values()].sort((a, b) => b.score - a.score);
 
 		// Build highlight regex
 		const searchTerms = searchQuery.trim().split(/\s+/).filter(t => t.length > 1);
