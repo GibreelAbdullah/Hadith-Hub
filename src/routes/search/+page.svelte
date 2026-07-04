@@ -24,6 +24,26 @@
 		modalStore.trigger(modal);
 	}
 
+	function highlightFromExcerpt(fullText: string, excerpt: string): string {
+		if (!excerpt || !fullText) return fullText;
+		// Extract the words that pagefind marked in the excerpt
+		const markRegex = /<mark>(.*?)<\/mark>/g;
+		const markedWords = new Set<string>();
+		let match;
+		while ((match = markRegex.exec(excerpt)) !== null) {
+			markedWords.add(match[1]);
+		}
+		if (markedWords.size === 0) return fullText;
+
+		// Build a regex from marked words, escaping special chars
+		const pattern = [...markedWords]
+			.sort((a, b) => b.length - a.length) // longest first
+			.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+			.join('|');
+		const highlightRegex = new RegExp(`(${pattern})`, 'gi');
+		return fullText.replace(highlightRegex, '<mark>$1</mark>');
+	}
+
 	function detectLanguages(query: string): string[] {
 		const text = query.trim();
 		if (!text) return ['en', 'ar'];
@@ -199,54 +219,38 @@
 		// Sort by score descending so best matches come first regardless of language
 		const uniqueResults = [...seen.values()].sort((a, b) => b.score - a.score);
 
-		// Build highlight regex
-		const searchTerms = searchQuery.trim().split(/\s+/).filter(t => t.length > 1);
-		const highlightRegex = searchTerms.length > 0
-			? new RegExp(`(${searchTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi')
-			: null;
-
-		function highlightText(text: string): string {
-			if (!highlightRegex || !text) return text;
-			return text.replace(highlightRegex, '<span class="text-error-500 font-semibold">$1</span>');
-		}
+		// No custom highlighting - pagefind provides excerpts via r.data()
 
 		// Store all unique results for pagination
 		allUniqueResults = uniqueResults;
 		displayCount = 15;
 
 		// Enrich only the first page
-		results = await enrichResults(uniqueResults.slice(0, displayCount), highlightText);
+		results = await enrichResults(uniqueResults.slice(0, displayCount));
 		loading = false;
 	}
 
 	async function loadMore() {
 		if (loadingMore) return;
 		loadingMore = true;
-		const searchTerms = searchQuery.trim().split(/\s+/).filter(t => t.length > 1);
-		const highlightRegex = searchTerms.length > 0
-			? new RegExp(`(${searchTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi')
-			: null;
-		function highlightText(text: string): string {
-			if (!highlightRegex || !text) return text;
-			return text.replace(highlightRegex, '<span class="text-error-500 font-semibold">$1</span>');
-		}
 		const nextBatch = allUniqueResults.slice(displayCount, displayCount + 15);
-		const enriched = await enrichResults(nextBatch, highlightText);
+		const enriched = await enrichResults(nextBatch);
 		results = [...results, ...enriched];
 		displayCount += 15;
 		loadingMore = false;
 	}
 
-	async function enrichResults(items: any[], highlightText: (t: string) => string) {
+	async function enrichResults(items: any[]) {
 		const enriched = [];
 		for (const { result, lang: matchedLang } of items) {
-			let collShort: string, hadithNum: string;
+			let collShort: string, hadithNum: string, excerpt: string;
 			try {
 				const data = await result.data();
 				const match = data.url.match(/\/([^/:]+):([^?]+)$/);
 				if (!match) continue;
 				collShort = match[1];
 				hadithNum = match[2];
+				excerpt = data.excerpt || "";
 			} catch { continue; }
 
 			const meta = await getMetadata(collShort);
@@ -255,9 +259,9 @@
 			const rec = meta.records.find(r => r.cat === "hadith" && r.num?.split(",").includes(hadithNum));
 			if (!rec) continue;
 
-			// Show only the matched language
+			// Fetch full hadith text from our files
 			const lines = await fetchLines(collShort, matchedLang, rec.line, rec.line, meta);
-			const text = highlightText(lines[0] || "");
+			const text = lines[0] || "";
 
 			const gradings = (meta as any).gradings?.[rec.num] || null;
 			const book = meta.books.find(b => b.number === rec.book);
@@ -272,6 +276,7 @@
 				collTitle,
 				bookTitle,
 				texts: [{ lang: matchedLang, text }],
+				excerpt,
 				gradings,
 			});
 		}
@@ -339,7 +344,7 @@
 								{#await isRtl(lang) then rtl}
 									<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'}>
 										{#if text}
-											<article>{@html text}</article>
+											<article>{@html highlightFromExcerpt(text, result.excerpt)}</article>
 										{:else}
 											<center><code class="!text-white !bg-red-500">Hadith translation not found</code></center>
 										{/if}
@@ -378,5 +383,10 @@
 	:global(.hadithGroup) {
 		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 		word-wrap: normal;
+	}
+	:global(mark) {
+		background: none;
+		color: rgb(var(--color-primary-500));
+		font-weight: 600;
 	}
 </style>
