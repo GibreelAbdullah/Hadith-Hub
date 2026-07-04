@@ -241,25 +241,23 @@
 	}
 
 	async function enrichResults(items: any[]) {
-		const enriched = [];
-		for (const { result, lang: matchedLang } of items) {
+		const results = await Promise.all(items.map(async ({ result, lang: matchedLang }) => {
 			let collShort: string, hadithNum: string, excerpt: string;
 			try {
 				const data = await result.data();
 				const match = data.url.match(/\/([^/:]+):([^?]+)$/);
-				if (!match) continue;
+				if (!match) return null;
 				collShort = match[1];
 				hadithNum = match[2];
 				excerpt = data.excerpt || "";
-			} catch { continue; }
+			} catch { return null; }
 
 			const meta = await getMetadata(collShort);
-			if (!meta) continue;
+			if (!meta) return null;
 
 			const rec = meta.records.find(r => r.cat === "hadith" && r.num?.split(",").includes(hadithNum));
-			if (!rec) continue;
+			if (!rec) return null;
 
-			// Fetch full hadith text from our files
 			const lines = await fetchLines(collShort, matchedLang, rec.line, rec.line, meta);
 			const text = lines[0] || "";
 
@@ -268,7 +266,7 @@
 			const collTitle = meta.collection_info?.en || meta.collection_info?.[matchedLang] || collShort;
 			const bookTitle = book?.en || book?.[matchedLang as keyof typeof book] || book?.ar || '';
 
-			enriched.push({
+			return {
 				collShort,
 				hadithNum: rec.num,
 				bookNum: rec.book,
@@ -278,10 +276,9 @@
 				texts: [{ lang: matchedLang, text }],
 				excerpt,
 				gradings,
-			});
-		}
-
-		return enriched;
+			};
+		}));
+		return results.filter(Boolean);
 	}
 </script>
 

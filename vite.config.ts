@@ -10,6 +10,11 @@ const config: UserConfig = {
 	define: {
         'process.env.ANCHOR_BROWSER': true
     },
+	server: {
+		watch: {
+			ignored: ['**/static/pagefind/**']
+		}
+	}
 };
 
 export default config;
