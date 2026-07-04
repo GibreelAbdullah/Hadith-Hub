@@ -30,6 +30,7 @@ jobs:
         env:
           BASE_PATH: '/Hadith-Hub'
           VITE_DB_BASE_URL: 'https://raw.githubusercontent.com/GibreelAbdullah/hadith-db/refs/heads/master/data'
+          VITE_META_BASE_URL: '/Hadith-Hub/db'
         run: npm run build
 
       - name: Clone hadith-db data for search index
@@ -37,6 +38,19 @@ jobs:
           git clone --depth 1 https://github.com/GibreelAbdullah/hadith-db.git /tmp/hadith-db
           rm -rf static/db
           cp -r /tmp/hadith-db/data static/db
+
+      - name: Copy metadata to build output
+        run: |
+          mkdir -p build/db
+          cp static/db/collections.json build/db/
+          cp static/db/gradeTranslations.json build/db/
+          for dir in static/db/*/; do
+            coll=$(basename "$dir")
+            if [ -f "$dir/metadata.json" ]; then
+              mkdir -p "build/db/$coll"
+              cp "$dir/metadata.json" "build/db/$coll/"
+            fi
+          done
 
       - name: Build search index
         env:

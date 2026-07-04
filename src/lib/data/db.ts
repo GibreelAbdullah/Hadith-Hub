@@ -1,7 +1,10 @@
 import { browser } from '$app/environment';
+import { base } from '$app/paths';
 
-// export const DATA_BASE_URL = import.meta.env.VITE_DB_BASE_URL || "https://raw.githubusercontent.com/GibreelAbdullah/hadith-db/refs/heads/master/data";
+// URL for text file range requests (can be cross-origin)
 export const DATA_BASE_URL = import.meta.env.VITE_DB_BASE_URL || '/db';
+// URL for metadata/collections (same-origin for fast loading)
+export const META_BASE_URL = import.meta.env.VITE_META_BASE_URL || DATA_BASE_URL;
 
 interface CollectionsData {
 	languages: { short_name: string; full_name: string; rtl: boolean }[];
@@ -39,24 +42,35 @@ export interface Metadata {
 let collectionsCache: CollectionsData | null = null;
 const metadataCache: Map<string, Metadata> = new Map();
 
+let collectionsFetching: Promise<CollectionsData> | null = null;
+
 export async function getCollections(): Promise<CollectionsData> {
 	if (!browser) return { languages: [], collections: [] };
 	if (collectionsCache) return collectionsCache;
-	const res = await fetch(`${DATA_BASE_URL}/collections.json`);
-	collectionsCache = await res.json();
-	return collectionsCache!;
+	if (!collectionsFetching) {
+		collectionsFetching = fetch(`${META_BASE_URL}/collections.json`)
+			.then(res => res.json())
+			.then(data => { collectionsCache = data; return data; });
+	}
+	return collectionsFetching;
 }
+
+const metadataFetching: Map<string, Promise<Metadata>> = new Map();
 
 export async function getMetadata(collection: string): Promise<Metadata | null> {
 	if (!browser) return null;
 	if (metadataCache.has(collection)) return metadataCache.get(collection)!;
-	const res = await fetch(`${DATA_BASE_URL}/${collection}/metadata.json`);
-	const meta: Metadata = await res.json();
-	metadataCache.set(collection, meta);
-	return meta;
+	if (!metadataFetching.has(collection)) {
+		const promise = fetch(`${META_BASE_URL}/${collection}/metadata.json`)
+			.then(res => res.json())
+			.then(meta => { metadataCache.set(collection, meta); metadataFetching.delete(collection); return meta; });
+		metadataFetching.set(collection, promise);
+	}
+	return metadataFetching.get(collection)!;
 }
 
 const rangeCache: Map<string, string> = new Map();
+const rangeFetching: Map<string, Promise<string>> = new Map();
 
 export async function fetchTextRange(
 	collection: string,
@@ -66,14 +80,21 @@ export async function fetchTextRange(
 ): Promise<string> {
 	const key = `${collection}/${lang}/${startByte}-${endByte}`;
 	if (rangeCache.has(key)) return rangeCache.get(key)!;
-	const url = `${DATA_BASE_URL}/${collection}/${lang}.txt`;
-	const res = await fetch(url, {
-		headers: { Range: `bytes=${startByte}-${endByte}` }
-	});
-	const buf = await res.arrayBuffer();
-	const text = new TextDecoder('utf-8').decode(buf);
-	rangeCache.set(key, text);
-	return text;
+	if (!rangeFetching.has(key)) {
+		const url = `${DATA_BASE_URL}/${collection}/${lang}.txt`;
+		const promise = fetch(url, {
+			headers: { Range: `bytes=${startByte}-${endByte}` }
+		})
+			.then(res => res.arrayBuffer())
+			.then(buf => {
+				const text = new TextDecoder("utf-8").decode(buf);
+				rangeCache.set(key, text);
+				rangeFetching.delete(key);
+				return text;
+			});
+		rangeFetching.set(key, promise);
+	}
+	return rangeFetching.get(key)!;
 }
 
 export async function fetchLines(
