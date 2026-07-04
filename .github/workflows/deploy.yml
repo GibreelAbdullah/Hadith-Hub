@@ -39,6 +39,16 @@ jobs:
           rm -rf static/db
           cp -r /tmp/hadith-db/data static/db
 
+      - name: Cache pagefind index
+        uses: actions/cache@v4
+        with:
+          path: |
+            build/pagefind
+            build/pagefind/.build_hashes.json
+          key: pagefind-${{ hashFiles('static/db/**/*.txt') }}
+          restore-keys: |
+            pagefind-
+
       - name: Copy metadata to build output
         run: |
           mkdir -p build/db
