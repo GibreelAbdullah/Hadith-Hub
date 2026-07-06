@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { AppBar } from '@skeletonlabs/skeleton';
 	import LogoAndDrawer from './LogoAndDrawer.svelte';
-	import ThemeButton from './ThemeButton.svelte';
 	import SearchBar from './SearchBar.svelte';
+
+	export let onSettingsClick: () => void = () => {};
 </script>
 
 <AppBar>
@@ -11,6 +12,12 @@
 		<SearchBar />
 	</svelte:fragment>
 	<svelte:fragment slot="trail">
-		<ThemeButton />
+		<button
+			class="btn hover:variant-soft-primary text-2xl"
+			on:click={onSettingsClick}
+			title="Settings"
+		>
+			⚙
+		</button>
 	</svelte:fragment>
 </AppBar>

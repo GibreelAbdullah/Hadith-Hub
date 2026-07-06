@@ -27,6 +27,7 @@
 	import SideBarContents from '$lib/components/common/sideBarContents.svelte';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import Header from '$lib/components/common/Header.svelte';
+	import SettingsSidebar from '$lib/components/common/SettingsSidebar.svelte';
 
 	function drawerOpen(): void {
 		const settings: DrawerSettings = { id: 'main' };
@@ -48,13 +49,20 @@
 	});
 </script>
 
-<Drawer>
-	<div class="px-4 pt-8"><SideBarContents /></div>
+<Drawer width="w-full max-w-sm">
+	{#if $drawerStore.id === 'settings'}
+		<div class="px-4 pt-8 overflow-y-auto h-full"><SettingsSidebar /></div>
+	{:else}
+		<div class="px-4 pt-8"><SideBarContents /></div>
+	{/if}
 </Drawer>
 <Modal components={modalComponentRegistry} />
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4 hidden md:block">
 	<svelte:fragment slot="header">
-		<Header />
+		<Header onSettingsClick={() => {
+			const settings: DrawerSettings = { id: 'settings', position: 'right' };
+			drawerStore.open(settings);
+		}} />
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
 		<SideBarContents />

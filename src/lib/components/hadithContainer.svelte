@@ -5,9 +5,12 @@
 	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
 	import Reference from './hadithCardComponents/reference.svelte';
 	import { isRtl } from '$lib/functions/utilsV2';
+	import { settingsStore, getFontStyle } from '$lib/functions/settingsStore';
 	export let dataListRecord: any[] = [];
 	export let availableLanguages: string[] = [];
 	export let hideBreadcrumb: boolean = false;
+
+	$: fontSettings = $settingsStore;
 
 	$: displayLanguages = languageStore.value.filter(l => availableLanguages.includes(l));
 	$: langCount = displayLanguages.length || 2;
@@ -46,7 +49,7 @@
 				<div class="hadithGroup font-medium grid">
 					{#each { length: langCount } as _, i}
 						{#await isRtl(displayLanguages[i]) then rtl}
-							<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'}>
+							<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'} style={getFontStyle(displayLanguages[i], fontSettings)}>
 								<article id="myDiv">{@html data[i + 7]}</article>
 							</div>
 						{/await}
@@ -69,7 +72,7 @@
 					<div class="hadithGroup font-medium grid">
 						{#each { length: langCount } as _, i}
 							{#await isRtl(displayLanguages[i]) then rtl}
-								<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'}>
+								<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'} style={getFontStyle(displayLanguages[i], fontSettings)}>
 									{#if data[i + 7]}
 										<article id="myDiv">{@html data[i + 7]}</article>
 									{:else}
@@ -106,7 +109,6 @@
 		text-wrap: auto;
 		display: block;
 		color: rgb(var(--color-primary-900));
-		font-family: 'KFGQPC Uthman Taha Naskh';
 	}
 
 	:global(.dark qbl, .dark b3d) {
