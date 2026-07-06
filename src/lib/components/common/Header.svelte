@@ -8,9 +8,9 @@
 <AppBar>
 	<svelte:fragment slot="lead">
 		<LogoAndDrawer />
+		<SearchBar />
 	</svelte:fragment>
 	<svelte:fragment slot="trail">
-		<SearchBar />
 		<ThemeButton />
 	</svelte:fragment>
 </AppBar>

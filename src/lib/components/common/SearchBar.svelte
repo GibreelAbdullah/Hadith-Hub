@@ -10,12 +10,13 @@
 		const modal: ModalSettings = {
 			type: 'component',
 			component: 'searchModal',
-			meta: { query: currentQuery },
+			meta: { query: currentQuery }
 		};
 		modalStore.trigger(modal);
 	}
 </script>
 
-<button class="btn hover:variant-soft-primary text-2xl" on:click={openSearch}>
-	⌕ <span class="hidden md:inline ml-1 text-base">Search</span>
+<button class="btn variant-soft hover:variant-soft-primary h-10 mx-4" on:click={openSearch}>
+	<span class="text-3xl p-0">⌕</span>
+	<span class="text-sm hidden md:inline-block badge">Search</span>
 </button>
