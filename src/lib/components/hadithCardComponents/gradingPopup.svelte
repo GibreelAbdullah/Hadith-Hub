@@ -54,7 +54,7 @@
             <div>
                 <p class="font-bold text-sm">{muhaddithName}</p>
                 {#if scholar?.dates}
-                    <p class="text-xs opacity-70">{scholar.dates}</p>
+                    <p class="text-xs opacity-70">{@html scholar.dates}</p>
                 {/if}
             </div>
         </div>
