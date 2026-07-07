@@ -41,6 +41,12 @@
 				txtValue = cards[i].textContent || cards[i].innerText;
 				cards[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? '' : 'none';
 			}
+			// Hide category sections where all cards are filtered out
+			const categories = collectionlist.querySelectorAll<HTMLElement>('.category-section');
+			for (i = 0; i < categories.length; i++) {
+				const visibleCards = categories[i].querySelectorAll<HTMLElement>('.collection-card:not([style*="display: none"])');
+				categories[i].style.display = visibleCards.length > 0 ? '' : 'none';
+			}
 		}
 	}
 
@@ -74,24 +80,26 @@
 			{@const categoryCollections = result.collections.filter((c) => category.collections.includes(c.short_name))}
 			{@const catName = getCategoryName(category)}
 			{#if categoryCollections.length > 0}
-				<div class="px-4 pt-6 pb-2">
-					<h2 class="text-lg font-bold text-primary-600 dark:text-primary-400" dir={RTL_LANGS.includes(catName.lang) ? 'rtl' : 'ltr'} lang={catName.lang}>{catName.name}</h2>
-				</div>
-				<div class="collection grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 px-4 pb-4">
-					{#each categoryCollections as coll}
-						<a class="collection-card card p-4 text-center relative" href="{base}/{coll.short_name}?lang={languageStore.value.toString()}">
-							{#each getCollectionNames(coll) as { name, lang }}
-								<span dir={RTL_LANGS.includes(lang) ? 'rtl' : 'ltr'} lang={lang}>{name}</span><br />
-							{/each}
-							{#await getUnavailableCollections(coll.languages || ["ar","en"], languageStore.value)}
-								<div class="placeholder w-40 m-auto animate-pulse"></div>
-							{:then collectionNames}
-								{#if collectionNames.length != 0}
-									<code class="break-words !text-error-500">Not available in {collectionNames}</code>
-								{/if}
-							{/await}
-						</a>
-					{/each}
+				<div class="category-section">
+					<div class="px-4 pt-6 pb-2">
+						<h2 class="text-lg font-bold text-primary-600 dark:text-primary-400" dir={RTL_LANGS.includes(catName.lang) ? 'rtl' : 'ltr'} lang={catName.lang}>{catName.name}</h2>
+					</div>
+					<div class="collection grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 px-4 pb-4">
+						{#each categoryCollections as coll}
+							<a class="collection-card card p-4 text-center relative" href="{base}/{coll.short_name}?lang={languageStore.value.toString()}">
+								{#each getCollectionNames(coll) as { name, lang }}
+									<span dir={RTL_LANGS.includes(lang) ? 'rtl' : 'ltr'} lang={lang}>{name}</span><br />
+								{/each}
+								{#await getUnavailableCollections(coll.languages || ["ar","en"], languageStore.value)}
+									<div class="placeholder w-40 m-auto animate-pulse"></div>
+								{:then collectionNames}
+									{#if collectionNames.length != 0}
+										<code class="break-words !text-error-500">Not available in {collectionNames}</code>
+									{/if}
+								{/await}
+							</a>
+						{/each}
+					</div>
 				</div>
 			{/if}
 		{/each}
