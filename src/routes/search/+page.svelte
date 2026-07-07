@@ -192,7 +192,8 @@
 
 		const searchOptions: any = {};
 		if (collectionFilter) {
-			searchOptions.filters = { collection: collectionFilter.split(',') };
+			const collections = collectionFilter.split(',');
+			searchOptions.filters = { collection: collections.length > 1 ? { any: collections } : collections[0] };
 		}
 
 		// Search across selected language indexes and merge results
