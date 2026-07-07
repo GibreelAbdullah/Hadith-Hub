@@ -13,6 +13,7 @@
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 	import { browser } from '$app/environment';
+	import { pushState, replaceState } from '$app/navigation';
 	import SearchModal from '$lib/components/searchModal.svelte';
 	import Footer from '$lib/components/common/footer.svelte';
 	import SideBarContents from '$lib/components/common/sideBarContents.svelte';
@@ -45,7 +46,7 @@
 		const url = new URL(window.location.href);
 		if (!url.searchParams.has('lang')) {
 			url.searchParams.set('lang', languageStore.value.toString());
-			history.replaceState({}, '', url.toString());
+			replaceState(url.toString(), {});
 		} else {
 			const langParam = url.searchParams.get('lang');
 			if (langParam) {
@@ -56,7 +57,7 @@
 		// Close drawer on back button
 		drawerStore.subscribe((state) => {
 			if (state.open) {
-				history.pushState({ drawer: true }, '');
+				pushState('', { drawer: true });
 			}
 		});
 		window.addEventListener('popstate', () => {

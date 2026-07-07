@@ -3,6 +3,7 @@
 	import SvgIcon from './svgIcon.svelte';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import { languagePromise } from '$lib/functions/utilsV2';
+	import { replaceState } from '$app/navigation';
 
 </script>
 
@@ -43,7 +44,7 @@
 							params.delete('lang');
 						}
 						const newUrl = `${window.location.pathname}?${params.toString()}`;
-						window.history.replaceState({}, '', newUrl);
+						replaceState(newUrl, {});
 					}}
 				>
 					<div>{languageObject[1]}</div>
