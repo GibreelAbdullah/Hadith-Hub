@@ -1,6 +1,6 @@
 import { getCollections, getMetadata, fetchLines, type Metadata } from "$lib/data/db";
-import { languageStore } from "$lib/functions/store.svelte";
 import { browser } from "$app/environment";
+import { getSelectedLanguages } from "$lib/functions/language";
 
 // Languages
 export async function getLanguages(): Promise<any[]> {
@@ -28,7 +28,7 @@ async function getCollectionsList() {
 export async function getBooks(collection: string, _langs?: string[]): Promise<any[]> {
   const meta = await getMetadata(collection);
   if (!meta) return [];
-  const langs = _langs?.length ? _langs : (languageStore.value.length ? languageStore.value : ["ar", "en"]);
+  const langs = _langs?.length ? _langs : getSelectedLanguages();
 
   // Collection row first
   const results: any[] = [];
@@ -49,7 +49,7 @@ export async function getBooks(collection: string, _langs?: string[]): Promise<a
 export async function getHadithPromise(params: Record<string, string>) {
   const collection = params.collection;
   const bookNumber = params.bookNumber;
-  const selectedLanguages = languageStore.value.length ? languageStore.value : ["ar", "en"];
+  const selectedLanguages = getSelectedLanguages();
   const meta = await getMetadata(collection);
   if (!meta) return [selectedLanguages, [], []];
   const availableLanguages = selectedLanguages.filter((l) => meta.languages.includes(l));
@@ -155,34 +155,4 @@ export async function getLanguageFullName(languageShortName: string[]) {
       return lang ? lang[1] : null;
     })
     .filter(Boolean);
-}
-
-export async function isRtl(languageShortName: string) {
-  const languageObject = await languagePromise;
-  const lang = languageObject.find((item: any[]) => item[0] === languageShortName);
-  return lang ? lang[2] : false;
-}
-
-export const getHadithData = async (collection: string, book: string, languageStoreValue: string[]) => {
-  const meta = await getMetadata(collection);
-  if (!meta) return [[], languageStoreValue, []];
-  const availableLanguages = languageStoreValue.filter((l) => meta.languages.includes(l));
-  const unavailableLanguages = languageStoreValue.filter((l) => !meta.languages.includes(l));
-  const data = await getHadithInBook(collection, book, availableLanguages, meta);
-  return [availableLanguages, unavailableLanguages, data];
-};
-
-// Scholar stub (not in text files)
-export async function getScholar(_lang: string, _name: string): Promise<any[]> {
-  return [];
-}
-
-// Search stub (will be a dedicated service)
-export async function searchHadith(_text: string, _language: string | null, _collection: string | null): Promise<any[]> {
-  return [];
-}
-
-// getData compatibility shim (for any remaining callers)
-export async function getData(_url: string): Promise<any[]> {
-  return [];
 }

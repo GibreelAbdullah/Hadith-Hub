@@ -2,26 +2,18 @@
 	import { page } from '$app/stores';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import { base } from '$app/paths';
-	import { settingsStore, getFontStyleForText, detectScript } from '$lib/functions/settingsStore';
+	import { settingsStore, getFontStyleForText } from '$lib/functions/settingsStore';
+	import { RTL_LANGS, getSelectedLanguages, getDirForText } from '$lib/functions/language';
 	let { bookPromise, bookURL } = $props();
 
-	const RTL_LANGS = ['ar', 'ur'];
-
 	function getLangAtIndex(i: number): string {
-		const langs = languageStore.value.length ? languageStore.value : ['ar', 'en'];
+		const langs = getSelectedLanguages();
 		return langs[i] || 'en';
-	}
-
-	function getDirForText(text: string, expectedLang: string): string {
-		const script = detectScript(text);
-		if (script === 'arabic') return 'rtl';
-		if (RTL_LANGS.includes(expectedLang) && script !== 'latin') return 'rtl';
-		return 'ltr';
 	}
 
 	// Deduplicate book name entries - returns unique {text, lang} pairs
 	function getUniqueBookNames(data: any[]): { text: string; lang: string }[] {
-		const langs = languageStore.value.length ? languageStore.value : ['ar', 'en'];
+		const langs = getSelectedLanguages();
 		const result: { text: string; lang: string }[] = [];
 		const seen = new Set<string>();
 		for (let i = 0; i < langs.length; i++) {

@@ -7,9 +7,6 @@ const config: UserConfig = {
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
-	define: {
-        'process.env.ANCHOR_BROWSER': true
-    },
 	server: {
 		watch: {
 			ignored: ['**/static/pagefind/**']

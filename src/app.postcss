@@ -7,3 +7,25 @@ html,
 body {
   @apply h-full overflow-hidden;
 }
+
+/* Hadith grid layout - base definition */
+.hadithGroup {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  word-wrap: normal;
+}
+
+/* Custom hadith markup tags */
+qbl, b3d {
+  text-wrap: auto;
+  display: block;
+  color: rgb(var(--color-primary-900));
+}
+
+.dark qbl, .dark b3d {
+  text-wrap: auto;
+  color: rgb(var(--color-primary-300));
+}
+
+text {
+  text-wrap: auto;
+}

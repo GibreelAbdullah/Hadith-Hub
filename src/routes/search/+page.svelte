@@ -5,7 +5,8 @@
 	import { browser } from '$app/environment';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import { getMetadata, fetchLines, getCollections } from '$lib/data/db';
-	import { isRtl, getLanguageFullName } from '$lib/functions/utilsV2';
+	import { getLanguageFullName } from '$lib/functions/utilsV2';
+	import { getDirForText } from '$lib/functions/language';
 	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
 	import Reference from '$lib/components/hadithCardComponents/reference.svelte';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
@@ -155,7 +156,6 @@
 		if (directMatch) {
 			const [, collName, num] = directMatch;
 			// Try to find the collection by short_name or partial name
-			const { getCollections } = await import('$lib/data/db');
 			const data = await getCollections();
 			const coll = data.collections.find((c: any) =>
 				c.short_name.toLowerCase() === collName.toLowerCase() ||
@@ -338,15 +338,13 @@
 					<div class="card flex-wrap">
 						<div class="hadithGroup font-medium grid">
 							{#each result.texts as { lang, text }}
-								{#await isRtl(lang) then rtl}
-									<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'}>
-										{#if text}
-											<article>{@html highlightFromExcerpt(text, result.excerpt)}</article>
-										{:else}
-											<center><code class="!text-white !bg-red-500">Hadith translation not found</code></center>
-										{/if}
-									</div>
-								{/await}
+								<div class="break-words leading-7 m-3 pb-4" dir={getDirForText(text || '', lang)}>
+									{#if text}
+										<article>{@html highlightFromExcerpt(text, result.excerpt)}</article>
+									{:else}
+										<center><code class="!text-white !bg-red-500">Hadith translation not found</code></center>
+									{/if}
+								</div>
 							{/each}
 						</div>
 						<GradingSection grades={result.gradings} hadithIndex={result.hadithNum} />
@@ -377,10 +375,6 @@
 </main>
 
 <style>
-	:global(.hadithGroup) {
-		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-		word-wrap: normal;
-	}
 	:global(mark) {
 		background: none;
 		color: rgb(var(--color-primary-500));

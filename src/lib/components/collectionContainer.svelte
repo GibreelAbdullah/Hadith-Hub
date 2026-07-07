@@ -3,6 +3,7 @@
 	let {collectionPromise} = $props()
 	import { languageStore } from '$lib/functions/store.svelte';
 	import { getLanguageFullName } from '$lib/functions/utilsV2';
+	import { RTL_LANGS, getSelectedLanguages } from '$lib/functions/language';
 	
 	function getUnavailableCollections(availbleLanguagesOfCollection: string[], selectedLanguagesStore: string[]) {
 		const unavailableLanguagesShortName = selectedLanguagesStore.filter(
@@ -11,10 +12,8 @@
 		return getLanguageFullName(unavailableLanguagesShortName);
 	}
 
-	const RTL_LANGS = ['ar', 'ur'];
-
 	function getCollectionNames(coll: any): { name: string; lang: string }[] {
-		const langs = languageStore.value.length ? languageStore.value : ["ar", "en"];
+		const langs = getSelectedLanguages();
 		const names: { name: string; lang: string }[] = [];
 		const seen = new Set();
 		for (const l of langs) {

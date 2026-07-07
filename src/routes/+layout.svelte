@@ -45,7 +45,7 @@
 		const url = new URL(window.location.href);
 		if (!url.searchParams.has('lang')) {
 			url.searchParams.set('lang', languageStore.value.toString());
-			window.location.href = url.toString();
+			history.replaceState({}, '', url.toString());
 		} else {
 			const langParam = url.searchParams.get('lang');
 			if (langParam) {

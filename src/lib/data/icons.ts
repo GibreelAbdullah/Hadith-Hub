@@ -4,7 +4,7 @@
     Copyright 2022 Fonticons, Inc
 */
 
-export const icons: any = {
+export const icons: Record<string, { path: string; viewBox?: string }> = {
   // Default Placeholder
   // Source: https://fontawesome.com/icons/image?s=solid
   theme: {

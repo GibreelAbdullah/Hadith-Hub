@@ -108,9 +108,10 @@ export function getFontStyle(lang: string, settings: AppSettings): string {
 }
 
 // Detect the actual script of text content (ignoring HTML tags, digits, punctuation)
+// Samples first 200 characters for performance on long texts
 export function detectScript(text: string): string {
-  // Strip HTML tags
-  const plain = text.replace(/<[^>]*>/g, '');
+  // Strip HTML tags and take first 200 chars for sampling
+  const plain = text.replace(/<[^>]*>/g, '').slice(0, 200);
   
   let arabicCount = 0;
   let bengaliCount = 0;

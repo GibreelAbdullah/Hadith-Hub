@@ -4,7 +4,7 @@
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
-	import { getHadithPromise, getLanguageFullName } from '$lib/functions/utilsV2';
+	import { getHadithPromise } from '$lib/functions/utilsV2';
 	import { getMetadata } from '$lib/data/db';
 	import UnavailableLanguagesNotice from '$lib/components/common/UnavailableLanguagesNotice.svelte';
 

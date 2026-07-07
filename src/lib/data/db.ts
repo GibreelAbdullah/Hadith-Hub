@@ -1,5 +1,4 @@
 import { browser } from '$app/environment';
-import { base } from '$app/paths';
 
 // URL for text file range requests (can be cross-origin)
 export const DATA_BASE_URL = import.meta.env.VITE_DB_BASE_URL || '/db';
@@ -19,7 +18,7 @@ interface BookMeta {
 	hadith_end: number;
 }
 
-interface Record {
+interface HadithRecord {
 	line: number;
 	cat: string;
 	book?: string;
@@ -32,7 +31,7 @@ export interface Metadata {
 	collection: string;
 	languages: string[];
 	books: BookMeta[];
-	records: Record[];
+	records: HadithRecord[];
 	offsets: { [lang: string]: number[] };
 	collection_info: { [lang: string]: string };
 	collection_intro: { [lang: string]: string };
