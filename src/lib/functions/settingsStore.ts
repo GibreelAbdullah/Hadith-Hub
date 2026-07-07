@@ -1,5 +1,10 @@
 import { browser } from '$app/environment';
 import { writable, get } from 'svelte/store';
+import { localStorageStore } from '@skeletonlabs/skeleton';
+import type { Writable } from 'svelte/store';
+
+// Theme store
+export const storeTheme: Writable<string> = localStorageStore('storeTheme', 'skeleton');
 
 export interface FontSettings {
   family: string;
@@ -99,7 +104,53 @@ export function getFontStyle(lang: string, settings: AppSettings): string {
   const family = font.family === 'System Default' ? 'sans-serif' : `'${font.family}', sans-serif`;
   // Scale line-height proportionally: base 1.75 at 100%, increases with size
   const lineHeight = (1.75 * font.size / 100).toFixed(2);
-  return `font-family: ${family}; font-size: ${font.size}%; line-height: ${lineHeight};`;
+  return `font-family: ${family}; font-size: ${(font.size / 100).toFixed(3)}rem; line-height: ${lineHeight};`;
+}
+
+// Detect the actual script of text content (ignoring HTML tags, digits, punctuation)
+export function detectScript(text: string): string {
+  // Strip HTML tags
+  const plain = text.replace(/<[^>]*>/g, '');
+  
+  let arabicCount = 0;
+  let bengaliCount = 0;
+  let tamilCount = 0;
+  let latinCount = 0;
+  
+  for (const char of plain) {
+    const code = char.codePointAt(0)!;
+    if (code >= 0x0600 && code <= 0x06FF || code >= 0x0750 && code <= 0x077F || code >= 0xFB50 && code <= 0xFDFF || code >= 0xFE70 && code <= 0xFEFF) {
+      arabicCount++;
+    } else if (code >= 0x0980 && code <= 0x09FF) {
+      bengaliCount++;
+    } else if (code >= 0x0B80 && code <= 0x0BFF) {
+      tamilCount++;
+    } else if (code >= 0x0041 && code <= 0x007A || code >= 0x00C0 && code <= 0x024F || code >= 0x0400 && code <= 0x04FF) {
+      // Latin (basic + extended) and Cyrillic
+      latinCount++;
+    }
+  }
+  
+  const max = Math.max(arabicCount, bengaliCount, tamilCount, latinCount);
+  if (max === 0) return 'latin';
+  if (max === arabicCount) return 'arabic';
+  if (max === bengaliCount) return 'bengali';
+  if (max === tamilCount) return 'tamil';
+  return 'latin';
+}
+
+// Get font style based on actual text content rather than expected language
+// Falls back to Latin font when text doesn't match the expected script
+export function getFontStyleForText(text: string, expectedLang: string, settings: AppSettings): string {
+  const expectedGroup = getScriptGroup(expectedLang);
+  const actualGroup = detectScript(text);
+  
+  // Use actual script's font if it differs from expected
+  const group = actualGroup !== expectedGroup ? actualGroup : expectedGroup;
+  const font = settings.fonts[group] || DEFAULT_SETTINGS.fonts.latin;
+  const family = font.family === 'System Default' ? 'sans-serif' : `'${font.family}', sans-serif`;
+  const lineHeight = (1.75 * font.size / 100).toFixed(2);
+  return `font-family: ${family}; font-size: ${(font.size / 100).toFixed(3)}rem; line-height: ${lineHeight};`;
 }
 
 // Load Google Fonts dynamically

@@ -15,6 +15,13 @@
     if (saved === 'false' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
     }
+    // Apply saved theme immediately to prevent flash
+    try {
+      const storedTheme = localStorage.getItem('storeTheme');
+      if (storedTheme) {
+        document.body.setAttribute('data-theme', JSON.parse(storedTheme));
+      }
+    } catch (e) {}
   </script>
   <div class="h-full overflow-hidden">%sveltekit.body%</div>
 </body>

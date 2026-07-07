@@ -5,12 +5,19 @@
 	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
 	import Reference from './hadithCardComponents/reference.svelte';
 	import { isRtl } from '$lib/functions/utilsV2';
-	import { settingsStore, getFontStyle } from '$lib/functions/settingsStore';
+	import { settingsStore, getFontStyleForText, detectScript } from '$lib/functions/settingsStore';
 	export let dataListRecord: any[] = [];
 	export let availableLanguages: string[] = [];
 	export let hideBreadcrumb: boolean = false;
 
 	$: fontSettings = $settingsStore;
+
+	function getDirForText(text: string, expectedLang: string, expectedRtl: boolean): string {
+		if (!text) return expectedRtl ? 'rtl' : 'ltr';
+		const script = detectScript(text);
+		if (script === 'arabic') return 'rtl';
+		return 'ltr';
+	}
 
 	$: displayLanguages = languageStore.value.filter(l => availableLanguages.includes(l));
 	$: langCount = displayLanguages.length || 2;
@@ -49,7 +56,7 @@
 				<div class="hadithGroup font-medium grid">
 					{#each { length: langCount } as _, i}
 						{#await isRtl(displayLanguages[i]) then rtl}
-							<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'} style={getFontStyle(displayLanguages[i], fontSettings)}>
+							<div class="break-words leading-7 m-3 pb-4" dir={getDirForText(data[i + 7] || '', displayLanguages[i], rtl)} style={getFontStyleForText(data[i + 7] || '', displayLanguages[i], fontSettings)}>
 								<article id="myDiv">{@html data[i + 7]}</article>
 							</div>
 						{/await}
@@ -72,7 +79,7 @@
 					<div class="hadithGroup font-medium grid">
 						{#each { length: langCount } as _, i}
 							{#await isRtl(displayLanguages[i]) then rtl}
-								<div class="break-words leading-7 m-3 pb-4" dir={rtl ? 'rtl' : 'ltr'} style={getFontStyle(displayLanguages[i], fontSettings)}>
+								<div class="break-words leading-7 m-3 pb-4" dir={getDirForText(data[i + 7] || '', displayLanguages[i], rtl)} style={getFontStyleForText(data[i + 7] || '', displayLanguages[i], fontSettings)}>
 									{#if data[i + 7]}
 										<article id="myDiv">{@html data[i + 7]}</article>
 									{:else}

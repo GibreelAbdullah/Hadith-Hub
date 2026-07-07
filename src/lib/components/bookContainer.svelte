@@ -2,7 +2,37 @@
 	import { page } from '$app/stores';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import { base } from '$app/paths';
+	import { settingsStore, getFontStyleForText, detectScript } from '$lib/functions/settingsStore';
 	let { bookPromise, bookURL } = $props();
+
+	const RTL_LANGS = ['ar', 'ur'];
+
+	function getLangAtIndex(i: number): string {
+		const langs = languageStore.value.length ? languageStore.value : ['ar', 'en'];
+		return langs[i] || 'en';
+	}
+
+	function getDirForText(text: string, expectedLang: string): string {
+		const script = detectScript(text);
+		if (script === 'arabic') return 'rtl';
+		if (RTL_LANGS.includes(expectedLang) && script !== 'latin') return 'rtl';
+		return 'ltr';
+	}
+
+	// Deduplicate book name entries - returns unique {text, lang} pairs
+	function getUniqueBookNames(data: any[]): { text: string; lang: string }[] {
+		const langs = languageStore.value.length ? languageStore.value : ['ar', 'en'];
+		const result: { text: string; lang: string }[] = [];
+		const seen = new Set<string>();
+		for (let i = 0; i < langs.length; i++) {
+			const text = data[i + 4] || '';
+			if (text && !seen.has(text)) {
+				seen.add(text);
+				result.push({ text, lang: langs[i] });
+			}
+		}
+		return result;
+	}
 </script>
 
 {#await bookPromise}
@@ -56,9 +86,9 @@
 					<a class="card p-4 text-center relative flex flex-col h-full" href="{base}/{bookURL}/{data[0]}?lang={languageStore.value.toString()}">
 						{data[0]}
 						<hr />
-						{#each { length: languageStore.value.length ? languageStore.value.length : 2 } as _, i}
-							<div>
-								{data[i + 4]}
+						{#each getUniqueBookNames(data) as { text, lang }}
+							<div dir={getDirForText(text, lang)} lang={lang} style={getFontStyleForText(text, lang, $settingsStore)}>
+								{text}
 							</div>
 						{/each}
 						<div class="badge bg-gray-500 mt-auto mx-auto">

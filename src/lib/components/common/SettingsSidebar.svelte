@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { LightSwitch, localStorageStore } from '@skeletonlabs/skeleton';
+	import { LightSwitch } from '@skeletonlabs/skeleton';
 	import { browser } from '$app/environment';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import {
-		FONT_OPTIONS, SCRIPT_GROUPS, getScriptGroup, settingsStore,
+		FONT_OPTIONS, SCRIPT_GROUPS, getScriptGroup, settingsStore, storeTheme,
 		updateFontFamily, updateFontSize, loadFont, initFonts, getFontStyle
 	} from '$lib/functions/settingsStore';
-	import type { Writable } from 'svelte/store';
 
 	// Theme
 	const themes = [
@@ -22,16 +21,9 @@
 		{ type: 'wintry', name: 'Wintry', icon: '🌨️' }
 	];
 
-	export const storeTheme: Writable<string> = localStorageStore('storeTheme', 'skeleton');
-
 	function setTheme(type: string) {
 		storeTheme.set(type);
 		if (browser) document.body.setAttribute('data-theme', type);
-	}
-
-	// Apply theme on load
-	if (browser) {
-		storeTheme.subscribe((val) => document.body.setAttribute('data-theme', val));
 	}
 
 	// Get visible script groups based on selected languages
@@ -50,6 +42,12 @@
 			              group === 'bengali' ? 'Bengali' : 'Tamil';
 			visible.push({ group, label, langs: groupLangs });
 		}
+
+		// Always show Latin since it's the universal fallback language
+		if (!seen.has('latin')) {
+			visible.push({ group: 'latin', label: 'Latin / Fallback (En, Fr, Tr, Id, Ru)', langs: ['en'] });
+		}
+
 		return visible;
 	}
 

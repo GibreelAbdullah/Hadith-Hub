@@ -25,10 +25,10 @@ async function getCollectionsList() {
 }
 
 // Books page: returns rows for BookContainer
-export async function getBooks(collection: string): Promise<any[]> {
+export async function getBooks(collection: string, _langs?: string[]): Promise<any[]> {
   const meta = await getMetadata(collection);
   if (!meta) return [];
-  const langs = languageStore.value.length ? languageStore.value : ["ar", "en"];
+  const langs = _langs?.length ? _langs : (languageStore.value.length ? languageStore.value : ["ar", "en"]);
 
   // Collection row first
   const results: any[] = [];

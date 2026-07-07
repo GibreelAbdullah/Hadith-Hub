@@ -6,6 +6,8 @@
 	import { getMetadata } from '$lib/data/db';
 
 	let title = $state(`${$page.params.collection} | HadithHub`);
+	// Re-fetch books when languages change - spread to ensure new array reference triggers $derived
+	const bookPromise = $derived(getBooks($page.params.collection, [...languageStore.value]));
 
 	$effect(() => {
 		getMetadata($page.params.collection).then(meta => {
@@ -40,5 +42,7 @@
 </svelte:head>
 
 <main>
-	<BookContainer bookPromise={getBooks($page.params.collection)} bookURL={$page.params.collection} />
+	{#key languageStore.value.toString()}
+		<BookContainer bookPromise={bookPromise} bookURL={$page.params.collection} />
+	{/key}
 </main>
