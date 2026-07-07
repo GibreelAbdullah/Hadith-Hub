@@ -347,7 +347,7 @@
 								</div>
 							{/each}
 						</div>
-						<GradingSection grades={result.gradings} hadithIndex={result.hadithNum} />
+						<GradingSection grades={result.gradings} hadithIndex={result.hadithNum} collection={result.collShort} />
 						<Reference
 							collectionShortName={result.collShort}
 							hadithNumberInCollection={result.hadithNum}

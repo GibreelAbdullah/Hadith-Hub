@@ -16,7 +16,7 @@ async function buildLanguageIndex(lang, collectionsData) {
   let totalIndexed = 0;
 
   for (const coll of collectionsData.collections) {
-    const metaPath = join(DATA_DIR, coll.short_name, "metadata.json");
+    const metaPath = join(DATA_DIR, "books", coll.short_name, "metadata.json");
     let meta;
     try {
       meta = JSON.parse(readFileSync(metaPath, "utf-8"));
@@ -27,7 +27,7 @@ async function buildLanguageIndex(lang, collectionsData) {
 
     let lines;
     try {
-      lines = readFileSync(join(DATA_DIR, coll.short_name, `${lang}.txt`), "utf-8").split("\n");
+      lines = readFileSync(join(DATA_DIR, "books", coll.short_name, `${lang}.txt`), "utf-8").split("\n");
     } catch { continue; }
 
     let count = 0;

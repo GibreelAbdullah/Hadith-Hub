@@ -2,9 +2,12 @@
 	import { languageStore } from '$lib/functions/store.svelte';
 	import { translateGrade, translateScholar, getGradeColor } from '$lib/data/gradeTranslations';
 	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
+	import { settingsStore, getFontStyleForText } from '$lib/functions/settingsStore';
+	import { getDirForText } from '$lib/functions/language';
 	import GradingPopup from './gradingPopup.svelte';
 	export let grades: any[];
 	export let hadithIndex: string;
+	export let collection: string;
 
 	const colorMap: Record<string, string> = {
 		green: 'bg-emerald-500',
@@ -38,6 +41,9 @@
 			placement: 'top'
 		};
 	}
+
+	let popupRefs: Record<string, any> = {};
+	$: fontSettings = $settingsStore;
 </script>
 
 {#if grades && grades.length}
@@ -47,16 +53,25 @@
 				{@const lang = languageStore.value[0] || 'en'}
 				{#await getTranslated(grade[0], grade[1], lang) then result}
 					<button
-						class="btn m-1 {result.color} text-black text-wrap max-w-md w-[95%] h-auto py-2 px-3 rounded"
+						class="btn m-1 {result.color} text-black text-wrap max-w-md w-[95%] h-auto py-2 px-3"
+						dir={getDirForText(result.displayText, lang)}
+						style={getFontStyleForText(result.displayText, lang, fontSettings)}
 						use:popup={getPopupSettings(i)}
+						on:click={() => popupRefs[`${hadithIndex}-${i}`]?.load()}
 					>
 						{result.displayText}
 					</button>
-					<div class="card p-0 variant-filled-surface shadow-xl z-50 rounded-lg" data-popup="grading-popup-{hadithIndex}-{i}">
+					<div
+						class="card p-0 variant-filled-surface shadow-xl z-50 rounded-lg"
+						data-popup="grading-popup-{hadithIndex}-{i}"
+					>
 						<GradingPopup
+							bind:this={popupRefs[`${hadithIndex}-${i}`]}
 							muhaddithName={result.scholarName}
+							englishName={grade[0]}
 							grade={result.gradeText}
 							source={grade[2] || ''}
+							{collection}
 						/>
 						<div class="arrow variant-filled-surface"></div>
 					</div>

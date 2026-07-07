@@ -45,22 +45,27 @@ jobs:
           path: |
             build/pagefind
             build/pagefind/.build_hashes.json
-          key: pagefind-${{ hashFiles('static/db/**/*.txt') }}
+          key: pagefind-${{ hashFiles('static/db/books/**/*.txt') }}
           restore-keys: |
             pagefind-
 
-      - name: Copy metadata to build output
+      - name: Copy metadata and muhaddith to build output
         run: |
           mkdir -p build/db
           cp static/db/collections.json build/db/
           cp static/db/gradeTranslations.json build/db/
-          for dir in static/db/*/; do
+          # Copy book metadata
+          for dir in static/db/books/*/; do
             coll=$(basename "$dir")
             if [ -f "$dir/metadata.json" ]; then
-              mkdir -p "build/db/$coll"
-              cp "$dir/metadata.json" "build/db/$coll/"
+              mkdir -p "build/db/books/$coll"
+              cp "$dir/metadata.json" "build/db/books/$coll/"
             fi
           done
+          # Copy muhaddith data
+          if [ -d "static/db/muhaddith" ]; then
+            cp -r static/db/muhaddith build/db/muhaddith
+          fi
 
       - name: Build search index
         env:

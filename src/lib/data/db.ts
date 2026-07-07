@@ -60,7 +60,7 @@ export async function getMetadata(collection: string): Promise<Metadata | null> 
 	if (!browser) return null;
 	if (metadataCache.has(collection)) return metadataCache.get(collection)!;
 	if (!metadataFetching.has(collection)) {
-		const promise = fetch(`${META_BASE_URL}/${collection}/metadata.json`)
+		const promise = fetch(`${META_BASE_URL}/books/${collection}/metadata.json`)
 			.then(res => res.json())
 			.then(meta => { metadataCache.set(collection, meta); metadataFetching.delete(collection); return meta; });
 		metadataFetching.set(collection, promise);
@@ -80,7 +80,7 @@ export async function fetchTextRange(
 	const key = `${collection}/${lang}/${startByte}-${endByte}`;
 	if (rangeCache.has(key)) return rangeCache.get(key)!;
 	if (!rangeFetching.has(key)) {
-		const url = `${DATA_BASE_URL}/${collection}/${lang}.txt`;
+		const url = `${DATA_BASE_URL}/books/${collection}/${lang}.txt`;
 		const promise = fetch(url, {
 			headers: { Range: `bytes=${startByte}-${endByte}` }
 		})
@@ -119,4 +119,41 @@ export async function fetchLines(
 			if (secondPipe === -1) return line;
 			return line.slice(secondPipe + 1).replace(/\\n/g, '<br>');
 		});
+}
+
+// Scholar/Muhaddith data
+export interface ScholarData {
+	dates?: string;
+	bio?: string;
+	image?: string;
+	[key: string]: string | undefined;
+}
+
+const scholarCache: Map<string, ScholarData | null> = new Map();
+const scholarFetching: Map<string, Promise<ScholarData | null>> = new Map();
+
+export async function getScholar(name: string): Promise<ScholarData | null> {
+	if (!browser) return null;
+	if (scholarCache.has(name)) return scholarCache.get(name)!;
+	if (scholarFetching.has(name)) return scholarFetching.get(name)!;
+	const promise = fetch(`${DATA_BASE_URL}/muhaddith/${encodeURIComponent(name)}.min.json`)
+		.then(res => {
+			if (!res.ok) {
+				scholarCache.set(name, null);
+				return null;
+			}
+			return res.json();
+		})
+		.then((data: ScholarData | null) => {
+			scholarCache.set(name, data);
+			scholarFetching.delete(name);
+			return data;
+		})
+		.catch(() => {
+			scholarCache.set(name, null);
+			scholarFetching.delete(name);
+			return null;
+		});
+	scholarFetching.set(name, promise);
+	return promise;
 }

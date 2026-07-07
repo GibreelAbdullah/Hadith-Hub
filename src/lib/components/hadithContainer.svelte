@@ -79,7 +79,7 @@
 						{/each}
 					</div>
 					<!-- GRADINGS -->
-					<GradingSection grades={data[6]} hadithIndex={data[1]} />
+					<GradingSection grades={data[6]} hadithIndex={data[1]} collection={collectionShortName} />
 					<!-- FULL REFERENCE AND BUTTONS at bottom -->
 					<Reference
 						{collectionShortName}
