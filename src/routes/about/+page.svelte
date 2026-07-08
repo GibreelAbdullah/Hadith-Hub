@@ -1,10 +1,13 @@
 <script lang="ts">
 	import { urlPrefix } from '$lib/common/constants';
 	import SvgIcon from '$lib/components/common/svgIcon.svelte';
+	import MetaTags from '$lib/components/common/MetaTags.svelte';
 	let htmlPromise = fetch(urlPrefix + '/updates/about/about.html').then((response) => {
 		return response.text();
 	});
 </script>
+
+<MetaTags title="About | HadithHub" description="About HadithHub - A Multi Language collection of Hadith" />
 
 <div class="card p-4 m-4 flex-wrap">
 	<div class="text-center fill-black dark:fill-white">

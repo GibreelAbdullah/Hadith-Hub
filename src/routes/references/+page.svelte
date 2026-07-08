@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { urlPrefix } from '$lib/common/constants';
 	import { onMount } from 'svelte';
+	import MetaTags from '$lib/components/common/MetaTags.svelte';
 
 	let data: any[] = [];
 	let isLoading = true;
@@ -47,6 +48,8 @@
 
 	onMount(fetchData);
 </script>
+
+<MetaTags title="References | HadithHub" description="References and sources for Hadith collections on HadithHub" />
 
 <input
 	class="input max-w-max mx-auto mt-4 block"

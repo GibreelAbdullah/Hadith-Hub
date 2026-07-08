@@ -10,6 +10,7 @@
 	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
 	import Reference from '$lib/components/hadithCardComponents/reference.svelte';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
+	import MetaTags from '$lib/components/common/MetaTags.svelte';
 	import { detectAll } from 'tinyld/light';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 	import type { ModalSettings } from '@skeletonlabs/skeleton';
@@ -283,9 +284,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Search{searchQuery ? ` for "${searchQuery}"` : ''} | HadithHub</title>
-</svelte:head>
+<MetaTags title={`Search${searchQuery ? ` for "${searchQuery}"` : ''} | HadithHub`} />
 
 <main>
 	<!-- Search details card -->

@@ -47,15 +47,6 @@
 					/>
 					<span class="hidden lg:inline-block ml-2 text-white pt-1">Telegram</span>
 				</a>
-				<a
-					class="btn bg-[#008c40] text-white"
-					href="https://play.google.com/store/apps/details?id=com.islamicproapps.hadithpro"
-					target="_blank"
-					rel="noreferrer"
-				>
-					<SvgIcon name="playstore" fill="fill-white" />
-					<span class="hidden lg:inline-block ml-2 text-white pt-1">PlayStore</span>
-				</a>
 			</div>
 		</section>
 		<section class="pt-8 flex flex-row justify-center lg:justify-start items-center space-y-0">
