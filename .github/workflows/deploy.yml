@@ -29,7 +29,7 @@ jobs:
       - name: Build
         env:
           BASE_PATH: '/Hadith-Hub'
-          VITE_DB_BASE_URL: 'https://cdn.jsdelivr.net/gh/GibreelAbdullah/hadith-db@master/data'
+          VITE_DB_BASE_URL: 'https://gibreelabdullah.github.io/hadith-db/data'
           VITE_META_BASE_URL: '/Hadith-Hub/db'
         run: npm run build
 
