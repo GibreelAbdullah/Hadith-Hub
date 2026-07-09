@@ -103,7 +103,7 @@
 		return langs.length > 0 ? [...new Set(langs)] : ['en', 'ar'];
 	}
 
-	const PAGEFIND_BASE = `${base}/pagefind`;
+	const PAGEFIND_BASE = import.meta.env.VITE_PAGEFIND_BASE_URL || `${base}/pagefind`;
 
 	async function getCollectionFullName(shortName: string): Promise<string> {
 		const data = await getCollections();
@@ -122,7 +122,10 @@
 	async function loadPagefindForLang(lang: string) {
 		if (pagefindInstances.has(lang)) return pagefindInstances.get(lang);
 		try {
-			const pf = await import(/* @vite-ignore */ `${PAGEFIND_BASE}/${lang}/pagefind.js`);
+			const { getDataVersion } = await import('$lib/data/db');
+			const version = await getDataVersion();
+			const vParam = version ? `?v=${version}` : '';
+			const pf = await import(/* @vite-ignore */ `${PAGEFIND_BASE}/${lang}/pagefind.js${vParam}`);
 			await pf.init();
 			pagefindInstances.set(lang, pf);
 			return pf;

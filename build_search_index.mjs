@@ -4,10 +4,11 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = join(__dirname, "static", "db");
-const OUTPUT_BASE = process.env.PAGEFIND_DEV
-  ? join(__dirname, "static", "pagefind")
-  : join(__dirname, "build", "pagefind");
+const DATA_DIR = process.env.PAGEFIND_DATA_DIR || join(__dirname, "static", "db");
+const OUTPUT_BASE = process.env.PAGEFIND_OUTPUT_DIR
+  || (process.env.PAGEFIND_DEV
+    ? join(__dirname, "static", "pagefind")
+    : join(__dirname, "build", "pagefind"));
 
 async function buildLanguageIndex(lang, collectionsData) {
   const { index } = await pagefind.createIndex({ forceLanguage: lang });

@@ -5,6 +5,46 @@ export const DATA_BASE_URL = import.meta.env.VITE_DB_BASE_URL || '/db';
 // URL for metadata/collections (same-origin for fast loading)
 export const META_BASE_URL = import.meta.env.VITE_META_BASE_URL || DATA_BASE_URL;
 
+// Data version for cache busting - fetched once, cached in localStorage
+let dataVersion: string | null = null;
+let versionPromise: Promise<string> | null = null;
+
+export function getDataVersion(): Promise<string> {
+	if (dataVersion) return Promise.resolve(dataVersion);
+	if (versionPromise) return versionPromise;
+	if (!browser) return Promise.resolve('');
+
+	// Check localStorage for cached version
+	const cached = localStorage.getItem('hadithDb_version');
+	if (cached) dataVersion = cached;
+
+	// Fetch latest version (short-lived cache on GitHub Pages)
+	versionPromise = fetch(`${DATA_BASE_URL}/version.json`, { cache: 'no-cache' })
+		.then(res => res.ok ? res.json() : null)
+		.then(data => {
+			if (data?.version) {
+				const newVersion = data.version;
+				if (cached !== newVersion) {
+					// Version changed — clear stale caches
+					localStorage.setItem('hadithDb_version', newVersion);
+					dataVersion = newVersion;
+				}
+				return newVersion;
+			}
+			return cached || '';
+		})
+		.catch(() => cached || '');
+
+	return versionPromise;
+}
+
+/** Append version query param to a URL for cache busting */
+export function versionedUrl(url: string): string {
+	if (!dataVersion) return url;
+	const sep = url.includes('?') ? '&' : '?';
+	return `${url}${sep}v=${dataVersion}`;
+}
+
 interface CollectionsData {
 	languages: { short_name: string; full_name: string; rtl: boolean }[];
 	collections: { short_name: string; ar: string; en: string }[];
@@ -47,9 +87,11 @@ export async function getCollections(): Promise<CollectionsData> {
 	if (!browser) return { languages: [], collections: [] };
 	if (collectionsCache) return collectionsCache;
 	if (!collectionsFetching) {
-		collectionsFetching = fetch(`${META_BASE_URL}/collections.json`)
-			.then(res => res.json())
-			.then(data => { collectionsCache = data; return data; });
+		collectionsFetching = getDataVersion().then(() =>
+			fetch(versionedUrl(`${META_BASE_URL}/collections.json`))
+				.then(res => res.json())
+				.then(data => { collectionsCache = data; return data; })
+		);
 	}
 	return collectionsFetching;
 }
@@ -60,7 +102,7 @@ export async function getMetadata(collection: string): Promise<Metadata | null> 
 	if (!browser) return null;
 	if (metadataCache.has(collection)) return metadataCache.get(collection)!;
 	if (!metadataFetching.has(collection)) {
-		const promise = fetch(`${META_BASE_URL}/books/${collection}/metadata.json`)
+		const promise = fetch(versionedUrl(`${META_BASE_URL}/books/${collection}/metadata.json`))
 			.then(res => res.json())
 			.then(meta => { metadataCache.set(collection, meta); metadataFetching.delete(collection); return meta; });
 		metadataFetching.set(collection, promise);
@@ -80,7 +122,7 @@ export async function fetchTextRange(
 	const key = `${collection}/${lang}/${startByte}-${endByte}`;
 	if (rangeCache.has(key)) return rangeCache.get(key)!;
 	if (!rangeFetching.has(key)) {
-		const url = `${DATA_BASE_URL}/books/${collection}/${lang}.txt`;
+		const url = versionedUrl(`${DATA_BASE_URL}/books/${collection}/${lang}.txt`);
 		const promise = fetch(url, {
 			headers: { Range: `bytes=${startByte}-${endByte}` }
 		})
