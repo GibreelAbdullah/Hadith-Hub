@@ -166,7 +166,7 @@ export async function getGradings(collection: string): Promise<Record<string, an
 	if (!browser) return {};
 	if (gradingsCache.has(collection)) return gradingsCache.get(collection)!;
 	if (gradingsFetching.has(collection)) return gradingsFetching.get(collection)!;
-	const promise = fetch(versionedUrl(`${DATA_BASE_URL}/books/${collection}/gradings.json`))
+	const promise = fetch(`${DATA_BASE_URL}/books/${collection}/gradings.json`)
 		.then(res => {
 			if (!res.ok) return {};
 			return res.json();
