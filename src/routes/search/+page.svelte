@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import { languageStore } from '$lib/functions/store.svelte';
-	import { getMetadata, fetchLines, getCollections } from '$lib/data/db';
+	import { getMetadata, fetchLines, getCollections, getGradings } from '$lib/data/db';
 	import { getLanguageFullName } from '$lib/functions/utilsV2';
 	import { getDirForText } from '$lib/functions/language';
 	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
@@ -197,17 +197,19 @@
 			searchOptions.filters = { collection: collections.length > 1 ? { any: collections } : collections[0] };
 		}
 
-		// Search across selected language indexes and merge results
+		// Search across selected language indexes in parallel
 		const allResults: { result: any; lang: string; score: number }[] = [];
 
-		for (const lang of langsToSearch) {
+		const searchPromises = langsToSearch.map(async (lang) => {
 			const pf = await loadPagefindForLang(lang);
-			if (!pf) continue;
-
+			if (!pf) return [];
 			const search = await pf.search(searchQuery, searchOptions);
-			for (const r of search.results) {
-				allResults.push({ result: r, lang, score: r.score || 0 });
-			}
+			return search.results.map((r: any) => ({ result: r, lang, score: r.score || 0 }));
+		});
+
+		const resultsPerLang = await Promise.all(searchPromises);
+		for (const langResults of resultsPerLang) {
+			allResults.push(...langResults);
 		}
 
 		// Deduplicate by score (keep highest scoring per result id)
@@ -263,7 +265,8 @@
 			const lines = await fetchLines(collShort, matchedLang, rec.line, rec.line, meta);
 			const text = lines[0] || "";
 
-			const gradings = (meta as any).gradings?.[rec.num] || null;
+			const collGradings = await getGradings(collShort);
+			const gradings = collGradings[rec.num] || null;
 			const book = meta.books.find(b => b.number === rec.book);
 			const collTitle = meta.collection_info?.en || meta.collection_info?.[matchedLang] || collShort;
 			const bookTitle = book?.en || book?.[matchedLang as keyof typeof book] || book?.ar || '';

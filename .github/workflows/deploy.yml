@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [next]
+  repository_dispatch:
+    types: [hadith-db-updated]
 
 permissions:
   contents: read

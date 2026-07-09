@@ -157,3 +157,30 @@ export async function getScholar(name: string): Promise<ScholarData | null> {
 	scholarFetching.set(name, promise);
 	return promise;
 }
+
+// Gradings per collection (loaded separately from metadata)
+const gradingsCache: Map<string, Record<string, any[]>> = new Map();
+const gradingsFetching: Map<string, Promise<Record<string, any[]>>> = new Map();
+
+export async function getGradings(collection: string): Promise<Record<string, any[]>> {
+	if (!browser) return {};
+	if (gradingsCache.has(collection)) return gradingsCache.get(collection)!;
+	if (gradingsFetching.has(collection)) return gradingsFetching.get(collection)!;
+	const promise = fetch(versionedUrl(`${DATA_BASE_URL}/books/${collection}/gradings.json`))
+		.then(res => {
+			if (!res.ok) return {};
+			return res.json();
+		})
+		.then((data: Record<string, any[]>) => {
+			gradingsCache.set(collection, data);
+			gradingsFetching.delete(collection);
+			return data;
+		})
+		.catch(() => {
+			gradingsCache.set(collection, {});
+			gradingsFetching.delete(collection);
+			return {};
+		});
+	gradingsFetching.set(collection, promise);
+	return promise;
+}

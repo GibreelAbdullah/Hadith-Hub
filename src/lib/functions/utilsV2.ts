@@ -1,4 +1,4 @@
-import { getCollections, getMetadata, fetchLines, type Metadata } from "$lib/data/db";
+import { getCollections, getMetadata, getGradings, fetchLines, type Metadata } from "$lib/data/db";
 import { browser } from "$app/environment";
 import { getSelectedLanguages } from "$lib/functions/language";
 
@@ -79,7 +79,7 @@ async function getHadithInBook(collection: string, bookNumber: string, langs: st
   const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
 
   // Build book/chapter/hadith rows from fetched text
-  const gradings = (meta as any).gradings || {};
+  const gradings = await getGradings(collection);
   const dataRows = bookRecords.map((rec, idx) => {
     const langValues = langs.map((l) => textByLang[l]?.[idx] || "");
     const grades = rec.cat === "hadith" && rec.num ? gradings[rec.num] || null : null;
@@ -136,7 +136,7 @@ export async function getSingleHadith(collection: string, hadithNumber: string, 
   const collLangValues = langs.map((l) => meta.collection_info[l] || "");
   const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
 
-  const gradings = (meta as any).gradings || {};
+  const gradings = await getGradings(collection);
   const dataRows = records.map((rec, idx) => {
     const langValues = langs.map((l) => textByLang[l]?.[idx] || "");
     const grades = rec.cat === "hadith" && rec.num ? gradings[rec.num] || null : null;
