@@ -103,7 +103,7 @@
 		return langs.length > 0 ? [...new Set(langs)] : ['en', 'ar'];
 	}
 
-	const PAGEFIND_BASE = import.meta.env.VITE_PAGEFIND_BASE_URL || `${base}/pagefind`;
+	const PAGEFIND_BASE = `${base}/pagefind`;
 
 	async function getCollectionFullName(shortName: string): Promise<string> {
 		const data = await getCollections();
@@ -197,19 +197,17 @@
 			searchOptions.filters = { collection: collections.length > 1 ? { any: collections } : collections[0] };
 		}
 
-		// Search across selected language indexes in parallel
+		// Search across selected language indexes and merge results
 		const allResults: { result: any; lang: string; score: number }[] = [];
 
-		const searchPromises = langsToSearch.map(async (lang) => {
+		for (const lang of langsToSearch) {
 			const pf = await loadPagefindForLang(lang);
-			if (!pf) return [];
-			const search = await pf.search(searchQuery, searchOptions);
-			return search.results.map((r: any) => ({ result: r, lang, score: r.score || 0 }));
-		});
+			if (!pf) continue;
 
-		const resultsPerLang = await Promise.all(searchPromises);
-		for (const langResults of resultsPerLang) {
-			allResults.push(...langResults);
+			const search = await pf.search(searchQuery, searchOptions);
+			for (const r of search.results) {
+				allResults.push({ result: r, lang, score: r.score || 0 });
+			}
 		}
 
 		// Deduplicate by score (keep highest scoring per result id)
