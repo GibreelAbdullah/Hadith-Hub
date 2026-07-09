@@ -30,9 +30,8 @@ jobs:
 
       - name: Build
         env:
-          BASE_PATH: '/Hadith-Hub'
           VITE_DB_BASE_URL: 'https://gibreelabdullah.github.io/hadith-db/data'
-          VITE_META_BASE_URL: '/Hadith-Hub/db'
+          VITE_META_BASE_URL: '/db'
         run: npm run build
 
       - name: Clone hadith-db data for search index
@@ -71,14 +70,12 @@ jobs:
 
       - name: Build search index
         if: steps.pagefind-cache.outputs.cache-hit != 'true'
-        env:
-          BASE_PATH: '/Hadith-Hub'
         run: node build_search_index.mjs
 
       - name: Fix SPA routing for GitHub Pages
         run: |
           cp build/index.html build/404.html
-          # Add .nojekyll to prevent GitHub Pages from ignoring files starting with _
+          echo "hadithhub.com" > build/CNAME
           touch build/.nojekyll
 
       - name: Upload artifact
