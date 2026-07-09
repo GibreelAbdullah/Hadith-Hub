@@ -122,10 +122,7 @@
 	async function loadPagefindForLang(lang: string) {
 		if (pagefindInstances.has(lang)) return pagefindInstances.get(lang);
 		try {
-			const { getDataVersion } = await import('$lib/data/db');
-			const version = await getDataVersion();
-			const vParam = version ? `?v=${version}` : '';
-			const pf = await import(/* @vite-ignore */ `${PAGEFIND_BASE}/${lang}/pagefind.js${vParam}`);
+			const pf = await import(/* @vite-ignore */ `${PAGEFIND_BASE}/${lang}/pagefind.js`);
 			await pf.init();
 			pagefindInstances.set(lang, pf);
 			return pf;
@@ -200,17 +197,19 @@
 			searchOptions.filters = { collection: collections.length > 1 ? { any: collections } : collections[0] };
 		}
 
-		// Search across selected language indexes and merge results
+		// Search across selected language indexes in parallel
 		const allResults: { result: any; lang: string; score: number }[] = [];
 
-		for (const lang of langsToSearch) {
+		const searchPromises = langsToSearch.map(async (lang) => {
 			const pf = await loadPagefindForLang(lang);
-			if (!pf) continue;
-
+			if (!pf) return [];
 			const search = await pf.search(searchQuery, searchOptions);
-			for (const r of search.results) {
-				allResults.push({ result: r, lang, score: r.score || 0 });
-			}
+			return search.results.map((r: any) => ({ result: r, lang, score: r.score || 0 }));
+		});
+
+		const resultsPerLang = await Promise.all(searchPromises);
+		for (const langResults of resultsPerLang) {
+			allResults.push(...langResults);
 		}
 
 		// Deduplicate by score (keep highest scoring per result id)
