@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { urlPrefix } from '$lib/common/constants';
+	import { DATA_BASE_URL } from '$lib/data/db';
 	import SvgIcon from '$lib/components/common/svgIcon.svelte';
 	import MetaTags from '$lib/components/common/MetaTags.svelte';
-	let htmlPromise = fetch(urlPrefix + '/updates/about/about.html').then((response) => {
+	let htmlPromise = fetch(`${DATA_BASE_URL}/about.html`).then((response) => {
 		return response.text();
 	});
 </script>

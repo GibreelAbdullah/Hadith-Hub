@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { urlPrefix } from '$lib/common/constants';
+	import { DATA_BASE_URL } from '$lib/data/db';
 	import { onMount } from 'svelte';
 	import MetaTags from '$lib/components/common/MetaTags.svelte';
 
@@ -9,7 +9,7 @@
 
 	const fetchData = async () => {
 		try {
-			const response = await fetch(urlPrefix + '/updates/references/reference.min.json');
+			const response = await fetch(`${DATA_BASE_URL}/references.json`);
 			if (!response.ok) {
 				throw new Error('Network response was not ok');
 			}
