@@ -36,4 +36,4 @@ It would be a grave injustice to omit the mention of [Fawaz Ahmed](https://githu
 
 ## Contribution Guide
 
-See the [Contribution Guide](https://github.com/GibreelAbdullah/Hadith-Hub/contributing.md)
+See the [Contribution Guide](https://github.com/GibreelAbdullah/Hadith-Hub/blob/prod/CONTRIBUTING.md)
