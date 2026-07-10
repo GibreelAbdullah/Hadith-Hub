@@ -36,36 +36,4 @@ It would be a grave injustice to omit the mention of [Fawaz Ahmed](https://githu
 
 ## Contribution Guide
 
-There are 2 repositories of interest.
-
-1. [Hadith Hub](https://github.com/GibreelAbdullah/Hadith-Hub) (This Repo) - The frontend of the application written in Svelte 5 with SvelteKit. Deployed to GitHub Pages.
-
-2. [hadith-db](https://github.com/GibreelAbdullah/hadith-db) - Holds all the hadith data (text files, metadata, gradings, scholar information). Served via GitHub Pages with Range request support. Data is organized as:
-   - `data/books/` — Hadith collections (text files and metadata per collection)
-   - `data/muhaddith/` — Scholar/Muhaddith biographical data
-   - `data/collections.json` — Collection listing
-   - `data/gradeTranslations.json` — Grade and scholar name translations
-
-Search is handled client-side using [Pagefind](https://pagefind.app/), with per-language indexes built at deploy time.
-
-You may raise a PR, give suggestions, or raise issues for any of them.
-
-## To run the project
-
-1. Clone the repository.
-  ```bash
-  git clone https://github.com/GibreelAbdullah/Hadith-Hub.git
-  cd Hadith-Hub
-  ```
-
-2. Clone the [hadith-db](https://github.com/GibreelAbdullah/hadith-db) repo and create a symlink:
-   ```bash
-   git clone https://github.com/GibreelAbdullah/hadith-db.git ../hadith-db
-   ln -sf ../hadith-db/data static/db
-   ```
-
-3. Run `npm install` to install dependencies.
-
-4. Run `npm run dev` to run the application in dev mode.
-
-5. Go to `http://localhost:5173` in your browser.
+See the [Contribution Guide](https://github.com/GibreelAbdullah/Hadith-Hub/blob/prod/CONTRIBUTING.md)
