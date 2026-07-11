@@ -58,8 +58,94 @@ export async function getHadithPromise(params: Record<string, string>) {
   return [availableLanguages, unavailableLanguages, data];
 }
 
+async function fetchRecordChunk(
+  collection: string, langs: string[], meta: Metadata,
+  bookRecords: any[], startIdx: number, endIdx: number, gradings: Record<string, any[]>
+): Promise<any[]> {
+  const chunk = bookRecords.slice(startIdx, endIdx);
+  if (!chunk.length) return [];
+
+  const firstLine = chunk[0].line;
+  const lastLine = chunk[chunk.length - 1].line;
+
+  const textByLang: { [lang: string]: string[] } = {};
+  await Promise.all(
+    langs.map(async (lang) => {
+      if (!meta.offsets[lang]) return;
+      textByLang[lang] = await fetchLines(collection, lang, firstLine, lastLine, meta);
+    })
+  );
+
+  return chunk.map((rec, idx) => {
+    const langValues = langs.map((l) => textByLang[l]?.[idx] || "");
+    const grades = rec.cat === "hadith" && rec.num ? gradings[rec.num] || null : null;
+    return [collection, rec.num || null, rec.book || null, rec.num_book || null, rec.chapter || null, rec.cat, grades, ...langValues];
+  });
+}
+
+export interface ChunkedHadithLoader {
+  initialData: any[];
+  availableLanguages: string[];
+  unavailableLanguages: string[];
+  totalRecords: number;
+  loadedCount: number;
+  loadMore: () => Promise<any[]>;
+  hasMore: () => boolean;
+}
+
+export async function getHadithChunked(params: Record<string, string>): Promise<ChunkedHadithLoader> {
+  const collection = params.collection;
+  const bookNumber = params.bookNumber;
+  const selectedLanguages = getSelectedLanguages();
+  const meta = await getMetadata(collection);
+  if (!meta) return {
+    initialData: [], availableLanguages: selectedLanguages, unavailableLanguages: [],
+    totalRecords: 0, loadedCount: 0, loadMore: async () => [], hasMore: () => false
+  };
+
+  const availableLanguages = selectedLanguages.filter((l) => meta.languages.includes(l));
+  const unavailableLanguages = selectedLanguages.filter((l) => !meta.languages.includes(l));
+  const langs = availableLanguages;
+
+  const bookRecords = meta.records.filter((r) => r.book === bookNumber);
+  if (!bookRecords.length) return {
+    initialData: [], availableLanguages, unavailableLanguages,
+    totalRecords: 0, loadedCount: 0, loadMore: async () => [], hasMore: () => false
+  };
+
+  // Build collection row from metadata
+  const collLangValues = langs.map((l) => meta.collection_info[l] || "");
+  const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
+
+  // Fetch gradings once
+  const gradings = await getGradings(collection);
+
+  // Fetch first chunk (small, for fast initial render)
+  const INITIAL_CHUNK = 20;
+  const firstChunk = await fetchRecordChunk(collection, langs, meta, bookRecords, 0, INITIAL_CHUNK, gradings);
+  let loadedCount = Math.min(INITIAL_CHUNK, bookRecords.length);
+
+  return {
+    initialData: [collRow, ...firstChunk],
+    availableLanguages,
+    unavailableLanguages,
+    totalRecords: bookRecords.length,
+    loadedCount,
+    hasMore: () => loadedCount < bookRecords.length,
+    loadMore: async () => {
+      // Fetch everything remaining in one batch
+      const start = loadedCount;
+      const end = bookRecords.length;
+      if (start >= end) return [];
+      const chunk = await fetchRecordChunk(collection, langs, meta, bookRecords, start, end, gradings);
+      loadedCount = end;
+      return chunk;
+    }
+  };
+}
+
+// Keep the old function for backward compatibility (single hadith page uses it)
 async function getHadithInBook(collection: string, bookNumber: string, langs: string[], meta: Metadata): Promise<any[]> {
-  // Get all records for this book (excluding collection — we'll use metadata for its name)
   const bookRecords = meta.records.filter((r) => r.book === bookNumber);
   if (!bookRecords.length) return [];
 
@@ -74,11 +160,9 @@ async function getHadithInBook(collection: string, bookNumber: string, langs: st
     })
   );
 
-  // Build collection row from metadata
   const collLangValues = langs.map((l) => meta.collection_info[l] || "");
   const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
 
-  // Build book/chapter/hadith rows from fetched text
   const gradings = await getGradings(collection);
   const dataRows = bookRecords.map((rec, idx) => {
     const langValues = langs.map((l) => textByLang[l]?.[idx] || "");
