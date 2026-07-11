@@ -5,12 +5,12 @@
 	import MetaTags from '$lib/components/common/MetaTags.svelte';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
-	import { getHadithPromise } from '$lib/functions/utilsV2';
+	import { getHadithChunked, type ChunkedHadithLoader } from '$lib/functions/utilsV2';
 	import { getMetadata } from '$lib/data/db';
 	import UnavailableLanguagesNotice from '$lib/components/common/UnavailableLanguagesNotice.svelte';
 
 	let title = $state(`Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`);
-	const hadithPromise = $derived(getHadithPromise($page.params));
+	const loaderPromise = $derived(getHadithChunked($page.params));
 
 	$effect(() => {
 		getMetadata($page.params.collection).then(meta => {
@@ -27,7 +27,7 @@
 <MetaTags {title} />
 <main>
 	{#if languageStore.value.length != 0}
-		{#await hadithPromise}
+		{#await loaderPromise}
 			<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
 				<div class="hadithGroup grid px-5">
 					<ol class="breadcrumb">
@@ -48,9 +48,9 @@
 				</div>
 			</div>
 			<HadithPlaceholder />
-		{:then dataList}
-			<UnavailableLanguagesNotice unavailableLanguages={dataList[1]} />
-			{#if dataList[2].length === 0}
+		{:then loader}
+			<UnavailableLanguagesNotice unavailableLanguages={loader.unavailableLanguages} />
+			{#if loader.totalRecords === 0}
 				{#await getMetadata($page.params.collection) then meta}
 				<div class="card p-4 m-4 max-w-[90rem] mx-auto text-center">
 					<div class="py-8">
@@ -65,8 +65,8 @@
 				</div>
 				{/await}
 			{:else}
-				{#if dataList[0].length > 0}
-					<HadithContainer dataListRecord={dataList[2]} availableLanguages={dataList[0]} />
+				{#if loader.availableLanguages.length > 0}
+					<HadithContainer dataListRecord={loader.initialData} availableLanguages={loader.availableLanguages} loadMore={loader.loadMore} hasMore={loader.hasMore} />
 				{/if}
 			{/if}
 		{:catch data}
