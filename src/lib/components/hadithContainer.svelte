@@ -48,8 +48,8 @@
 	{#if data[5] == 'collection'}
 		{#if !hideBreadcrumb}
 			<div class="p-4">
-				<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto">
-					<div class="hadithGroup grid px-5">
+				<div class="sticky top-0 card p-4 !preset-tonal-secondary max-w-[90rem] m-auto">
+					<div class="px-5">
 						<ol class="breadcrumb">
 							<li class="crumb anchor">
 								<a href="{base}/{$page.params.home}?lang={languageStore.value.toString()}">Home</a>
@@ -70,7 +70,7 @@
 	{:else if data[5] == 'book'}{:else if ['chapter', 'chapter_intro'].includes(data[5])}
 		<div class="p-4">
 			<div
-				class="px-4 card max-w-[90rem] m-auto {data[5] == 'chapter' ? 'variant-glass-primary' : ''}"
+				class="px-4 card max-w-[90rem] m-auto {data[5] == 'chapter' ? 'preset-tonal-primary' : ''}"
 			>
 				<div class="hadithGroup font-medium grid">
 					{#each { length: langCount } as _, i}

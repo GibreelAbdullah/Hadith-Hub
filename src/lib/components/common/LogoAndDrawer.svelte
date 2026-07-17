@@ -1,18 +1,15 @@
 <script lang="ts">
-	import { getDrawerStore, type DrawerSettings } from '@skeletonlabs/skeleton';
 	import { base } from '$app/paths';
 	import { languageStore } from '$lib/functions/store.svelte';
+	import { drawerState } from '$lib/functions/drawerState.svelte';
 	import SvgIcon from './svgIcon.svelte';
 
-	const drawerStore = getDrawerStore();
-
 	function drawerOpen(): void {
-		const settings: DrawerSettings = { id: 'main' };
-		drawerStore.open(settings);
+		drawerState.open('main', 'left');
 	}
 </script>
 
-<button on:click={drawerOpen} class="md:hidden mr-2 p-1 cursor-pointer text-3xl">≡ </button>
+<button onclick={drawerOpen} class="md:hidden mr-2 p-1 cursor-pointer text-3xl">≡ </button>
 <a href="{base}/?lang={languageStore.value.toString()}">
 	<span>
 		<SvgIcon class="!w-10" name="icon" />

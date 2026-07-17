@@ -1,10 +1,31 @@
 import { browser } from '$app/environment';
 import { writable, get } from 'svelte/store';
-import { localStorageStore } from '@skeletonlabs/skeleton';
 import type { Writable } from 'svelte/store';
 
+// Custom localStorageStore replacement (Skeleton v4 removed this utility)
+function localStorageStore<T>(key: string, initialValue: T): Writable<T> {
+  let storedValue = initialValue;
+  if (browser) {
+    try {
+      const stored = localStorage.getItem(key);
+      if (stored !== null) {
+        storedValue = JSON.parse(stored);
+      }
+    } catch {}
+  }
+  const store = writable<T>(storedValue);
+  if (browser) {
+    store.subscribe((val) => {
+      try {
+        localStorage.setItem(key, JSON.stringify(val));
+      } catch {}
+    });
+  }
+  return store;
+}
+
 // Theme store
-export const storeTheme: Writable<string> = localStorageStore('storeTheme', 'skeleton');
+export const storeTheme: Writable<string> = localStorageStore('storeTheme', 'cerberus');
 
 export interface FontSettings {
   family: string;

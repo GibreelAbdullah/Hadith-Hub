@@ -1,9 +1,9 @@
 import { sveltekit } from '@sveltejs/kit/vite';
+import tailwindcss from '@tailwindcss/vite';
 import type { UserConfig } from 'vite';
-import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 
 const config: UserConfig = {
-	plugins: [sveltekit(), purgeCss()],
+	plugins: [tailwindcss(), sveltekit()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},

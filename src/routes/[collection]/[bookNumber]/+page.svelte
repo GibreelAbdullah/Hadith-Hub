@@ -28,8 +28,8 @@
 <main>
 	{#if languageStore.value.length != 0}
 		{#await loaderPromise}
-			<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
-				<div class="hadithGroup grid px-5">
+			<div class="sticky top-0 card p-4 !preset-tonal-secondary max-w-[90rem] m-auto my-4">
+				<div class="px-5">
 					<ol class="breadcrumb">
 						<li class="crumb anchor"><a href="{base}/">Home</a></li>
 						<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
@@ -58,7 +58,7 @@
 						<p class="text-surface-600 dark:text-surface-400 mb-4">
 							Book <strong>{$page.params.bookNumber}</strong> does not exist in this collection.
 						</p>
-						<a href="{base}/{$page.params.collection}?lang={languageStore.value.toString()}" class="btn variant-filled-primary">
+						<a href="{base}/{$page.params.collection}?lang={languageStore.value.toString()}" class="btn preset-filled-primary-500">
 							Browse {meta?.collection_info?.[languageStore.value[0]] || meta?.collection_info?.en || $page.params.collection}
 						</a>
 					</div>

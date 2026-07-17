@@ -28,8 +28,8 @@
 </script>
 
 {#await bookPromise}
-	<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
-		<div class="grid px-3">
+	<div class="sticky top-0 card p-4 !preset-tonal-secondary max-w-[90rem] m-auto my-4">
+		<div class="px-3">
 			<ol class="breadcrumb">
 				<li class="crumb anchor"><a href="{base}/?lang={languageStore.value.toString()}">Home</a></li>
 				<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
@@ -64,8 +64,8 @@
 			{#each dataList as data}
 				{#if data[3] == 'collection'}
 					<div class="p-4 lg:col-span-2 2xl:col-span-3">
-						<div class="sticky top-0 card p-4 m-auto !variant-glass-secondary max-w-[90rem]">
-							<div class="grid px-3">
+						<div class="sticky top-0 card p-4 m-auto !preset-tonal-secondary max-w-[90rem]">
+							<div class="px-3">
 								<ol class="breadcrumb">
 									<li class="crumb anchor"><a href="{base}/{$page.params.home}?lang={languageStore.value.toString()}">Home</a></li>
 									<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
@@ -83,7 +83,7 @@
 								{text}
 							</div>
 						{/each}
-						<div class="badge bg-gray-500 mt-auto mx-auto">
+						<div class="badge preset-tonal-surface mt-auto mx-auto">
 							{data[1][0]} to
 							{data[1][1]}
 						</div>

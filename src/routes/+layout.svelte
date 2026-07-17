@@ -1,44 +1,29 @@
 <script lang="ts">
-	import '../app.postcss';
-	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
-	import {
-		initializeStores,
-		AppShell,
-		Drawer,
-		type DrawerSettings,
-		getDrawerStore,
-		storePopup,
-		Modal
-	} from '@skeletonlabs/skeleton';
+	import '../app.css';
 	import { onMount } from 'svelte';
-	import { get } from 'svelte/store';
 	import { browser } from '$app/environment';
 	import { pushState, replaceState } from '$app/navigation';
-	import SearchModal from '$lib/components/searchModal.svelte';
 	import Footer from '$lib/components/common/footer.svelte';
 	import SideBarContents from '$lib/components/common/sideBarContents.svelte';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import Header from '$lib/components/common/Header.svelte';
 	import SettingsSidebar from '$lib/components/common/SettingsSidebar.svelte';
 	import { settingsStore, storeTheme, initFonts, loadFont } from '$lib/functions/settingsStore';
-
-	initializeStores();
-	const drawerStore = getDrawerStore();
-
-	const modalComponentRegistry: Record<string, any> = {
-		searchModal: { ref: SearchModal }
-	};
-
-	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+	import { drawerState } from '$lib/functions/drawerState.svelte';
+	import { searchModalState } from '$lib/functions/searchModalState.svelte';
+	import SearchModal from '$lib/components/searchModal.svelte';
 
 	// Apply theme immediately on layout init
 	if (browser) {
-		storeTheme.subscribe((val) => document.body.setAttribute('data-theme', val));
+		storeTheme.subscribe((val) => document.documentElement.setAttribute('data-theme', val));
 	}
 
 	function openSettings() {
-		const s: DrawerSettings = { id: 'settings', position: 'right' };
-		drawerStore.open(s);
+		drawerState.open('settings', 'right');
+	}
+
+	function closeDrawer() {
+		drawerState.close();
 	}
 
 	onMount(() => {
@@ -55,15 +40,9 @@
 		}
 
 		// Close drawer on back button
-		drawerStore.subscribe((state) => {
-			if (state.open) {
-				pushState('', { drawer: true });
-			}
-		});
 		window.addEventListener('popstate', () => {
-			const state = get(drawerStore);
-			if (state.open) {
-				drawerStore.close();
+			if (drawerState.isOpen) {
+				drawerState.close();
 			}
 		});
 
@@ -76,7 +55,6 @@
 			const tamil = s.fonts.tamil || { family: 'Noto Sans Tamil', size: 110 };
 			
 			const fam = (f: string) => f === 'System Default' ? 'sans-serif' : `'${f}', sans-serif`;
-			// Convert percentage to rem (100% = 1rem base)
 			const toRem = (size: number) => (size / 100).toFixed(3);
 			const lh = (size: number) => (1.75 * size / 100).toFixed(2);
 			
@@ -100,25 +78,58 @@
 	});
 </script>
 
-<Drawer width="w-[80%] max-w-sm">
-	{#if $drawerStore.id === 'settings'}
-		<div class="px-4 pt-8 overflow-y-auto h-full"><SettingsSidebar /></div>
-	{:else}
-		<div class="px-4 pt-8"><SideBarContents /></div>
-	{/if}
-</Drawer>
-<Modal components={modalComponentRegistry} />
-<AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4 hidden md:block">
-	<svelte:fragment slot="header">
-		<Header onSettingsClick={openSettings} />
-	</svelte:fragment>
-	<svelte:fragment slot="sidebarLeft">
-		<SideBarContents />
-	</svelte:fragment>
-	<div class="flex flex-col min-h-[95%]">
-		<div class="flex-1">
-			<slot />
-		</div>
-		<Footer />
+<!-- Drawer Overlay -->
+{#if drawerState.isOpen}
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		class="fixed inset-0 bg-black/50 z-40 transition-opacity"
+		onkeydown={(e) => { if (e.key === 'Escape') closeDrawer(); }}
+		onclick={closeDrawer}
+	></div>
+	<aside
+		class="fixed top-0 z-50 h-full w-[80%] max-w-sm bg-surface-50-950 shadow-xl transition-transform duration-300 overflow-y-auto
+		{drawerState.position === 'right' ? 'right-0' : 'left-0'}"
+	>
+		{#if drawerState.id === 'settings'}
+			<div class="px-4 pt-8 overflow-y-auto h-full"><SettingsSidebar /></div>
+		{:else}
+			<div class="px-4 pt-8"><SideBarContents /></div>
+		{/if}
+	</aside>
+{/if}
+
+<!-- Search Modal -->
+{#if searchModalState.isOpen}
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		class="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4 overflow-y-auto"
+		onkeydown={(e) => { if (e.key === 'Escape') searchModalState.close(); }}
+		onclick={(e) => { if (e.target === e.currentTarget) searchModalState.close(); }}
+	>
+		<SearchModal />
 	</div>
-</AppShell>
+{/if}
+
+<!-- App Layout (replaces AppShell) -->
+<div class="h-full overflow-hidden flex flex-col">
+	<!-- Header -->
+	<Header onSettingsClick={openSettings} />
+
+	<!-- Body with sidebar + content -->
+	<div class="flex-1 flex overflow-hidden">
+		<!-- Sidebar (desktop only) -->
+		<aside class="bg-surface-50-950 w-56 p-4 hidden md:block overflow-y-auto">
+			<SideBarContents />
+		</aside>
+
+		<!-- Main content -->
+		<main class="flex-1 overflow-y-auto">
+			<div class="flex flex-col min-h-[95%]">
+				<div class="flex-1">
+					<slot />
+				</div>
+				<Footer />
+			</div>
+		</main>
+	</div>
+</div>

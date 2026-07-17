@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
 	import { base } from '$app/paths';
 	import LanguageFilter from '$lib/searchModalComponents/languageFilter.svelte';
@@ -7,10 +6,10 @@
 	import CollectionFilter, {
 		selectedCollectionsSearchStore
 	} from '$lib/searchModalComponents/collectionFilter.svelte';
+	import { searchModalState } from '$lib/functions/searchModalState.svelte';
+	import { get } from 'svelte/store';
 
-	const modalStore = getModalStore();
-
-	let searchQuery = $modalStore[0]?.meta?.query || '';
+	let searchQuery = $state(searchModalState.query || '');
 
 	function onInputKeyDown(event: KeyboardEvent): void {
 		if (event.key === 'Enter') {
@@ -23,22 +22,24 @@
 		if (!searchQuery.trim()) return;
 		const params = new URLSearchParams();
 		params.set('text', searchQuery);
-		if ($selectedLanguagesSearchStore) {
-			params.set('language', $selectedLanguagesSearchStore);
+		const langs = get(selectedLanguagesSearchStore);
+		if (langs) {
+			params.set('language', langs);
 		}
-		if ($selectedCollectionsSearchStore.length) {
-			params.set('collection', $selectedCollectionsSearchStore.join(','));
+		const colls = get(selectedCollectionsSearchStore);
+		if (colls.length) {
+			params.set('collection', colls.join(','));
 		}
-		modalStore.close();
+		searchModalState.close();
 		goto(`${base}/search?${params.toString()}`);
 	}
 </script>
 
 <div
-	class="modal-search card bg-surface-100/60 dark:bg-surface-500/30 backdrop-blur-lg overflow-y-auto w-full max-w-[800px] shadow-xl mt-8 mb-auto h-fit"
+	class="card bg-surface-100/60 dark:bg-surface-500/30 backdrop-blur-lg overflow-y-auto w-full max-w-[800px] shadow-xl mt-8 mb-auto h-fit"
 >
 	<!-- Header -->
-	<header class="bg-surface-300-600-token flex items-center">
+	<header class="bg-surface-200 dark:bg-surface-700 flex items-center">
 		<div class="m-auto bg-transparent border-0 ring-0 focus:ring-0 w-full p-4 text-lg">
 			<div class="content-normal flex gap-2">
 				<input
@@ -46,9 +47,9 @@
 					placeholder="Search..."
 					bind:value={searchQuery}
 					class="input flex-1 pb-1"
-					on:keydown={onInputKeyDown}
+					onkeydown={onInputKeyDown}
 				/>
-				<button class="btn bg-primary-500 text-white text-2xl" on:click={doSearch}>
+				<button class="btn preset-filled-primary-500 text-2xl" onclick={doSearch}>
 					⌕
 				</button>
 			</div>
@@ -64,7 +65,7 @@
 
 	<div style="clear: both;" />
 	<footer
-		class="hidden md:flex items-center gap-2 bg-surface-300-600-token p-4 text-xs font-bold"
+		class="hidden md:flex items-center gap-2 bg-surface-200 dark:bg-surface-700 p-4 text-xs font-bold"
 	>
 		<div><kbd>Esc</kbd> to close</div>
 		<div><kbd>Enter</kbd> to search</div>

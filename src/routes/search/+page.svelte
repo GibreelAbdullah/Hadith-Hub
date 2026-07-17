@@ -12,18 +12,10 @@
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 	import MetaTags from '$lib/components/common/MetaTags.svelte';
 	import { detectAll } from 'tinyld/light';
-	import { getModalStore } from '@skeletonlabs/skeleton';
-	import type { ModalSettings } from '@skeletonlabs/skeleton';
-
-	const modalStore = getModalStore();
+	import { searchModalState } from '$lib/functions/searchModalState.svelte';
 
 	function openSearchModal() {
-		const modal: ModalSettings = {
-			type: 'component',
-			component: 'searchModal',
-			meta: { query: searchQuery },
-		};
-		modalStore.trigger(modal);
+		searchModalState.open(searchQuery);
 	}
 
 	function highlightFromExcerpt(fullText: string, excerpt: string): string {
@@ -293,27 +285,27 @@
 	<!-- Search details card -->
 	{#if searchQuery}
 	<div class="p-4">
-		<div class="card p-4 max-w-[90rem] m-auto variant-glass-primary cursor-pointer hover:brightness-95" on:click={openSearchModal} on:keydown={openSearchModal} role="button" tabindex="0">
+		<div class="card p-4 max-w-[90rem] m-auto preset-tonal-primary cursor-pointer hover:brightness-95" onclick={openSearchModal} onkeydown={openSearchModal} role="button" tabindex="0">
 			<div class="flex flex-wrap items-center gap-2 justify-center">
 				<span class="font-medium">Search:</span>
-				<span class="badge variant-filled-primary">{searchQuery}</span>
+				<span class="badge preset-filled-primary-500">{searchQuery}</span>
 				<span class="font-medium ml-2">Language:</span>
 				{#if $page.url.searchParams.get('language')}
 					{#await getLanguageFullName([$page.url.searchParams.get('language') || '']) then names}
-						<span class="badge variant-filled-secondary">{names[0] || $page.url.searchParams.get('language')}</span>
+						<span class="badge preset-filled-secondary-500">{names[0] || $page.url.searchParams.get('language')}</span>
 					{/await}
 				{:else}
-					<span class="badge variant-filled-secondary">All Languages</span>
+					<span class="badge preset-filled-secondary-500">All Languages</span>
 				{/if}
 				<span class="font-medium ml-2">Collections:</span>
 				{#if $page.url.searchParams.get('collection')}
 					{#each $page.url.searchParams.get('collection')?.split(',') || [] as coll}
 						{#await getCollectionFullName(coll) then name}
-							<span class="badge variant-filled-secondary">{name}</span>
+							<span class="badge preset-filled-secondary-500">{name}</span>
 						{/await}
 					{/each}
 				{:else}
-					<span class="badge variant-filled-secondary">All Collections</span>
+					<span class="badge preset-filled-secondary-500">All Collections</span>
 				{/if}
 				{#if results.length > 0}
 					<span class="text-sm opacity-60 ml-2">({results.length} results)</span>
@@ -365,7 +357,7 @@
 		{/each}
 		{#if displayCount < allUniqueResults.length}
 			<div class="p-4 text-center">
-				<button class="btn variant-filled-primary" on:click={loadMore} disabled={loadingMore}>
+				<button class="btn preset-filled-primary-500" onclick={loadMore} disabled={loadingMore}>
 					{loadingMore ? 'Loading...' : `Load More (${allUniqueResults.length - displayCount} remaining)`}
 				</button>
 			</div>
