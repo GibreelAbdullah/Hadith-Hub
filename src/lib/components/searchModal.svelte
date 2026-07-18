@@ -36,11 +36,11 @@
 </script>
 
 <div
-	class="card bg-surface-100-500/50 backdrop-blur-lg overflow-y-auto w-full max-w-[800px] shadow-xl mt-8 mb-auto h-fit"
+	class="card !bg-surface-100-800 overflow-y-auto w-full max-w-[800px] shadow-xl mt-8 mb-auto h-fit"
 >
 	<!-- Header -->
 	<header class="bg-surface-200-700 flex items-center">
-		<div class="m-auto bg-transparent border-0 ring-0 focus:ring-0 w-full p-4 text-lg">
+		<div class="m-auto border-0 ring-0 w-full p-4 text-lg">
 			<div class="content-normal flex gap-2">
 				<input
 					type="search"

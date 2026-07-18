@@ -10,7 +10,7 @@
 	let { onSettingsClick = () => {} }: Props = $props();
 </script>
 
-<AppBar class="z-50 sticky top-0 border-b border-surface-200-800 bg-transparent  flex">
+<AppBar class="z-30 sticky top-0 border-b border-surface-200-800 bg-transparent  flex">
 	<AppBar.Toolbar class="grid-cols-[auto_1fr_auto]">
 		<AppBar.Lead class="flex items-center">
 			<LogoAndDrawer />
@@ -19,7 +19,7 @@
 		<AppBar.Headline />
 		<AppBar.Trail>
 			<button
-				class="btn-icon hover:preset-tonal text-2xl"
+				class="btn-icon hover:preset-tonal text-2xl z-60"
 				onclick={onSettingsClick}
 				title="Settings"
 			>

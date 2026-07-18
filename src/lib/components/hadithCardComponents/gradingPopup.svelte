@@ -34,7 +34,7 @@
     }
 </script>
 
-<div class="p-4 space-y-3 max-w-sm min-w-[280px] bg-primary-500/20 text-surface-contrast-900">
+<div class="p-4 space-y-3 max-w-sm min-w-[280px] bg-primary-500/20 text-surface-950-50">
     {#if loading}
         <div class="flex items-center gap-3">
             <div class="w-12 h-12 rounded-full bg-surface-300-600 animate-pulse"></div>

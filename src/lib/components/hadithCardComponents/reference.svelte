@@ -144,14 +144,14 @@
 					class="text-center justify-center px-4 min-[480px]:px-8 btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-r-none"
 					onclick={() => captureHadithScreenshot(collectionShortName + hadithNumberInCollection, true)}
 				>
-					<SvgIcon name="copy" fill="fill-primary-contrast-500" />
+					<SvgIcon name="copy" fill="fill-black" class="w-5 h-5" />
 				</button>
 				<button
 					class="btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
 					onclick={() =>
 						captureHadithScreenshot(collectionShortName + hadithNumberInCollection, false)}
 				>
-					<SvgIcon name="download" fill="fill-primary-contrast-500" />
+					<SvgIcon name="download" fill="fill-black" class="w-5 h-5" />
 				</button>
 				<div class="text-center">
 					<p class="text-sm badge opacity-50">SCREENSHOT</p>
@@ -163,7 +163,7 @@
 					class="text-center justify-center px-4 min-[480px]:px-8 btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-r-none"
 					onclick={copyPermalink}
 				>
-					<SvgIcon name="copy" fill="fill-primary-contrast-500" />
+					<SvgIcon name="copy" fill="fill-black" class="w-5 h-5" />
 				</button>
 				<a
 					class="btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
@@ -180,7 +180,7 @@
 					target="_blank"
 					rel="noreferrer"
 				>
-					<SvgIcon name="openExternal" fill="fill-primary-contrast-500" />
+					<SvgIcon name="openExternal" fill="fill-black" class="w-5 h-5"/>
 				</a>
 				<div class="text-center">
 					<p class="text-sm badge opacity-50">LINK</p>

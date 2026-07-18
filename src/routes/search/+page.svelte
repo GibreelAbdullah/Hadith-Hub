@@ -7,8 +7,7 @@
 	import { getMetadata, fetchLines, getCollections, getGradings } from '$lib/data/db';
 	import { getLanguageFullName } from '$lib/functions/utilsV2';
 	import { getDirForText } from '$lib/functions/language';
-	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
-	import Reference from '$lib/components/hadithCardComponents/reference.svelte';
+	import HadithCard from '$lib/components/hadithCardComponents/HadithCard.svelte';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 	import MetaTags from '$lib/components/common/MetaTags.svelte';
 	import { detectAll } from 'tinyld/light';
@@ -321,39 +320,22 @@
 		</div>
 	{:else if results.length > 0}
 		{#each results as result}
-			<div class="p-4">
-				<div class="p-4 card max-w-[90rem] m-auto" id="hadith{result.collShort}{result.hadithNum}">
-					<!-- Top reference -->
-					<div class="text-center mb-3">
-						<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-500/15 text-primary-700-300 text-sm font-medium">
-							<span>{result.collTitle}</span>
-							<span dir="ltr">: {result.hadithNum}</span>
-						</span>
-					</div>
-					<div class="card flex-wrap">
-						<div class="hadithGroup font-medium grid">
-							{#each result.texts as { lang, text }}
-								<div class="break-words leading-7 m-3 pb-4" dir={getDirForText(text || '', lang)}>
-									{#if text}
-										<article>{@html highlightFromExcerpt(text, result.excerpt)}</article>
-									{:else}
-										<center><code class="!text-white !bg-red-500">Hadith translation not found</code></center>
-									{/if}
-								</div>
-							{/each}
-						</div>
-						<GradingSection grades={result.gradings} hadithIndex={result.hadithNum} collection={result.collShort} />
-						<Reference
-							collectionShortName={result.collShort}
-							hadithNumberInCollection={result.hadithNum}
-							hadithNumberInBook={result.numBook}
-							bookNumber={result.bookNum}
-							collectionTitle={result.collTitle}
-							bookTitle={result.bookTitle}
-						/>
-					</div>
-				</div>
-			</div>
+			<HadithCard
+				id="{result.collShort}{result.hadithNum}"
+				collectionTitle={result.collTitle}
+				collectionShortName={result.collShort}
+				hadithNum={result.hadithNum}
+				bookTitle={result.bookTitle}
+				bookNumber={result.bookNum}
+				hadithNumberInBook={result.numBook}
+				texts={result.texts.map(({ lang, text }: { lang: string; text: string }) => ({
+					text: highlightFromExcerpt(text, result.excerpt),
+					lang,
+					dir: getDirForText(text || '', lang),
+				}))}
+				grades={result.gradings}
+				maxWidth="max-w-[90rem]"
+			/>
 		{/each}
 		{#if displayCount < allUniqueResults.length}
 			<div class="p-4 text-center">

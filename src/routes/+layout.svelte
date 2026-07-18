@@ -102,7 +102,7 @@
 {#if searchModalState.isOpen}
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4 overflow-y-auto"
+		class="fixed inset-0 bg-black/50 z-[60] flex items-start justify-center p-4 overflow-y-auto"
 		onkeydown={(e) => { if (e.key === 'Escape') searchModalState.close(); }}
 		onclick={(e) => { if (e.target === e.currentTarget) searchModalState.close(); }}
 	>
