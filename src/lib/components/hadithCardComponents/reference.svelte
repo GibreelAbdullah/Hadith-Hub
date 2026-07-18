@@ -123,7 +123,7 @@
 	</aside>
 {/if}
 <div
-	class="lgcd flex flex-col sm:flex-row sm:justify-between sm:items-center items-center px-3 py-3 mt-3 border-t border-surface-300 dark:border-surface-600 text-black dark:text-white text-sm gap-2 relative"
+	class="lgcd flex flex-col sm:flex-row sm:justify-between sm:items-center items-center px-3 py-3 mt-3 border-t border-surface-300-600 text-surface-950-50 text-sm gap-2 relative"
 >
 	<div class="text-center sm:text-left">
 		<div class="flex items-center gap-1 justify-center sm:justify-start">
@@ -141,17 +141,17 @@
 			<div class="mx-1">
 				<button
 					id="permalink{collectionShortName}{hadithNumberInCollection}"
-					class="text-center justify-center px-4 min-[480px]:px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
+					class="text-center justify-center px-4 min-[480px]:px-8 btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-r-none"
 					onclick={() => captureHadithScreenshot(collectionShortName + hadithNumberInCollection, true)}
 				>
-					<SvgIcon name="copy" fill="fill-black" />
+					<SvgIcon name="copy" fill="fill-primary-contrast-500" />
 				</button>
 				<button
-					class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
+					class="btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
 					onclick={() =>
 						captureHadithScreenshot(collectionShortName + hadithNumberInCollection, false)}
 				>
-					<SvgIcon name="download" fill="fill-black" />
+					<SvgIcon name="download" fill="fill-primary-contrast-500" />
 				</button>
 				<div class="text-center">
 					<p class="text-sm badge opacity-50">SCREENSHOT</p>
@@ -160,13 +160,13 @@
 			<br />
 			<div class="mx-1">
 				<button
-					class="text-center justify-center px-4 min-[480px]:px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
+					class="text-center justify-center px-4 min-[480px]:px-8 btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-r-none"
 					onclick={copyPermalink}
 				>
-					<SvgIcon name="copy" fill="fill-black" />
+					<SvgIcon name="copy" fill="fill-primary-contrast-500" />
 				</button>
 				<a
-					class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
+					class="btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
 					href={$page.url.protocol +
 						'//' +
 						$page.url.host +
@@ -180,7 +180,7 @@
 					target="_blank"
 					rel="noreferrer"
 				>
-					<SvgIcon name="openExternal" fill="fill-black" />
+					<SvgIcon name="openExternal" fill="fill-primary-contrast-500" />
 				</a>
 				<div class="text-center">
 					<p class="text-sm badge opacity-50">LINK</p>

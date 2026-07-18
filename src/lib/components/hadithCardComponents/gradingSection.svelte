@@ -78,9 +78,9 @@
 				{@const lang = languageStore.value[0] || 'en'}
 				{@const popupKey = `${hadithIndex}-${i}`}
 				{#await getTranslated(grade[0], grade[1], lang) then result}
-					<div class="relative">
+					<div class="relative w-full min-w-[200px] max-w-md">
 						<button
-							class="btn m-1 {result.color} text-black w-full min-w-[200px] max-w-md h-12 py-2 px-3 text-sm truncate"
+							class="btn m-1 {result.color} text-white w-full h-12 py-2 px-3 text-sm truncate"
 							dir={getDirForText(result.displayText, lang)}
 							style={getFontStyleForText(result.displayText, lang, fontSettings)}
 							onclick={(e) => togglePopup(popupKey, e)}
@@ -88,10 +88,8 @@
 							{result.displayText}
 						</button>
 						{#if openPopup === popupKey}
-							<!-- svelte-ignore a11y_no_static_element_interactions -->
 							<div
 								class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 card preset-filled-surface-500 shadow-xl z-50 rounded-lg"
-								onclick={(e) => e.stopPropagation()}
 							>
 								<GradingPopup
 									muhaddithName={result.scholarName}

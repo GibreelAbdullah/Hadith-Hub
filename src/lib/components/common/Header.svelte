@@ -10,9 +10,9 @@
 	let { onSettingsClick = () => {} }: Props = $props();
 </script>
 
-<AppBar>
+<AppBar class="z-50 sticky top-0 border-b border-surface-200-800 bg-transparent  flex">
 	<AppBar.Toolbar class="grid-cols-[auto_1fr_auto]">
-		<AppBar.Lead>
+		<AppBar.Lead class="flex items-center">
 			<LogoAndDrawer />
 			<SearchBar />
 		</AppBar.Lead>

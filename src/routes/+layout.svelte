@@ -110,15 +110,15 @@
 	</div>
 {/if}
 
-<!-- App Layout (replaces AppShell) -->
-<div class="h-full overflow-hidden flex flex-col">
+<!-- App Layout -->
+<div class="h-full overflow-hidden flex flex-col text-surface-950-50 app-gradient">
 	<!-- Header -->
 	<Header onSettingsClick={openSettings} />
 
 	<!-- Body with sidebar + content -->
 	<div class="flex-1 flex overflow-hidden">
 		<!-- Sidebar (desktop only) -->
-		<aside class="bg-surface-50-950 w-56 p-4 hidden md:block overflow-y-auto">
+		<aside class="w-56 p-4 hidden md:block overflow-y-auto">
 			<SideBarContents />
 		</aside>
 

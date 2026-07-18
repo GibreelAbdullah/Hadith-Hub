@@ -36,10 +36,10 @@
 </script>
 
 <div
-	class="card bg-surface-100/60 dark:bg-surface-500/30 backdrop-blur-lg overflow-y-auto w-full max-w-[800px] shadow-xl mt-8 mb-auto h-fit"
+	class="card bg-surface-100-500/50 backdrop-blur-lg overflow-y-auto w-full max-w-[800px] shadow-xl mt-8 mb-auto h-fit"
 >
 	<!-- Header -->
-	<header class="bg-surface-200 dark:bg-surface-700 flex items-center">
+	<header class="bg-surface-200-700 flex items-center">
 		<div class="m-auto bg-transparent border-0 ring-0 focus:ring-0 w-full p-4 text-lg">
 			<div class="content-normal flex gap-2">
 				<input
@@ -65,7 +65,7 @@
 
 	<div style="clear: both;" />
 	<footer
-		class="hidden md:flex items-center gap-2 bg-surface-200 dark:bg-surface-700 p-4 text-xs font-bold"
+		class="hidden md:flex items-center gap-2 bg-surface-200-700 p-4 text-xs font-bold"
 	>
 		<div><kbd>Esc</kbd> to close</div>
 		<div><kbd>Enter</kbd> to search</div>

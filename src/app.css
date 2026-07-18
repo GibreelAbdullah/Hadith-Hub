@@ -51,7 +51,7 @@
   select {
     appearance: none;
     background-color: transparent;
-    border-color: var(--color-surface-300);
+    border-color: light-dark(var(--color-surface-300), var(--color-surface-600));
     border-width: 1px;
     border-radius: 0.25rem;
     padding: 0.5rem 0.75rem;
@@ -85,6 +85,14 @@ body {
   overflow: hidden;
 }
 
+/* Subtle background gradient */
+.app-gradient {
+  background:
+    radial-gradient(ellipse at 0% 0%, oklch(from var(--color-primary-500) l c h / 0.3) 0%, transparent 50%) no-repeat,
+    radial-gradient(ellipse at 100% 100%, oklch(from var(--color-secondary-500) l c h / 0.3) 0%, transparent 50%) no-repeat,
+    light-dark(var(--color-surface-50), var(--color-surface-950));
+}
+
 /* Hadith grid layout - base definition */
 .hadithGroup {
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -95,12 +103,7 @@ body {
 qbl, b3d {
   text-wrap: auto;
   display: block;
-  color: var(--color-primary-900);
-}
-
-.dark qbl, .dark b3d {
-  text-wrap: auto;
-  color: var(--color-primary-300);
+  color: light-dark(var(--color-primary-900), var(--color-primary-300));
 }
 
 text {
@@ -109,10 +112,8 @@ text {
 
 /* Card visibility - ensure cards have a visible boundary */
 .card {
-  border: 1px solid var(--color-surface-200);
-}
-.dark .card {
-  border-color: var(--color-surface-700);
+  background-color: light-dark(var(--color-surface-50), var(--color-surface-950));
+  border: 1px solid light-dark(var(--color-surface-200), var(--color-surface-700));
 }
 
 /* Breadcrumb styling (replaces removed Skeleton v2 breadcrumb classes) */

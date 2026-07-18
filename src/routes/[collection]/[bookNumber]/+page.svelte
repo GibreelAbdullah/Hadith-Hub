@@ -55,7 +55,7 @@
 				<div class="card p-4 m-4 max-w-[90rem] mx-auto text-center">
 					<div class="py-8">
 						<h2 class="text-2xl font-bold mb-2">Book Not Found</h2>
-						<p class="text-surface-600 dark:text-surface-400 mb-4">
+						<p class="text-surface-600-400 mb-4">
 							Book <strong>{$page.params.bookNumber}</strong> does not exist in this collection.
 						</p>
 						<a href="{base}/{$page.params.collection}?lang={languageStore.value.toString()}" class="btn preset-filled-primary-500">

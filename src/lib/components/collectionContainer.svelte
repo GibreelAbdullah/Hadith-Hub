@@ -82,7 +82,7 @@
 			{#if categoryCollections.length > 0}
 				<div class="category-section">
 					<div class="px-4 pt-6 pb-2">
-						<h2 class="text-lg font-bold text-primary-600 dark:text-primary-400" dir={RTL_LANGS.includes(catName.lang) ? 'rtl' : 'ltr'} lang={catName.lang}>{catName.name}</h2>
+						<h2 class="text-lg font-bold text-primary-600-400" dir={RTL_LANGS.includes(catName.lang) ? 'rtl' : 'ltr'} lang={catName.lang}>{catName.name}</h2>
 					</div>
 					<div class="collection grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 px-4 pb-4">
 						{#each categoryCollections as coll}

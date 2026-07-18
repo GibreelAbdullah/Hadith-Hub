@@ -157,7 +157,7 @@
 		<p class="text-sm opacity-60">Select languages to configure fonts</p>
 	{/if}
 	{#each visibleGroups as { group, label, langs }}
-		<div class="mb-4 p-3 rounded-lg bg-surface-200/50 dark:bg-surface-700/50">
+		<div class="mb-4 p-3 rounded-lg bg-surface-200-700/50">
 			<div class="text-sm font-medium mb-2">{label}</div>
 
 			<!-- Font Family -->
@@ -186,7 +186,7 @@
 
 			<!-- Preview -->
 			<div
-				class="mt-2 p-2 rounded bg-surface-100 dark:bg-surface-800 text-sm"
+				class="mt-2 p-2 rounded bg-surface-100-800 text-sm"
 				style={getFontStyle(langs[0], currentSettings)}
 			>
 				{#if group === 'arabic'}

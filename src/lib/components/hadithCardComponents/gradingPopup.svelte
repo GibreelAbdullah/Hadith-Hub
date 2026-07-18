@@ -34,10 +34,10 @@
     }
 </script>
 
-<div class="p-4 space-y-3 max-w-sm min-w-[280px]">
+<div class="p-4 space-y-3 max-w-sm min-w-[280px] bg-primary-500/20 text-surface-contrast-900">
     {#if loading}
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-surface-300 dark:bg-surface-600 animate-pulse"></div>
+            <div class="w-12 h-12 rounded-full bg-surface-300-600 animate-pulse"></div>
             <div class="placeholder w-32 animate-pulse"></div>
         </div>
     {:else}
@@ -49,7 +49,7 @@
                     class="w-12 h-12 rounded-full object-cover"
                 />
             {:else}
-                <div class="w-12 h-12 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-700 dark:text-primary-300 font-bold text-lg">
+                <div class="w-12 h-12 rounded-full  flex items-center justify-center font-bold text-lg">
                     {muhaddithName.charAt(0)}
                 </div>
             {/if}

@@ -325,7 +325,7 @@
 				<div class="p-4 card max-w-[90rem] m-auto" id="hadith{result.collShort}{result.hadithNum}">
 					<!-- Top reference -->
 					<div class="text-center mb-3">
-						<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-500/15 text-primary-700 dark:text-primary-300 text-sm font-medium">
+						<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-500/15 text-primary-700-300 text-sm font-medium">
 							<span>{result.collTitle}</span>
 							<span dir="ltr">: {result.hadithNum}</span>
 						</span>
@@ -372,7 +372,7 @@
 <style>
 	:global(mark) {
 		background: none;
-		color: rgb(var(--color-primary-500));
+		color: var(--color-primary-500);
 		font-weight: 600;
 	}
 </style>

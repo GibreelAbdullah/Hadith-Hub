@@ -48,7 +48,7 @@
 	{#if data[5] == 'collection'}
 		{#if !hideBreadcrumb}
 			<div class="p-4">
-				<div class="sticky top-0 card p-4 !preset-tonal-secondary max-w-[90rem] m-auto">
+				<div class="sticky top-0 card p-4 !preset-tonal-secondary max-w-360 m-auto">
 					<div class="px-5">
 						<ol class="breadcrumb">
 							<li class="crumb anchor">
@@ -70,12 +70,12 @@
 	{:else if data[5] == 'book'}{:else if ['chapter', 'chapter_intro'].includes(data[5])}
 		<div class="p-4">
 			<div
-				class="px-4 card max-w-[90rem] m-auto {data[5] == 'chapter' ? 'preset-tonal-primary' : ''}"
+				class="px-4 card max-w-360 m-auto {data[5] == 'chapter' ? '!preset-tonal-primary' : '!preset-tonal-tertiary'}"
 			>
 				<div class="hadithGroup font-medium grid">
 					{#each { length: langCount } as _, i}
 						<div
-							class="break-words leading-7 m-3 pb-4"
+							class="wrap-break-word leading-7 m-3 pb-4"
 							dir={getDirForText(data[i + 7] || '', displayLanguages[i])}
 							style={getFontStyleForText(data[i + 7] || '', displayLanguages[i], fontSettings)}
 						>
@@ -87,21 +87,21 @@
 		</div>
 	{:else if data[5] == 'hadith'}
 		<div class="p-4">
-			<div class="p-4 card max-w-[90rem] m-auto" id="hadith{data[0]}{data[1]}">
+			<div class="p-4 card max-w-360 m-auto" id="hadith{data[0]}{data[1]}">
 				<!-- Compact reference at top center -->
 				<div class="text-center mb-3">
 					<span
-						class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-500/15 text-primary-700 dark:text-primary-300 text-sm font-medium"
+						class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-primary-700-300 text-sm font-medium"
 					>
 						<span>{collectionTitle}</span>
 						<span dir="ltr">: {data[1]}</span>
 					</span>
 				</div>
-				<div class="card flex-wrap">
+				<div class="card flex-wrap  border-0!">
 					<div class="hadithGroup font-medium grid">
 						{#each { length: langCount } as _, i}
 							<div
-								class="break-words leading-7 m-3 pb-4"
+								class="wrap-break-word leading-7 m-3 pb-4"
 								dir={getDirForText(data[i + 7] || '', displayLanguages[i])}
 								style={getFontStyleForText(data[i + 7] || '', displayLanguages[i], fontSettings)}
 							>
@@ -109,7 +109,7 @@
 									<article id="myDiv">{@html data[i + 7]}</article>
 								{:else}
 									<center
-										><code class="!text-white !bg-red-500">Hadith translation not found</code
+										><code class="text-white! bg-red-500!">Hadith translation not found</code
 										></center
 									>
 								{/if}
