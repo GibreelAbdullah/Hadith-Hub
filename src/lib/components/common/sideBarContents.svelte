@@ -1,8 +1,8 @@
-<script lang="ts" module>
+<script lang="ts">
 	import SvgIcon from './svgIcon.svelte';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import { languagePromise } from '$lib/functions/utilsV2';
-	import { replaceState } from '$app/navigation';
+	import { goto } from '$app/navigation';
 </script>
 
 <aside>	
@@ -24,23 +24,21 @@
 						class="w-full text-left px-3 py-2 rounded-md transition-colors
 						{isSelected ? 'preset-filled-primary-500' : 'hover:preset-tonal-primary'}"
 						onclick={() => {
-							const params = new URLSearchParams(window.location.search);
-							let currentLangs = params.get('lang')?.split(',').filter(Boolean) ?? [];
+							let currentLangs = [...languageStore.value];
 							if (currentLangs.includes(languageObject[0])) {
 								currentLangs = currentLangs.filter(l => l !== languageObject[0]);
 							} else {
 								currentLangs = [...currentLangs, languageObject[0]];
 							}
 							currentLangs = Array.from(new Set(currentLangs)).filter(Boolean);
+							languageStore.value = currentLangs;
+							const params = new URLSearchParams(window.location.search);
 							if (currentLangs.length > 0) {
 								params.set('lang', currentLangs.join(','));
-								languageStore.value = currentLangs;
 							} else {
 								params.delete('lang');
-								languageStore.value = [];
 							}
-							const newUrl = `${window.location.pathname}?${params.toString()}`;
-							replaceState(newUrl, {});
+							goto(`${window.location.pathname}?${params.toString()}`, { replaceState: true, keepFocus: true, noScroll: true });
 						}}
 					>
 						<div>{languageObject[1]}</div>

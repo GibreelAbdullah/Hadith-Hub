@@ -2,6 +2,8 @@
 	import GradingSection from './gradingSection.svelte';
 	import Reference from './reference.svelte';
 	import { getDirForText } from '$lib/functions/language';
+	import { settingsStore, getFontStyleForText } from '$lib/functions/settingsStore';
+	import { get } from 'svelte/store';
 
 	interface TextEntry {
 		text: string;
@@ -35,6 +37,9 @@
 		grades,
 		maxWidth = 'max-w-360',
 	}: Props = $props();
+
+	let fontSettings = $state(get(settingsStore));
+	settingsStore.subscribe(v => fontSettings = v);
 </script>
 
 <div class="p-4">
@@ -43,6 +48,7 @@
 		<div class="text-center mb-3">
 			<span
 				class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-primary-700-300 text-sm font-medium"
+				style={getFontStyleForText(collectionTitle, texts[0]?.lang || 'en', fontSettings)}
 			>
 				<span>{collectionTitle}</span>
 				<span dir="ltr">: {hadithNum}</span>
@@ -77,6 +83,7 @@
 				{bookNumber}
 				{collectionTitle}
 				{bookTitle}
+				{fontSettings}
 			/>
 		</div>
 	</div>

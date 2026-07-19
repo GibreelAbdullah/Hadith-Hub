@@ -2,7 +2,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import { pushState, replaceState } from '$app/navigation';
+	import { goto, pushState, replaceState } from '$app/navigation';
 	import Footer from '$lib/components/common/footer.svelte';
 	import SideBarContents from '$lib/components/common/sideBarContents.svelte';
 	import { languageStore } from '$lib/functions/store.svelte';
@@ -28,12 +28,13 @@
 
 	onMount(() => {
 		// Language from URL
-		const url = new URL(window.location.href);
-		if (!url.searchParams.has('lang')) {
-			url.searchParams.set('lang', languageStore.value.toString());
-			replaceState(url.toString(), {});
+		const params = new URLSearchParams(window.location.search);
+		if (!params.has('lang')) {
+			const langs = languageStore.value.length ? languageStore.value : ['en', 'ar'];
+			params.set('lang', langs.join(','));
+			goto(`${window.location.pathname}?${params.toString()}`, { replaceState: true, keepFocus: true, noScroll: true });
 		} else {
-			const langParam = url.searchParams.get('lang');
+			const langParam = params.get('lang');
 			if (langParam) {
 				languageStore.value = langParam.split(',');
 			}
@@ -58,6 +59,11 @@
 			const toRem = (size: number) => (size / 100).toFixed(3);
 			const lh = (size: number) => (1.75 * size / 100).toFixed(2);
 			
+			// Update Skeleton's CSS custom properties on :root so they cascade properly
+			document.documentElement.style.setProperty('--typo-base--font-family', fam(latin.family));
+			document.documentElement.style.setProperty('--typo-base--font-size', `${toRem(latin.size)}rem`);
+			document.documentElement.style.setProperty('--typo-base--line-height', lh(latin.size));
+
 			let el = document.getElementById('hadith-font-styles');
 			if (!el) {
 				el = document.createElement('style');
@@ -65,7 +71,6 @@
 				document.head.appendChild(el);
 			}
 			el.textContent = `
-				body { font-family: ${fam(latin.family)}; font-size: ${toRem(latin.size)}rem; line-height: ${lh(latin.size)}; }
 				[dir="rtl"], [lang="ar"], [lang="ur"] { font-family: ${fam(arabic.family)}; font-size: ${toRem(arabic.size)}rem; line-height: ${lh(arabic.size)}; }
 				[lang="bn"], .lang-bn { font-family: ${fam(bengali.family)}; font-size: ${toRem(bengali.size)}rem; line-height: ${lh(bengali.size)}; }
 				[lang="ta"], .lang-ta { font-family: ${fam(tamil.family)}; font-size: ${toRem(tamil.size)}rem; line-height: ${lh(tamil.size)}; }

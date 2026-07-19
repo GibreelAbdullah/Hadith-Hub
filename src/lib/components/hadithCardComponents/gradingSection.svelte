@@ -80,7 +80,7 @@
 				{#await getTranslated(grade[0], grade[1], lang) then result}
 					<div class="relative w-full min-w-[200px] max-w-md">
 						<button
-							class="btn m-1 {result.color} text-black w-full h-12 py-2 px-3 text-sm truncate"
+							class="btn m-1 {result.color} text-black w-full py-2 px-3 text-sm text-wrap"
 							dir={getDirForText(result.displayText, lang)}
 							style={getFontStyleForText(result.displayText, lang, fontSettings)}
 							onclick={(e) => togglePopup(popupKey, e)}

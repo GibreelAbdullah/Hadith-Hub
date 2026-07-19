@@ -5,6 +5,7 @@
 	import SvgIcon from '../common/svgIcon.svelte';
     import * as htmlToImage from 'html-to-image';
 	import download from 'downloadjs';
+	import { getFontStyleForText, type AppSettings } from '$lib/functions/settingsStore';
 
 	interface Props {
 		collectionTitle: string;
@@ -13,9 +14,10 @@
 		hadithNumberInCollection: string;
 		hadithNumberInBook: string;
 		bookNumber: any;
+		fontSettings: AppSettings;
 	}
 
-	let { collectionTitle, bookTitle, collectionShortName, hadithNumberInCollection, hadithNumberInBook, bookNumber }: Props = $props();
+	let { collectionTitle, bookTitle, collectionShortName, hadithNumberInCollection, hadithNumberInBook, bookNumber, fontSettings }: Props = $props();
 
 	let visible = $state(false);
 
@@ -124,6 +126,7 @@
 {/if}
 <div
 	class="lgcd flex flex-col sm:flex-row sm:justify-between sm:items-center items-center px-3 py-3 mt-3 border-t border-surface-300-600 text-surface-950-50 text-sm gap-2 relative"
+	style={getFontStyleForText(collectionTitle, 'en', fontSettings)}
 >
 	<div class="text-center sm:text-left">
 		<div class="flex items-center gap-1 justify-center sm:justify-start">

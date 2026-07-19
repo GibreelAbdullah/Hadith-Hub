@@ -1,9 +1,3 @@
-  2 issues.
-  1. In individual hadith mode I'm unable to select multiple languages
-  2. The reference section at the bottom of hadith card is unaffected by change in font size
-  3. The reference section in search looks a bit smaller than that of single ahdith mode.
-  
-  High Impact — User Experience
 
   1. Infinite scroll on hadith pages — Currently loads all hadiths in a book at once. Lazy-loading as the user scrolls would drastically reduce initial page load time for large books.
   2. Shareable hadith cards — A "copy shareable link" or "share to WhatsApp/Twitter" button would increase engagement since this is how hadith content spreads.
