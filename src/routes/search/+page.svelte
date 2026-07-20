@@ -332,6 +332,7 @@
 				}))}
 				grades={result.gradings}
 				maxWidth="max-w-[90rem]"
+				displayLang={result.texts.map(({ lang }: { lang: string }) => lang).join(',')}
 			/>
 		{/each}
 		{#if displayCount < allUniqueResults.length}

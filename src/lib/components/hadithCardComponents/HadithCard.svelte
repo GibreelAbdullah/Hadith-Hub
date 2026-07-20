@@ -23,6 +23,7 @@
 		texts: TextEntry[];
 		grades: any[] | null;
 		maxWidth?: string;
+		displayLang?: string;
 	}
 
 	let {
@@ -36,6 +37,7 @@
 		texts,
 		grades,
 		maxWidth = 'max-w-360',
+		displayLang,
 	}: Props = $props();
 
 	let fontSettings = $state(get(settingsStore));
@@ -84,6 +86,7 @@
 				{collectionTitle}
 				{bookTitle}
 				{fontSettings}
+				{displayLang}
 			/>
 		</div>
 	</div>

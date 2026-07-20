@@ -6,6 +6,7 @@
     import * as htmlToImage from 'html-to-image';
 	import download from 'downloadjs';
 	import { getFontStyleForText, type AppSettings } from '$lib/functions/settingsStore';
+	import { languageStore } from '$lib/functions/store.svelte';
 
 	interface Props {
 		collectionTitle: string;
@@ -15,9 +16,22 @@
 		hadithNumberInBook: string;
 		bookNumber: any;
 		fontSettings: AppSettings;
+		displayLang?: string;
 	}
 
-	let { collectionTitle, bookTitle, collectionShortName, hadithNumberInCollection, hadithNumberInBook, bookNumber, fontSettings }: Props = $props();
+	let { collectionTitle, bookTitle, collectionShortName, hadithNumberInCollection, hadithNumberInBook, bookNumber, fontSettings, displayLang }: Props = $props();
+
+	let linkLang = $derived.by(() => {
+		const langs = [...languageStore.value];
+		if (displayLang) {
+			for (const l of displayLang.split(',')) {
+				if (l && !langs.includes(l)) {
+					langs.push(l);
+				}
+			}
+		}
+		return langs.join(',');
+	});
 
 	let visible = $state(false);
 
@@ -38,7 +52,9 @@
 			':' +
 			hadithNumberInCollection
 				.replace('<span style="color:red;">', '')
-				.replace('</span>', '');
+				.replace('</span>', '') +
+			'?lang=' +
+			linkLang;
 		navigator.clipboard.writeText(link).then(() => {
 			showAndHideCopiedAlert();
 		}).catch((err) => {
@@ -179,7 +195,9 @@
 						':' +
 						hadithNumberInCollection
 							.replace('<span style="color:red;">', '')
-							.replace('</span>', '')}
+							.replace('</span>', '') +
+						'?lang=' +
+						linkLang}
 					target="_blank"
 					rel="noreferrer"
 				>
