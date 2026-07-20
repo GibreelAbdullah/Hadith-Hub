@@ -44,7 +44,7 @@
 	let fontSettings = $state(get(settingsStore));
 	settingsStore.subscribe(v => fontSettings = v);
 
-	let containerEl: HTMLDivElement;
+	let containerEl = $state<HTMLDivElement | null>(null);
 
 	function togglePopup(key: string, event: MouseEvent) {
 		event.stopPropagation();

@@ -129,8 +129,6 @@
 
 	$effect(() => {
 		const text = $page.url.searchParams.get('text') || '';
-		const _collection = $page.url.searchParams.get('collection') || '';
-		const _language = $page.url.searchParams.get('language') || '';
 		if (text !== searchQuery) {
 			searchQuery = text;
 		}
@@ -175,7 +173,6 @@
 		// Determine which language indexes to search
 		// Language filter from search bar = specific language only
 		// No filter = auto-detect from the script of the typed text
-		const allAvailableLanguages = ['ar', 'en', 'bn', 'fr', 'id', 'ru', 'ta', 'tr', 'ur'];
 		const langsToSearch = languageFilter
 			? [languageFilter]
 			: detectLanguages(searchQuery);
@@ -257,7 +254,7 @@
 			const text = lines[0] || "";
 
 			const collGradings = await getGradings(collShort);
-			const gradings = collGradings[rec.num] || null;
+			const gradings = collGradings[rec.num!] || null;
 			const book = meta.books.find(b => b.number === rec.book);
 			const collTitle = meta.collection_info?.en || meta.collection_info?.[matchedLang] || collShort;
 			const bookTitle = book?.en || book?.[matchedLang as keyof typeof book] || book?.ar || '';

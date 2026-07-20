@@ -2,7 +2,7 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import { goto, pushState, replaceState } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import Footer from '$lib/components/common/footer.svelte';
 	import SideBarContents from '$lib/components/common/sideBarContents.svelte';
 	import { languageStore } from '$lib/functions/store.svelte';

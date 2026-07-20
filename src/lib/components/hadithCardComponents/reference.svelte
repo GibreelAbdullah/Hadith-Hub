@@ -91,7 +91,7 @@
 								function () {
 									// console.log('Image copied to clipboard successfully!');
 								},
-								function (err) {
+								function () {
 									// console.error('Failed to copy image: ', err);
 								}
 							);

@@ -35,7 +35,7 @@
 {#await getCollectionPromise()}
 	<div class="text-primary-500 font-bold uppercase">Collections</div>
 	<div class="text-sm">
-		<div class="placeholder animate-pulse w-32" />
+		<div class="placeholder animate-pulse w-32"></div>
 	</div>
 {:then data}
 	<Accordion collapsible>
@@ -68,6 +68,6 @@
 			</Accordion.ItemContent>
 		</Accordion.Item>
 	</Accordion>
-{:catch data}
+{:catch}
 	Error...Could Not Load Data
 {/await}

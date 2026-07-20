@@ -1,5 +1,5 @@
 import * as pagefind from "pagefind";
-import { readFileSync, rmSync, mkdirSync, existsSync, writeFileSync } from "fs";
+import { readFileSync, mkdirSync, existsSync, writeFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 

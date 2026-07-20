@@ -8,6 +8,7 @@ export const META_BASE_URL = import.meta.env.VITE_META_BASE_URL || DATA_BASE_URL
 interface CollectionsData {
 	languages: { short_name: string; full_name: string; rtl: boolean }[];
 	collections: { short_name: string; ar: string; en: string }[];
+	categories?: { name: Record<string, string>; collections: string[] }[];
 }
 
 interface BookMeta {

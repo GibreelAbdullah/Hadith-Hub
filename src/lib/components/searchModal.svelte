@@ -63,7 +63,7 @@
 		<CollectionFilter />
 	</div>
 
-	<div style="clear: both;" />
+	<div style="clear: both;"></div>
 	<footer
 		class="hidden md:flex items-center gap-2 bg-surface-200-700 p-4 text-xs font-bold"
 	>

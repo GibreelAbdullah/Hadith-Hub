@@ -46,7 +46,7 @@
 				</li>
 			{/each}
 		</ul>
-	{:catch data}
+	{:catch}
 		Error...Could Not Load Data
 	{/await}
 </aside>

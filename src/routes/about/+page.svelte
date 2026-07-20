@@ -16,7 +16,7 @@
 	{#await htmlPromise}
 		<div class="card anchor dark:fill-white fill-black font-bold p-4 px-6 py-2 text-center text-xl">
 			<div class="hadithGroup font-medium p-2 grid">
-					<div class="placeholder animate-pulse" />
+					<div class="placeholder animate-pulse"></div>
 			</div>
 		</div>
 	{:then data}

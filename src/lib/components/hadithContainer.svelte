@@ -51,7 +51,7 @@
 					<div class="px-5">
 						<ol class="breadcrumb">
 							<li class="crumb anchor">
-								<a href="{base}/{$page.params.home}?lang={languageStore.value.toString()}">Home</a>
+							<a href="{base}/?lang={languageStore.value.toString()}">Home</a>
 							</li>
 							<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 							<li class="crumb anchor">

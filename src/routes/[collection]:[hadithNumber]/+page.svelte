@@ -12,8 +12,8 @@
 	let title = `${$page.params.collection}:${$page.params.hadithNumber} | HadithHub`;
 
 	const getHadithData = $derived(getSingleHadith(
-		$page.params.collection,
-		$page.params.hadithNumber,
+		$page.params.collection!,
+		$page.params.hadithNumber!,
 		languageStore.value.length ? languageStore.value : ["ar", "en"]
 	));
 </script>
@@ -44,7 +44,7 @@
 		<HadithPlaceholder />
 	{:then dataList}
 		{#if dataList.length === 0}
-			{#await getMetadata($page.params.collection) then meta}
+			{#await getMetadata($page.params.collection!) then meta}
 			<div class="card p-4 m-4 max-w-[90rem] mx-auto text-center">
 				<div class="py-8">
 					<h2 class="text-2xl font-bold mb-2">Hadith Not Found</h2>
@@ -58,7 +58,7 @@
 			</div>
 			{/await}
 		{:else}
-			{#await getMetadata($page.params.collection) then meta}
+			{#await getMetadata($page.params.collection!) then meta}
 				{@const unavailable = languageStore.value.filter(l => !(meta?.languages || []).includes(l))}
 				<UnavailableLanguagesNotice unavailableLanguages={unavailable} />
 				{#if unavailable.length < languageStore.value.length}

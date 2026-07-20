@@ -5,7 +5,7 @@
 	import MetaTags from '$lib/components/common/MetaTags.svelte';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
-	import { getHadithChunked, type ChunkedHadithLoader } from '$lib/functions/utilsV2';
+	import { getHadithChunked } from '$lib/functions/utilsV2';
 	import { getMetadata } from '$lib/data/db';
 	import UnavailableLanguagesNotice from '$lib/components/common/UnavailableLanguagesNotice.svelte';
 
@@ -13,7 +13,7 @@
 	const loaderPromise = $derived(getHadithChunked($page.params));
 
 	$effect(() => {
-		getMetadata($page.params.collection).then(meta => {
+		getMetadata($page.params.collection!).then(meta => {
 			if (!meta) return;
 			const lang = languageStore.value[0] || 'en';
 			const collName = meta.collection_info?.[lang] || meta.collection_info?.en || $page.params.collection;
@@ -51,7 +51,7 @@
 		{:then loader}
 			<UnavailableLanguagesNotice unavailableLanguages={loader.unavailableLanguages} />
 			{#if loader.totalRecords === 0}
-				{#await getMetadata($page.params.collection) then meta}
+				{#await getMetadata($page.params.collection!) then meta}
 				<div class="card p-4 m-4 max-w-[90rem] mx-auto text-center">
 					<div class="py-8">
 						<h2 class="text-2xl font-bold mb-2">Book Not Found</h2>
@@ -69,7 +69,7 @@
 					<HadithContainer dataListRecord={loader.initialData} availableLanguages={loader.availableLanguages} loadMore={loader.loadMore} hasMore={loader.hasMore} />
 				{/if}
 			{/if}
-		{:catch data}
+		{:catch}
 			<div class="card p-4 m-4">
 				<div class="hadithGroup font-medium p-2 grid">
 					<div class="break-words leading-7 m-3">Error. Try clearing the cache.</div>

@@ -161,7 +161,7 @@
 			<div class="text-sm font-medium mb-2">{label}</div>
 
 			<!-- Font Family -->
-			<label class="text-xs opacity-70">Font Family</label>
+			<label class="text-xs opacity-70">Font Family
 			<select
 				class="select select-sm w-full mb-2"
 				value={currentSettings.fonts[group]?.family || ''}
@@ -171,9 +171,10 @@
 					<option value={font}>{font}</option>
 				{/each}
 			</select>
+			</label>
 
 			<!-- Font Size -->
-			<label class="text-xs opacity-70">Size: {currentSettings.fonts[group]?.size || 100}%</label>
+			<label class="text-xs opacity-70">Size: {currentSettings.fonts[group]?.size || 100}%
 			<input
 				type="range"
 				min="70"
@@ -183,6 +184,7 @@
 				oninput={(e) => handleSizeChange(group, e)}
 				class="w-full"
 			/>
+			</label>
 
 			<!-- Preview -->
 			<div

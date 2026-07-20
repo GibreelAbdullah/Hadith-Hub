@@ -8,7 +8,7 @@
 	interface TextEntry {
 		text: string;
 		lang?: string;
-		dir?: string;
+		dir?: 'rtl' | 'ltr' | 'auto';
 		style?: string;
 	}
 
@@ -74,7 +74,7 @@
 				{/each}
 			</div>
 			<!-- GRADINGS -->
-			<GradingSection {grades} hadithIndex={hadithNum} collection={collectionShortName} />
+			<GradingSection grades={grades ?? []} hadithIndex={hadithNum} collection={collectionShortName} />
 			<!-- FULL REFERENCE AND BUTTONS at bottom -->
 			<Reference
 				{collectionShortName}
