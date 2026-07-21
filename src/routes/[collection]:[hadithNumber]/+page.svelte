@@ -12,8 +12,8 @@
 	let title = `${$page.params.collection}:${$page.params.hadithNumber} | HadithHub`;
 
 	const getHadithData = $derived(getSingleHadith(
-		$page.params.collection,
-		$page.params.hadithNumber,
+		$page.params.collection!,
+		$page.params.hadithNumber!,
 		languageStore.value.length ? languageStore.value : ["ar", "en"]
 	));
 </script>
@@ -22,8 +22,8 @@
 
 {#if languageStore.value.length != 0}
 	{#await getHadithData}
-		<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
-			<div class="hadithGroupgrid px-5">
+		<div class="sticky top-0 card p-4 !preset-tonal-secondary max-w-[90rem] m-auto my-4">
+			<div class="px-5">
 				<ol class="breadcrumb">
 					<li class="crumb anchor"><a href="{base}/">Home</a></li>
 					<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
@@ -31,7 +31,7 @@
 				</ol>
 			</div>
 		</div>
-		<div class="card variant-glass-primary z-[-1] relative max-w-[90rem] m-auto">
+		<div class="card preset-tonal-primary z-[-1] relative max-w-[90rem] m-auto">
 			<div class="hadithGroup grid">
 				<div class="break-words leading-7 m-3">
 					<div class="placeholder animate-pulse"></div>
@@ -44,21 +44,21 @@
 		<HadithPlaceholder />
 	{:then dataList}
 		{#if dataList.length === 0}
-			{#await getMetadata($page.params.collection) then meta}
+			{#await getMetadata($page.params.collection!) then meta}
 			<div class="card p-4 m-4 max-w-[90rem] mx-auto text-center">
 				<div class="py-8">
 					<h2 class="text-2xl font-bold mb-2">Hadith Not Found</h2>
-					<p class="text-surface-600 dark:text-surface-400 mb-4">
+					<p class="text-surface-600-400 mb-4">
 						The hadith <strong>{$page.params.collection}:{$page.params.hadithNumber}</strong> does not exist in this collection.
 					</p>
-					<a href="{base}/{$page.params.collection}?lang={languageStore.value.toString()}" class="btn variant-filled-primary">
+					<a href="{base}/{$page.params.collection}?lang={languageStore.value.toString()}" class="btn preset-filled-primary-500">
 						Browse {meta?.collection_info?.[languageStore.value[0]] || meta?.collection_info?.en || $page.params.collection}
 					</a>
 				</div>
 			</div>
 			{/await}
 		{:else}
-			{#await getMetadata($page.params.collection) then meta}
+			{#await getMetadata($page.params.collection!) then meta}
 				{@const unavailable = languageStore.value.filter(l => !(meta?.languages || []).includes(l))}
 				<UnavailableLanguagesNotice unavailableLanguages={unavailable} />
 				{#if unavailable.length < languageStore.value.length}

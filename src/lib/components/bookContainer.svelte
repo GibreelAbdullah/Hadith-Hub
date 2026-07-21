@@ -1,15 +1,9 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { languageStore } from '$lib/functions/store.svelte';
 	import { base } from '$app/paths';
 	import { settingsStore, getFontStyleForText } from '$lib/functions/settingsStore';
-	import { RTL_LANGS, getSelectedLanguages, getDirForText } from '$lib/functions/language';
+	import { getSelectedLanguages, getDirForText } from '$lib/functions/language';
 	let { bookPromise, bookURL } = $props();
-
-	function getLangAtIndex(i: number): string {
-		const langs = getSelectedLanguages();
-		return langs[i] || 'en';
-	}
 
 	// Deduplicate book name entries - returns unique {text, lang} pairs
 	function getUniqueBookNames(data: any[]): { text: string; lang: string }[] {
@@ -28,8 +22,8 @@
 </script>
 
 {#await bookPromise}
-	<div class="sticky top-0 card p-4 !variant-glass-secondary max-w-[90rem] m-auto my-4">
-		<div class="grid px-3">
+	<div class="sticky top-0 card p-4 !preset-tonal-secondary max-w-[90rem] m-auto my-4">
+		<div class="px-3">
 			<ol class="breadcrumb">
 				<li class="crumb anchor"><a href="{base}/?lang={languageStore.value.toString()}">Home</a></li>
 				<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
@@ -37,7 +31,7 @@
 			</ol>
 		</div>
 	</div>
-	{#each { length: 5 } as _, i}
+	{#each { length: 5 } as _}
 		<div class="card p-4 max-w-[90rem] m-auto my-4">
 			<div class="hadithGroup font-medium p-2 grid">
 				<div>
@@ -64,10 +58,10 @@
 			{#each dataList as data}
 				{#if data[3] == 'collection'}
 					<div class="p-4 lg:col-span-2 2xl:col-span-3">
-						<div class="sticky top-0 card p-4 m-auto !variant-glass-secondary max-w-[90rem]">
-							<div class="grid px-3">
+						<div class="sticky top-0 card p-4 m-auto !preset-tonal-secondary max-w-[90rem]">
+							<div class="px-3">
 								<ol class="breadcrumb">
-									<li class="crumb anchor"><a href="{base}/{$page.params.home}?lang={languageStore.value.toString()}">Home</a></li>
+									<li class="crumb anchor"><a href="{base}/?lang={languageStore.value.toString()}">Home</a></li>
 									<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 									<li class="crumb">{data[4]}</li>
 								</ol>
@@ -83,7 +77,7 @@
 								{text}
 							</div>
 						{/each}
-						<div class="badge bg-gray-500 mt-auto mx-auto">
+						<div class="badge preset-tonal-surface mt-auto mx-auto">
 							{data[1][0]} to
 							{data[1][1]}
 						</div>

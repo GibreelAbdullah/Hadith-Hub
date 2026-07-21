@@ -67,7 +67,7 @@
 />
 {#await collectionPromise}
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4 max-w-[90rem] m-auto">
-		{#each { length: 7 } as _, i}
+		{#each { length: 7 } as _}
 			<div class="card p-4 h-20">
 				<div class="placeholder w-40 m-auto animate-pulse my-1"></div>
 				<div class="placeholder w-40 m-auto animate-pulse my-1"></div>
@@ -77,18 +77,18 @@
 {:then result}
 	<div id="collectionlist" class="max-w-[90rem] m-auto">
 		{#each result.categories as category}
-			{@const categoryCollections = result.collections.filter((c) => category.collections.includes(c.short_name))}
+			{@const categoryCollections = result.collections.filter((c: { short_name: string }) => category.collections.includes(c.short_name))}
 			{@const catName = getCategoryName(category)}
 			{#if categoryCollections.length > 0}
 				<div class="category-section">
 					<div class="px-4 pt-6 pb-2">
-						<h2 class="text-lg font-bold text-primary-600 dark:text-primary-400" dir={RTL_LANGS.includes(catName.lang) ? 'rtl' : 'ltr'} lang={catName.lang}>{catName.name}</h2>
+						<h2 class="text-lg font-bold text-primary-600-400" dir={(RTL_LANGS as readonly string[]).includes(catName.lang) ? 'rtl' : 'ltr'} lang={catName.lang}>{catName.name}</h2>
 					</div>
 					<div class="collection grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-4 px-4 pb-4">
 						{#each categoryCollections as coll}
 							<a class="collection-card card p-4 text-center relative" href="{base}/{coll.short_name}?lang={languageStore.value.toString()}">
 								{#each getCollectionNames(coll) as { name, lang }}
-									<span dir={RTL_LANGS.includes(lang) ? 'rtl' : 'ltr'} lang={lang}>{name}</span><br />
+									<span dir={(RTL_LANGS as readonly string[]).includes(lang) ? 'rtl' : 'ltr'} lang={lang}>{name}</span><br />
 								{/each}
 								{#await getUnavailableCollections(coll.languages || ["ar","en"], languageStore.value)}
 									<div class="placeholder w-40 m-auto animate-pulse"></div>
@@ -104,7 +104,7 @@
 			{/if}
 		{/each}
 	</div>
-{:catch error}
+{:catch}
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
 		<div class="card p-4 hvr-reveal">Error...Could Not Load Data</div>
 	</div>

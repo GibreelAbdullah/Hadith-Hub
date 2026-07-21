@@ -7,23 +7,14 @@
 	import { getMetadata, fetchLines, getCollections, getGradings } from '$lib/data/db';
 	import { getLanguageFullName } from '$lib/functions/utilsV2';
 	import { getDirForText } from '$lib/functions/language';
-	import GradingSection from '$lib/components/hadithCardComponents/gradingSection.svelte';
-	import Reference from '$lib/components/hadithCardComponents/reference.svelte';
+	import HadithCard from '$lib/components/hadithCardComponents/HadithCard.svelte';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 	import MetaTags from '$lib/components/common/MetaTags.svelte';
 	import { detectAll } from 'tinyld/light';
-	import { getModalStore } from '@skeletonlabs/skeleton';
-	import type { ModalSettings } from '@skeletonlabs/skeleton';
-
-	const modalStore = getModalStore();
+	import { searchModalState } from '$lib/functions/searchModalState.svelte';
 
 	function openSearchModal() {
-		const modal: ModalSettings = {
-			type: 'component',
-			component: 'searchModal',
-			meta: { query: searchQuery },
-		};
-		modalStore.trigger(modal);
+		searchModalState.open(searchQuery);
 	}
 
 	function highlightFromExcerpt(fullText: string, excerpt: string): string {
@@ -138,8 +129,6 @@
 
 	$effect(() => {
 		const text = $page.url.searchParams.get('text') || '';
-		const _collection = $page.url.searchParams.get('collection') || '';
-		const _language = $page.url.searchParams.get('language') || '';
 		if (text !== searchQuery) {
 			searchQuery = text;
 		}
@@ -184,7 +173,6 @@
 		// Determine which language indexes to search
 		// Language filter from search bar = specific language only
 		// No filter = auto-detect from the script of the typed text
-		const allAvailableLanguages = ['ar', 'en', 'bn', 'fr', 'id', 'ru', 'ta', 'tr', 'ur'];
 		const langsToSearch = languageFilter
 			? [languageFilter]
 			: detectLanguages(searchQuery);
@@ -266,7 +254,7 @@
 			const text = lines[0] || "";
 
 			const collGradings = await getGradings(collShort);
-			const gradings = collGradings[rec.num] || null;
+			const gradings = collGradings[rec.num!] || null;
 			const book = meta.books.find(b => b.number === rec.book);
 			const collTitle = meta.collection_info?.en || meta.collection_info?.[matchedLang] || collShort;
 			const bookTitle = book?.en || book?.[matchedLang as keyof typeof book] || book?.ar || '';
@@ -293,27 +281,27 @@
 	<!-- Search details card -->
 	{#if searchQuery}
 	<div class="p-4">
-		<div class="card p-4 max-w-[90rem] m-auto variant-glass-primary cursor-pointer hover:brightness-95" on:click={openSearchModal} on:keydown={openSearchModal} role="button" tabindex="0">
+		<div class="card p-4 max-w-[90rem] m-auto preset-tonal-primary cursor-pointer hover:brightness-95" onclick={openSearchModal} onkeydown={openSearchModal} role="button" tabindex="0">
 			<div class="flex flex-wrap items-center gap-2 justify-center">
 				<span class="font-medium">Search:</span>
-				<span class="badge variant-filled-primary">{searchQuery}</span>
+				<span class="badge preset-filled-primary-500">{searchQuery}</span>
 				<span class="font-medium ml-2">Language:</span>
 				{#if $page.url.searchParams.get('language')}
 					{#await getLanguageFullName([$page.url.searchParams.get('language') || '']) then names}
-						<span class="badge variant-filled-secondary">{names[0] || $page.url.searchParams.get('language')}</span>
+						<span class="badge preset-filled-secondary-500">{names[0] || $page.url.searchParams.get('language')}</span>
 					{/await}
 				{:else}
-					<span class="badge variant-filled-secondary">All Languages</span>
+					<span class="badge preset-filled-secondary-500">All Languages</span>
 				{/if}
 				<span class="font-medium ml-2">Collections:</span>
 				{#if $page.url.searchParams.get('collection')}
 					{#each $page.url.searchParams.get('collection')?.split(',') || [] as coll}
 						{#await getCollectionFullName(coll) then name}
-							<span class="badge variant-filled-secondary">{name}</span>
+							<span class="badge preset-filled-secondary-500">{name}</span>
 						{/await}
 					{/each}
 				{:else}
-					<span class="badge variant-filled-secondary">All Collections</span>
+					<span class="badge preset-filled-secondary-500">All Collections</span>
 				{/if}
 				{#if results.length > 0}
 					<span class="text-sm opacity-60 ml-2">({results.length} results)</span>
@@ -329,43 +317,27 @@
 		</div>
 	{:else if results.length > 0}
 		{#each results as result}
-			<div class="p-4">
-				<div class="p-4 card max-w-[90rem] m-auto" id="hadith{result.collShort}{result.hadithNum}">
-					<!-- Top reference -->
-					<div class="text-center mb-3">
-						<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-500/15 text-primary-700 dark:text-primary-300 text-sm font-medium">
-							<span>{result.collTitle}</span>
-							<span dir="ltr">: {result.hadithNum}</span>
-						</span>
-					</div>
-					<div class="card flex-wrap">
-						<div class="hadithGroup font-medium grid">
-							{#each result.texts as { lang, text }}
-								<div class="break-words leading-7 m-3 pb-4" dir={getDirForText(text || '', lang)}>
-									{#if text}
-										<article>{@html highlightFromExcerpt(text, result.excerpt)}</article>
-									{:else}
-										<center><code class="!text-white !bg-red-500">Hadith translation not found</code></center>
-									{/if}
-								</div>
-							{/each}
-						</div>
-						<GradingSection grades={result.gradings} hadithIndex={result.hadithNum} collection={result.collShort} />
-						<Reference
-							collectionShortName={result.collShort}
-							hadithNumberInCollection={result.hadithNum}
-							hadithNumberInBook={result.numBook}
-							bookNumber={result.bookNum}
-							collectionTitle={result.collTitle}
-							bookTitle={result.bookTitle}
-						/>
-					</div>
-				</div>
-			</div>
+			<HadithCard
+				id="{result.collShort}{result.hadithNum}"
+				collectionTitle={result.collTitle}
+				collectionShortName={result.collShort}
+				hadithNum={result.hadithNum}
+				bookTitle={result.bookTitle}
+				bookNumber={result.bookNum}
+				hadithNumberInBook={result.numBook}
+				texts={result.texts.map(({ lang, text }: { lang: string; text: string }) => ({
+					text: highlightFromExcerpt(text, result.excerpt),
+					lang,
+					dir: getDirForText(text || '', lang),
+				}))}
+				grades={result.gradings}
+				maxWidth="max-w-[90rem]"
+				displayLang={result.texts.map(({ lang }: { lang: string }) => lang).join(',')}
+			/>
 		{/each}
 		{#if displayCount < allUniqueResults.length}
 			<div class="p-4 text-center">
-				<button class="btn variant-filled-primary" on:click={loadMore} disabled={loadingMore}>
+				<button class="btn preset-filled-primary-500" onclick={loadMore} disabled={loadingMore}>
 					{loadingMore ? 'Loading...' : `Load More (${allUniqueResults.length - displayCount} remaining)`}
 				</button>
 			</div>
@@ -380,7 +352,7 @@
 <style>
 	:global(mark) {
 		background: none;
-		color: rgb(var(--color-primary-500));
+		color: var(--color-primary-500);
 		font-weight: 600;
 	}
 </style>

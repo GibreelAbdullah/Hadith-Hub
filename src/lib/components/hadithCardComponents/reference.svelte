@@ -2,24 +2,64 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { base } from '$app/paths';
-	import { clipboard } from '@skeletonlabs/skeleton';
 	import SvgIcon from '../common/svgIcon.svelte';
     import * as htmlToImage from 'html-to-image';
 	import download from 'downloadjs';
-	let visible: boolean = false;
+	import { getFontStyleForText, type AppSettings } from '$lib/functions/settingsStore';
+	import { languageStore } from '$lib/functions/store.svelte';
 
-	export let collectionTitle: string;
-	export let bookTitle: string;
-	export let collectionShortName: string;
-	export let hadithNumberInCollection: string;
-	export let hadithNumberInBook: string;
-	export let bookNumber: any;
+	interface Props {
+		collectionTitle: string;
+		bookTitle: string;
+		collectionShortName: string;
+		hadithNumberInCollection: string;
+		hadithNumberInBook: string;
+		bookNumber: any;
+		fontSettings: AppSettings;
+		displayLang?: string;
+	}
+
+	let { collectionTitle, bookTitle, collectionShortName, hadithNumberInCollection, hadithNumberInBook, bookNumber, fontSettings, displayLang }: Props = $props();
+
+	let linkLang = $derived.by(() => {
+		const langs = [...languageStore.value];
+		if (displayLang) {
+			for (const l of displayLang.split(',')) {
+				if (l && !langs.includes(l)) {
+					langs.push(l);
+				}
+			}
+		}
+		return langs.join(',');
+	});
+
+	let visible = $state(false);
 
 	function showAndHideCopiedAlert() {
 		visible = true;
 		setTimeout(() => {
 			visible = false;
 		}, 3000);
+	}
+
+	function copyPermalink() {
+		const link = $page.url.protocol +
+			'//' +
+			$page.url.host +
+			base +
+			'/' +
+			collectionShortName +
+			':' +
+			hadithNumberInCollection
+				.replace('<span style="color:red;">', '')
+				.replace('</span>', '') +
+			'?lang=' +
+			linkLang;
+		navigator.clipboard.writeText(link).then(() => {
+			showAndHideCopiedAlert();
+		}).catch((err) => {
+			console.error('Failed to copy:', err);
+		});
 	}
 
     function captureHadithScreenshot(
@@ -40,6 +80,7 @@
 		htmlToImage
 			.toPng(hadithGroup, {
 				style: { margin: '0' },
+				backgroundColor: getComputedStyle(hadithGroup).backgroundColor || (document.documentElement.classList.contains('dark') ? '#1a1a2e' : '#ffffff'),
 				filter: (node) => {
 					if (node === buttonGroup) return false;
 					return true;
@@ -66,7 +107,7 @@
 								function () {
 									// console.log('Image copied to clipboard successfully!');
 								},
-								function (err) {
+								function () {
 									// console.error('Failed to copy image: ', err);
 								}
 							);
@@ -86,13 +127,12 @@
 				setTimeout(() => {
 					visible = false;
 				}, 3000);
-				// showAndHideCopiedAlert();
 			});
 	}
 </script>
 {#if visible}
 	<aside
-		class="fixed top-20 right-4 transform shadow-lg rounded-lg py-4 px-20 z-50 alert variant-filled-primary"
+		class="fixed top-20 right-4 transform shadow-lg rounded-lg py-4 px-20 z-50 alert preset-filled-primary-500"
 	>
 		<div>✔</div>
 		<div class="alert-message">
@@ -101,7 +141,8 @@
 	</aside>
 {/if}
 <div
-	class="lgcd flex flex-col sm:flex-row sm:justify-between sm:items-center items-center px-3 py-3 mt-3 border-t border-surface-300 dark:border-surface-600 text-black dark:text-white text-sm gap-2 relative"
+	class="lgcd flex flex-col sm:flex-row sm:justify-between sm:items-center items-center px-3 py-3 mt-3 border-t border-surface-300-600 text-surface-950-50 text-sm gap-2 relative"
+	style={getFontStyleForText(collectionTitle, 'en', fontSettings)}
 >
 	<div class="text-center sm:text-left">
 		<div class="flex items-center gap-1 justify-center sm:justify-start">
@@ -119,17 +160,17 @@
 			<div class="mx-1">
 				<button
 					id="permalink{collectionShortName}{hadithNumberInCollection}"
-					class="text-center justify-center px-4 min-[480px]:px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
-					on:click={() => captureHadithScreenshot(collectionShortName + hadithNumberInCollection, true)}
+					class="text-center justify-center px-4 min-[480px]:px-8 btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-r-none"
+					onclick={() => captureHadithScreenshot(collectionShortName + hadithNumberInCollection, true)}
 				>
-					<SvgIcon name="copy" fill="fill-black" />
+					<SvgIcon name="copy" fill="fill-black" class="w-5 h-5" />
 				</button>
 				<button
-					class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
-					on:click={() =>
+					class="btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
+					onclick={() =>
 						captureHadithScreenshot(collectionShortName + hadithNumberInCollection, false)}
 				>
-					<SvgIcon name="download" fill="fill-black" />
+					<SvgIcon name="download" fill="fill-black" class="w-5 h-5" />
 				</button>
 				<div class="text-center">
 					<p class="text-sm badge opacity-50">SCREENSHOT</p>
@@ -138,26 +179,13 @@
 			<br />
 			<div class="mx-1">
 				<button
-					id="permalink{collectionShortName}{hadithNumberInCollection}"
-					class="text-center justify-center px-4 min-[480px]:px-8 btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-r-none"
-					use:clipboard={$page.url.protocol +
-						'//' +
-						$page.url.host +
-						base +
-						'/' +
-						collectionShortName +
-						':' +
-						hadithNumberInCollection
-							.replace('<span style="color:red;">', '')
-							.replace('</span>', '')}
-					on:click={() => {
-						showAndHideCopiedAlert();
-					}}
+					class="text-center justify-center px-4 min-[480px]:px-8 btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-r-none"
+					onclick={copyPermalink}
 				>
-					<SvgIcon name="copy" fill="fill-black" />
+					<SvgIcon name="copy" fill="fill-black" class="w-5 h-5" />
 				</button>
 				<a
-					class="btn bg-primary-500 btn-sm text-black mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
+					class="btn preset-filled-primary-500 btn-sm mt-6 h-10 rounded-l-none px-4 min-[480px]:px-8 border-l-2 border-primary-900"
 					href={$page.url.protocol +
 						'//' +
 						$page.url.host +
@@ -167,11 +195,13 @@
 						':' +
 						hadithNumberInCollection
 							.replace('<span style="color:red;">', '')
-							.replace('</span>', '')}
+							.replace('</span>', '') +
+						'?lang=' +
+						linkLang}
 					target="_blank"
 					rel="noreferrer"
 				>
-					<SvgIcon name="openExternal" fill="fill-black" />
+					<SvgIcon name="openExternal" fill="fill-black" class="w-5 h-5"/>
 				</a>
 				<div class="text-center">
 					<p class="text-sm badge opacity-50">LINK</p>

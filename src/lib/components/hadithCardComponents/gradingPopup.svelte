@@ -1,29 +1,31 @@
 <script lang="ts">
     import { getScholar, type ScholarData } from '$lib/data/db';
+    import { onMount } from 'svelte';
 
-    export let muhaddithName: string;
-    export let englishName: string;
-    export let grade: string;
-    export let source: string;
-    export let collection: string;
+    interface Props {
+        muhaddithName: string;
+        englishName: string;
+        grade: string;
+        source: string;
+        collection: string;
+    }
 
-    let scholar: ScholarData | null = null;
-    let loading = true;
-    let fetched = false;
+    let { muhaddithName, englishName, grade, source, collection }: Props = $props();
 
-    export function load() {
-        if (fetched) return;
-        fetched = true;
+    let scholar = $state<ScholarData | null>(null);
+    let loading = $state(true);
+
+    // Auto-load scholar data when component mounts
+    onMount(() => {
         getScholar(englishName).then(data => {
             scholar = data;
             loading = false;
         });
-    }
+    });
 
     function getReference(data: ScholarData | null, coll: string): string | null {
         if (!data) return null;
-        // The reference key matches the collection short name
-        const ref = data[coll];
+        const ref = (data as any)[coll];
         return ref || null;
     }
 
@@ -32,10 +34,10 @@
     }
 </script>
 
-<div class="p-4 space-y-3 max-w-sm min-w-[280px]">
+<div class="p-4 space-y-3 max-w-sm min-w-[280px] bg-primary-500/20 text-surface-950-50">
     {#if loading}
         <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-full bg-surface-300 dark:bg-surface-600 animate-pulse"></div>
+            <div class="w-12 h-12 rounded-full bg-surface-300-600 animate-pulse"></div>
             <div class="placeholder w-32 animate-pulse"></div>
         </div>
     {:else}
@@ -47,7 +49,7 @@
                     class="w-12 h-12 rounded-full object-cover"
                 />
             {:else}
-                <div class="w-12 h-12 rounded-full bg-primary-500/20 flex items-center justify-center text-primary-700 dark:text-primary-300 font-bold text-lg">
+                <div class="w-12 h-12 rounded-full  flex items-center justify-center font-bold text-lg">
                     {muhaddithName.charAt(0)}
                 </div>
             {/if}
@@ -74,8 +76,8 @@
                 {@const ref = getReference(scholar, collection)}
                 <p>
                     <span class="font-semibold opacity-70">Reference:</span>
-                    {#if isUrl(ref)}
-                        <a href={ref} target="_blank" rel="noopener noreferrer" class="anchor">{ref}</a>
+                    {#if ref && isUrl(ref)}
+                        <a href={ref} target="_blank" rel="noopener noreferrer" class="text-primary-400 underline hover:text-primary-300 break-all">{ref}</a>
                     {:else}
                         {ref}
                     {/if}

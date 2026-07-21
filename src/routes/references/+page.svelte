@@ -70,7 +70,7 @@
 			</thead>
 			{#if isLoading}
 				<tbody>
-					{#each { length: 20 } as _, i}
+					{#each { length: 20 } as _}
 						<tr>
 							<td></td>
 							<td></td>
@@ -79,7 +79,7 @@
 					{/each}
 				</tbody>
 			{:else if error}
-				<p>Error: {error}</p>
+				<tbody><tr><td colspan={99}>Error: {error}</td></tr></tbody>
 			{:else}
 				<tbody>
 					{#each data as row}

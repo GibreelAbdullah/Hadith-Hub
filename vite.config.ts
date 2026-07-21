@@ -1,9 +1,9 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import type { UserConfig } from 'vite';
-import { purgeCss } from 'vite-plugin-tailwind-purgecss';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vitest/config';
 
-const config: UserConfig = {
-	plugins: [sveltekit(), purgeCss()],
+export default defineConfig({
+	plugins: [tailwindcss(), sveltekit()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
@@ -12,6 +12,4 @@ const config: UserConfig = {
 			ignored: ['**/static/pagefind/**']
 		}
 	}
-};
-
-export default config;
+});

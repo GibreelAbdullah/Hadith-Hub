@@ -1,21 +1,13 @@
 <script lang="ts">
-	import { getModalStore } from '@skeletonlabs/skeleton';
-	import type { ModalSettings } from '@skeletonlabs/skeleton';
-
-	const modalStore = getModalStore();
+	import { searchModalState } from '$lib/functions/searchModalState.svelte';
 
 	function openSearch() {
 		const currentQuery = new URL(window.location.href).searchParams.get('text') || '';
-		const modal: ModalSettings = {
-			type: 'component',
-			component: 'searchModal',
-			meta: { query: currentQuery }
-		};
-		modalStore.trigger(modal);
+		searchModalState.open(currentQuery);
 	}
 </script>
 
-<button class="btn variant-soft hover:variant-soft-primary h-10 mx-4" on:click={openSearch}>
-	<span class="text-3xl p-0">⌕</span>
+<button class="btn preset-tonal hover:preset-tonal-primary h-10 mx-4 items-center" onclick={openSearch}>
+	<span class="text-3xl leading-none" >⌕</span>
 	<span class="text-sm hidden md:inline-block badge">Search</span>
 </button>

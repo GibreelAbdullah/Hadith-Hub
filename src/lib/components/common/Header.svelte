@@ -1,23 +1,30 @@
 <script lang="ts">
-	import { AppBar } from '@skeletonlabs/skeleton';
+	import { AppBar } from '@skeletonlabs/skeleton-svelte';
 	import LogoAndDrawer from './LogoAndDrawer.svelte';
 	import SearchBar from './SearchBar.svelte';
 
-	export let onSettingsClick: () => void = () => {};
+	interface Props {
+		onSettingsClick?: () => void;
+	}
+
+	let { onSettingsClick = () => {} }: Props = $props();
 </script>
 
-<AppBar>
-	<svelte:fragment slot="lead">
-		<LogoAndDrawer />
-		<SearchBar />
-	</svelte:fragment>
-	<svelte:fragment slot="trail">
-		<button
-			class="btn hover:variant-soft-primary text-2xl"
-			on:click={onSettingsClick}
-			title="Settings"
-		>
-			⚙
-		</button>
-	</svelte:fragment>
+<AppBar class="z-30 sticky top-0 border-b border-surface-200-800 bg-transparent  flex">
+	<AppBar.Toolbar class="grid-cols-[auto_1fr_auto]">
+		<AppBar.Lead class="flex items-center">
+			<LogoAndDrawer />
+			<SearchBar />
+		</AppBar.Lead>
+		<AppBar.Headline />
+		<AppBar.Trail>
+			<button
+				class="btn-icon hover:preset-tonal text-2xl z-60"
+				onclick={onSettingsClick}
+				title="Settings"
+			>
+				⚙
+			</button>
+		</AppBar.Trail>
+	</AppBar.Toolbar>
 </AppBar>

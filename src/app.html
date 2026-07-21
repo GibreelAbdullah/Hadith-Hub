@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="cerberus">
 
 <head>
   <meta charset="utf-8" />
@@ -8,7 +8,7 @@
   %sveltekit.head%
 </head>
 
-<body data-theme="skeleton">
+<body>
   <script>
     // Sync dark mode with system preference or saved preference
     const saved = localStorage.getItem('modeCurrent');
@@ -19,7 +19,7 @@
     try {
       const storedTheme = localStorage.getItem('storeTheme');
       if (storedTheme) {
-        document.body.setAttribute('data-theme', JSON.parse(storedTheme));
+        document.documentElement.setAttribute('data-theme', JSON.parse(storedTheme));
       }
     } catch (e) {}
   </script>
