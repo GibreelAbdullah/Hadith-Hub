@@ -72,6 +72,9 @@ jobs:
         if: steps.pagefind-cache.outputs.cache-hit != 'true'
         run: node build_search_index.mjs
 
+      - name: Generate blog meta pages (OG tags for social media previews)
+        run: node generate_blog_meta.mjs --data-dir static/db --output-dir build --base-url https://hadithhub.com
+
       - name: Fix SPA routing for GitHub Pages
         run: |
           cp build/index.html build/404.html
