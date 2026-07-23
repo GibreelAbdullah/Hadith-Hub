@@ -78,6 +78,7 @@
 			</div>
 			<a class="anchor float-right pl-8" href="/about">About</a>
 			<a class="anchor float-right pl-8" href="/references">References</a>
+			<a class="anchor float-right pl-8" href="/blogs">Blog</a>
 		</section>
 	</div>
 </footer>

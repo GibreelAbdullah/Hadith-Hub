@@ -58,7 +58,7 @@
 	on:keyup={filterTable}
 	placeholder="Filter References..."
 />
-<div class="p-4 max-w-[90rem] m-auto">
+<div class="p-4 m-auto">
 	<div class="m-auto table-container text-token">
 		<table id="referenceTable" class="m-auto table table-hover">
 			<thead>

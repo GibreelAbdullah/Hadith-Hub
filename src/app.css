@@ -133,3 +133,170 @@ text {
   display: inline;
   opacity: 0.5;
 }
+
+/* Global content max-width — constrains all page content uniformly */
+main > div > div.flex-1 > * {
+  max-width: 90rem;
+  margin-inline: auto;
+}
+
+/* Blog content typography — styles semantic HTML rendered via @html */
+.blog-content article {
+  width: 100%;
+  padding: 1rem 0;
+}
+
+.blog-content h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.blog-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.blog-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.blog-content h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.blog-content p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 1.25rem;
+}
+
+.blog-content ul,
+.blog-content ol {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.blog-content ul {
+  list-style-type: disc;
+}
+
+.blog-content ol {
+  list-style-type: decimal;
+}
+
+.blog-content li {
+  margin-bottom: 0.5rem;
+}
+
+.blog-content blockquote {
+  border-left: 3px solid light-dark(var(--color-primary-500), var(--color-primary-400));
+  padding-left: 1.25rem;
+  margin: 2rem 0;
+  font-style: italic;
+  opacity: 0.85;
+  font-size: 1.15rem;
+}
+
+.blog-content a {
+  color: light-dark(var(--color-primary-700), var(--color-primary-300));
+  text-decoration: underline;
+}
+
+.blog-content a:hover {
+  color: light-dark(var(--color-primary-500), var(--color-primary-200));
+}
+
+.blog-content pre {
+  background-color: light-dark(var(--color-surface-100), var(--color-surface-800));
+  border: 1px solid light-dark(var(--color-surface-300), var(--color-surface-600));
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  margin-bottom: 1.5rem;
+}
+
+.blog-content code {
+  background-color: light-dark(var(--color-surface-100), var(--color-surface-800));
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+  font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.blog-content pre code {
+  padding: 0;
+  background: none;
+}
+
+.blog-content figure {
+  margin: 2rem 0;
+}
+
+.blog-content figure img,
+.blog-content figure svg {
+  width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+}
+
+.blog-content figcaption {
+  text-align: center;
+  font-size: 0.875rem;
+  opacity: 0.6;
+  margin-top: 0.5rem;
+}
+
+.blog-content .subtitle {
+  font-size: 1.2rem;
+  opacity: 0.7;
+  margin-bottom: 2rem;
+}
+
+.blog-content .meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.6;
+  border-bottom: 1px solid light-dark(var(--color-surface-300), var(--color-surface-600));
+  padding-bottom: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.blog-content .highlight-box {
+  background-color: light-dark(var(--color-success-50), var(--color-success-950));
+  border: 1px solid light-dark(var(--color-success-200), var(--color-success-800));
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.blog-content .highlight-box h4 {
+  margin: 0 0 0.5rem 0;
+  color: light-dark(var(--color-success-700), var(--color-success-300));
+}
+
+.blog-content .highlight-box p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.blog-content strong {
+  font-weight: 700;
+}
