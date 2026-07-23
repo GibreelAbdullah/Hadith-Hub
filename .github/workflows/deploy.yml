@@ -73,7 +73,7 @@ jobs:
         run: node build_search_index.mjs
 
       - name: Generate blog meta pages (OG tags for social media previews)
-        run: node generate_blog_meta.mjs --data-dir static/db --output-dir build --base-url https://hadithhub.com
+        run: node generate_blog_meta.mjs --data-dir static/db --output-dir build --base-url https://hadithhub.com --data-base-url https://gibreelabdullah.github.io/hadith-db/data
 
       - name: Fix SPA routing for GitHub Pages
         run: |

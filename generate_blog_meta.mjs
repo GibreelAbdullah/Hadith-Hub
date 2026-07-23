@@ -25,6 +25,7 @@ function getArg(name, defaultValue) {
 const dataDir = getArg('data-dir', 'static/db');
 const outputDir = getArg('output-dir', 'build');
 const baseUrl = getArg('base-url', 'https://hadithhub.com');
+const dataBaseUrl = getArg('data-base-url', 'https://gibreelabdullah.github.io/hadith-db/data');
 const defaultImage = 'https://cdn.jsdelivr.net/gh/GibreelAbdullah/Hadith-Hub@master/Header.jpg';
 
 // Read blogs manifest
@@ -44,7 +45,7 @@ for (const blog of blogs) {
 	// Check if there's a blog-specific OG image
 	const blogImagePath = join(dataDir, 'blogs', `${slug}.png`);
 	const ogImage = existsSync(blogImagePath)
-		? `${baseUrl}/db/blogs/${slug}.png`
+		? `${dataBaseUrl}/blogs/${slug}.png`
 		: defaultImage;
 
 	const html = `<!DOCTYPE html>
