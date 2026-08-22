@@ -73,6 +73,7 @@ Hadith-Hub/
 │   │   ├── references/            # References page
 │   │   ├── blogs/                 # Blog listing
 │   │   │   └── [slug]/            # Individual blog post
+│   │   ├── notes/                 # Notes management page
 │   │   └── search/                # Search page
 │   └── lib/
 │       ├── data/
@@ -83,12 +84,18 @@ Hadith-Hub/
 │       │   ├── utilsV2.ts         # Main utility functions
 │       │   ├── store.svelte.ts    # Language store (Svelte 5 runes)
 │       │   ├── settingsStore.ts   # Settings/theme/font store
+│       │   ├── notesStore.svelte.ts # Notes store (Svelte 5 runes, LZW compressed localStorage)
 │       │   ├── drawerState.svelte.ts
 │       │   ├── searchModalState.svelte.ts
 │       │   └── language.ts        # Language utilities
 │       ├── components/
 │       │   ├── common/            # Shared components (Header, Footer, MetaTags, etc.)
 │       │   ├── hadithCardComponents/ # Hadith display components
+│       │   │   ├── HadithCard.svelte
+│       │   │   ├── HadithNotes.svelte # Inline notes UI on hadith cards
+│       │   │   ├── reference.svelte
+│       │   │   ├── gradingSection.svelte
+│       │   │   └── gradingPopup.svelte
 │       │   ├── collectionContainer.svelte
 │       │   ├── bookContainer.svelte
 │       │   ├── hadithContainer.svelte
@@ -179,6 +186,7 @@ fetch(url, { headers: { Range: `bytes=${startByte}-${endByte}` } })
 - **Language selection**: Stored in URL query params (`?lang=en,ar`) and synced to a Svelte 5 rune store
 - **Theme**: Stored in localStorage via Skeleton's theme system
 - **Settings**: Custom font families and sizes via settingsStore (localStorage)
+- **Notes**: User notes stored in localStorage with LZW compression via notesStore (Svelte 5 runes)
 - **UI state**: Drawer and search modal managed by `.svelte.ts` rune stores
 
 ### Routing
@@ -192,10 +200,57 @@ fetch(url, { headers: { Range: `bytes=${startByte}-${endByte}` } })
 - `/blogs` — Blog listing (JSON from data repo)
 - `/blogs/[slug]` — Individual blog post (HTML from data repo)
 - `/search` — Full-text search (Pagefind)
+- `/notes` — Notes management page (export/import, view all notes)
 
 ### Search
 
 Full-text search is powered by [Pagefind](https://pagefind.app/), a static search library. The search index is pre-built during CI using `build_search_index.mjs` and stored in `static/pagefind/`. Indices are built per-language.
+
+### Notes
+
+User notes are a client-side feature allowing users to annotate individual hadiths. No backend is required.
+
+**Architecture:**
+- Store: `src/lib/functions/notesStore.svelte.ts` (Svelte 5 runes with `$state`)
+- localStorage key: `hadithHub_notes`
+- Data is compressed using LZW (UTF-16) before storage to reduce space usage
+- Notes are keyed by `collectionShortName` + `hadithNum`
+
+**Components:**
+- `src/lib/components/hadithCardComponents/reference.svelte` — Contains the Notes button (alongside Screenshot and Link buttons) with toggle state bound to parent
+- `src/lib/components/hadithCardComponents/HadithNotes.svelte` — Expandable notes panel on each hadith card (add/edit/delete), toggled via `showPanel` bindable prop
+- `src/lib/components/hadithCardComponents/HadithCard.svelte` — Wires `notesOpen` state between Reference and HadithNotes via two-way binding
+- `src/routes/notes/+page.svelte` — Management page (view all, export, import, clear, filter, sort)
+
+**Features:**
+- Add/edit/delete notes on any hadith via the "Notes" button on hadith cards
+- Notes button is in the same button row as Screenshot and Link, uses the same filled icon style (`SvgIcon name="note"`)
+- Button shows a count badge and switches to warning color (`preset-filled-warning-500`) when notes exist
+- `/notes` page displays all notes grouped by collection with links to source hadiths
+- Filter by collection (dropdown with full display names)
+- Sort by hadith number (default), newest first, or oldest first
+- Collection names resolve to the user's selected language (reactive to language changes) via `getCollectionDisplayInfo()`
+- Collection names use language-appropriate font styling (via `getFontStyleForText`)
+- Export all notes as a JSON file (uncompressed, human-readable)
+- Import a previously exported JSON file (merges with existing, deduplicates by note ID)
+- Clear all notes (with confirmation dialog)
+- Warning banner explaining localStorage limitations (data loss on cache clear, no cross-device sync)
+
+**Note data structure:**
+```typescript
+interface Note {
+  id: string;                  // crypto.randomUUID()
+  collectionShortName: string; // e.g., "bukhari"
+  hadithNum: string;           // hadith number in collection
+  text: string;                // user's note text
+  createdAt: string;           // ISO date string
+  updatedAt: string;           // ISO date string
+}
+```
+
+**Utility functions (in `utilsV2.ts`):**
+- `getCollectionDisplayName(shortName)` — Returns the display name for a collection in the user's selected language (with fallback to en → ar → shortName)
+- `getCollectionDisplayInfo(shortName)` — Returns `{ name, lang }` so callers can apply language-appropriate font styling
 
 ## Development
 

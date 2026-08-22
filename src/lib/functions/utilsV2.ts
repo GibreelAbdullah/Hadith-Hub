@@ -240,3 +240,32 @@ export async function getLanguageFullName(languageShortName: string[]) {
     })
     .filter(Boolean);
 }
+
+/**
+ * Get the display name for a collection, using the user's selected language
+ * with fallback to English, then Arabic, then the short_name.
+ */
+export async function getCollectionDisplayName(shortName: string): Promise<string> {
+  const info = await getCollectionDisplayInfo(shortName);
+  return info.name;
+}
+
+/**
+ * Get the display name and the language it was resolved in for a collection.
+ * Uses the user's selected language with fallback to English, then Arabic, then short_name.
+ */
+export async function getCollectionDisplayInfo(shortName: string): Promise<{ name: string; lang: string }> {
+  const data = await getCollections();
+  const coll = data.collections.find((c) => c.short_name === shortName);
+  if (!coll) return { name: shortName, lang: 'en' };
+
+  const langs = getSelectedLanguages();
+  for (const lang of langs) {
+    const name = (coll as any)[lang];
+    if (name) return { name, lang };
+  }
+  // Fallback chain: en → ar → short_name
+  if (coll.en) return { name: coll.en, lang: 'en' };
+  if (coll.ar) return { name: coll.ar, lang: 'ar' };
+  return { name: shortName, lang: 'en' };
+}
