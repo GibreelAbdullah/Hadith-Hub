@@ -7,6 +7,7 @@
 	import download from 'downloadjs';
 	import { getFontStyleForText, type AppSettings } from '$lib/functions/settingsStore';
 	import { languageStore } from '$lib/functions/store.svelte';
+	import { notesStore } from '$lib/functions/notesStore.svelte';
 
 	interface Props {
 		collectionTitle: string;
@@ -17,9 +18,13 @@
 		bookNumber: any;
 		fontSettings: AppSettings;
 		displayLang?: string;
+		notesOpen?: boolean;
 	}
 
-	let { collectionTitle, bookTitle, collectionShortName, hadithNumberInCollection, hadithNumberInBook, bookNumber, fontSettings, displayLang }: Props = $props();
+	let { collectionTitle, bookTitle, collectionShortName, hadithNumberInCollection, hadithNumberInBook, bookNumber, fontSettings, displayLang, notesOpen = $bindable(false) }: Props = $props();
+
+	let hasNotes = $derived(notesStore.hasNotes(collectionShortName, hadithNumberInCollection));
+	let noteCount = $derived(notesStore.getNotesForHadith(collectionShortName, hadithNumberInCollection).length);
 
 	let linkLang = $derived.by(() => {
 		const langs = [...languageStore.value];
@@ -141,22 +146,22 @@
 	</aside>
 {/if}
 <div
-	class="lgcd flex flex-col sm:flex-row sm:justify-between sm:items-center items-center px-3 py-3 mt-3 border-t border-surface-300-600 text-surface-950-50 text-sm gap-2 relative"
+	class="lgcd flex flex-col min-[1400px]:flex-row min-[1400px]:justify-between min-[1400px]:items-center items-center px-3 py-3 mt-3 border-t border-surface-300-600 text-surface-950-50 text-sm gap-2 relative"
 	style={getFontStyleForText(collectionTitle, 'en', fontSettings)}
 >
-	<div class="text-center sm:text-left">
-		<div class="flex items-center gap-1 justify-center sm:justify-start">
+	<div class="text-center min-[1400px]:text-left">
+		<div class="flex items-center gap-1 justify-center min-[1400px]:justify-start">
 			<span>{collectionTitle}</span><span dir="ltr">: {hadithNumberInCollection}</span>
 		</div>
-		<div class="flex items-center gap-1 justify-center sm:justify-start">
+		<div class="flex items-center gap-1 justify-center min-[1400px]:justify-start">
 			<span>{bookTitle}</span><span dir="ltr">: {hadithNumberInBook}</span>
 		</div>
 		<div>
 			Book {bookNumber} : {hadithNumberInBook}
 		</div>
 	</div>
-	<div class="text-[0px] whitespace-pre flex justify-center min-[820px]:justify-end relative">
-		<div id="buttonGroup{collectionShortName}{hadithNumberInCollection}" class="flex">
+	<div class="text-[0px] whitespace-pre flex flex-wrap justify-center min-[1400px]:justify-end relative">
+		<div id="buttonGroup{collectionShortName}{hadithNumberInCollection}" class="flex flex-wrap justify-center min-[1400px]:justify-end">
 			<div class="mx-1">
 				<button
 					id="permalink{collectionShortName}{hadithNumberInCollection}"
@@ -207,11 +212,26 @@
 					<p class="text-sm badge opacity-50">LINK</p>
 				</div>
 			</div>
+			<div class="mx-1">
+				<button
+					class="text-center justify-center px-4 min-[480px]:px-8 btn btn-sm mt-6 h-10 {hasNotes ? 'preset-filled-warning-500' : 'preset-filled-primary-500'}"
+					onclick={() => notesOpen = !notesOpen}
+					title={hasNotes ? `Notes (${noteCount})` : 'Add a note'}
+				>
+					<SvgIcon name="note" fill="fill-black" class="w-5 h-5" />
+					{#if hasNotes}
+						<span class="text-xs font-bold ml-1">{noteCount}</span>
+					{/if}
+				</button>
+				<div class="text-center">
+					<p class="text-sm badge opacity-50">NOTES</p>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div id="watermark{collectionShortName}{hadithNumberInCollection}" class="hidden absolute top-[65%] sm:top-[45%] -translate-y-1/2 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-3">
-		<SvgIcon class="!w-10" name="icon" />
-		<SvgIcon class="!w-40" name="hadithHub" />
-		<SvgIcon class="!w-20 !fill-error-500 pt-1" name="com" />
+	<div id="watermark{collectionShortName}{hadithNumberInCollection}" class="hidden absolute top-[65%] min-[1400px]:top-[45%] -translate-y-1/2 left-1/2 -translate-x-1/2 min-[1400px]:left-auto min-[1400px]:translate-x-0 min-[1400px]:right-3">
+		<SvgIcon class="w-10!" name="icon" />
+		<SvgIcon class="w-40!" name="hadithHub" />
+		<SvgIcon class="w-20! fill-error-500! pt-1" name="com" />
 	</div>
 </div>

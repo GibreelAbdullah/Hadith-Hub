@@ -1,6 +1,7 @@
 <script lang="ts">
 	import GradingSection from './gradingSection.svelte';
 	import Reference from './reference.svelte';
+	import HadithNotes from './HadithNotes.svelte';
 	import { getDirForText } from '$lib/functions/language';
 	import { settingsStore, getFontStyleForText } from '$lib/functions/settingsStore';
 	import { get } from 'svelte/store';
@@ -42,6 +43,8 @@
 
 	let fontSettings = $state(get(settingsStore));
 	settingsStore.subscribe(v => fontSettings = v);
+
+	let notesOpen = $state(false);
 </script>
 
 <div class="p-4">
@@ -87,7 +90,10 @@
 				{bookTitle}
 				{fontSettings}
 				{displayLang}
+				bind:notesOpen
 			/>
+			<!-- NOTES PANEL -->
+			<HadithNotes {collectionShortName} hadithNum={hadithNum} bind:showPanel={notesOpen} />
 		</div>
 	</div>
 </div>
