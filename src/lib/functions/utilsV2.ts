@@ -186,12 +186,18 @@ export async function getSingleHadith(collection: string, hadithNumber: string, 
   if (!hadithRec) return [];
 
   // Get context: book + the chapter immediately before this hadith + the hadith itself
-  // Find the chapter/chapter_intro directly preceding this hadith
+  // Find the single chapter directly preceding this hadith, plus its intro if present
   const hadithLine = hadithRec.line;
-  const precedingChapter = [...meta.records]
-    .filter(r => (r.cat === "chapter" || r.cat === "chapter_intro") && r.line < hadithLine && r.book === hadithRec.book)
-    .sort((a, b) => b.line - a.line)
-    .slice(0, 2); // chapter + chapter_intro at most
+  const precedingChapterRec = [...meta.records]
+    .filter(r => r.cat === "chapter" && r.line < hadithLine && r.book === hadithRec.book)
+    .sort((a, b) => b.line - a.line)[0];
+
+  const precedingChapter = precedingChapterRec
+    ? meta.records.filter(r =>
+        (r.line === precedingChapterRec.line) ||
+        (r.cat === "chapter_intro" && r.line > precedingChapterRec.line && r.line < hadithLine && r.book === hadithRec.book)
+      )
+    : [];
 
   const records = meta.records.filter(
     (r) =>
