@@ -3,7 +3,8 @@
 	import { base } from '$app/paths';
 	import { settingsStore, getFontStyleForText } from '$lib/functions/settingsStore';
 	import { getSelectedLanguages, getDirForText } from '$lib/functions/language';
-	let { bookPromise, bookURL } = $props();
+	import type { Author } from '$lib/data/db';
+	let { bookPromise, bookURL, author = null } = $props<{ bookPromise: Promise<any[]>; bookURL: string; author?: Author | null }>();
 
 	// Deduplicate book name entries - returns unique {text, lang} pairs
 	function getUniqueBookNames(data: any[]): { text: string; lang: string }[] {
@@ -65,6 +66,16 @@
 									<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 									<li class="crumb">{data[4]}</li>
 								</ol>
+								{#if author?.name}
+									<div
+										class="text-sm opacity-80 mt-1"
+										dir={getDirForText(author.name, 'ar')}
+										lang="ar"
+										style={getFontStyleForText(author.name, 'ar', $settingsStore)}
+									>
+										{author.name}{#if author.died}<span class="opacity-70"> ({author.died} هـ)</span>{/if}
+									</div>
+								{/if}
 							</div>
 						</div>
 					</div>

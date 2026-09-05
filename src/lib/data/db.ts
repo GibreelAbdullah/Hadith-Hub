@@ -28,6 +28,12 @@ interface HadithRecord {
 	num_book?: number;
 }
 
+export interface Author {
+	name?: string;
+	aka?: string;
+	died?: string;
+}
+
 export interface Metadata {
 	collection: string;
 	languages: string[];
@@ -36,6 +42,7 @@ export interface Metadata {
 	offsets: { [lang: string]: number[] };
 	collection_info: { [lang: string]: string };
 	collection_intro: { [lang: string]: string };
+	author?: Author;
 }
 
 // Cache
