@@ -6,7 +6,7 @@
 	import { languageStore } from '$lib/functions/store.svelte';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 	import { getHadithChunked } from '$lib/functions/utilsV2';
-	import { getMetadata } from '$lib/data/db';
+	import { getMetadata, resolveCollectionName } from '$lib/data/db';
 	import UnavailableLanguagesNotice from '$lib/components/common/UnavailableLanguagesNotice.svelte';
 
 	let title = $state(`Book ${$page.params.bookNumber} - ${$page.params.collection} | HadithHub`);
@@ -16,7 +16,7 @@
 		getMetadata($page.params.collection!).then(meta => {
 			if (!meta) return;
 			const lang = languageStore.value[0] || 'en';
-			const collName = meta.collection_info?.[lang] || meta.collection_info?.en || $page.params.collection;
+			const collName = resolveCollectionName(meta.collection_info, [...languageStore.value], $page.params.collection!);
 			const book = meta.books.find(b => b.number === $page.params.bookNumber);
 			const bookName = book ? (book as any)[lang] || (book as any).en || `Book ${$page.params.bookNumber}` : `Book ${$page.params.bookNumber}`;
 			title = `${bookName} - ${collName} | HadithHub`;
@@ -59,7 +59,7 @@
 							Book <strong>{$page.params.bookNumber}</strong> does not exist in this collection.
 						</p>
 						<a href="{base}/{$page.params.collection}?lang={languageStore.value.toString()}" class="btn preset-filled-primary-500">
-							Browse {meta?.collection_info?.[languageStore.value[0]] || meta?.collection_info?.en || $page.params.collection}
+							Browse {resolveCollectionName(meta?.collection_info, [...languageStore.value], $page.params.collection!)}
 						</a>
 					</div>
 				</div>

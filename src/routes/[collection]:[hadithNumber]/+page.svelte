@@ -5,7 +5,7 @@
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
 	import MetaTags from '$lib/components/common/MetaTags.svelte';
 	import { getSingleHadith } from '$lib/functions/utilsV2';
-	import { getMetadata } from '$lib/data/db';
+	import { getMetadata, resolveCollectionName } from '$lib/data/db';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 	import UnavailableLanguagesNotice from '$lib/components/common/UnavailableLanguagesNotice.svelte';
 
@@ -52,7 +52,7 @@
 						The hadith <strong>{$page.params.collection}:{$page.params.hadithNumber}</strong> does not exist in this collection.
 					</p>
 					<a href="{base}/{$page.params.collection}?lang={languageStore.value.toString()}" class="btn preset-filled-primary-500">
-						Browse {meta?.collection_info?.[languageStore.value[0]] || meta?.collection_info?.en || $page.params.collection}
+						Browse {resolveCollectionName(meta?.collection_info, [...languageStore.value], $page.params.collection!)}
 					</a>
 				</div>
 			</div>
