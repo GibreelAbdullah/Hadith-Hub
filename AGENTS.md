@@ -155,6 +155,7 @@ Each collection's `metadata.json` contains:
   "languages": ["ar", "en", "bn", "fr", "id", "ru", "ta", "tr", "ur"],
   "collection_info": { "en": "Sahih al-Bukhari", "ar": "صحيح البخاري" },
   "collection_intro": { "en": "...", "ar": "..." },
+  "author": { "name": "محمد بن إسماعيل البخاري", "aka": "البخاري", "died": "256" },
   "books": [
     { "number": "1", "ar": "بدء الوحي", "en": "Revelation", "hadith_start": 0, "hadith_end": 6 }
   ],
@@ -169,6 +170,14 @@ Each collection's `metadata.json` contains:
 ```
 
 The `offsets` object provides byte offsets for each line, enabling HTTP Range requests to fetch individual hadiths without downloading entire files.
+
+The optional `author` object (`name` / `aka` / `died`, all Arabic where
+applicable) holds the collection's compiler. It is **not** derived from the
+text files; it is passed through from the collection's entry in
+`collections.json` by `convert.py`. The frontend surfaces it in the collection
+header (see `bookContainer.svelte`). Collections without author data simply
+omit the field.
+
 
 ## Key Technical Patterns
 
@@ -289,6 +298,56 @@ Deployment is automated via GitHub Actions (`.github/workflows/deploy.yml`):
 ### Data Updates
 
 When data in `hadith-db` changes, it triggers a `repository_dispatch` event to rebuild and redeploy the frontend. The hadith text files are served directly from GitHub Pages of the `hadith-db` repo (cross-origin), while metadata is bundled with the frontend build (same-origin).
+
+## Adding Arabic Collections from OpenITI
+
+Additional Arabic-only collections can be ingested from the
+[OpenITI corpus](https://github.com/OpenITI) (Open Islamicate Texts Initiative).
+This is done in the **hadith-db** repo, not the frontend.
+
+Discovery: OpenITI publishes a master metadata TSV
+(`kitab_metadata_for_DLME_latest_release.tsv` in the
+`OpenITI/kitab-metadata-automation` repo) listing every text with a `tags`
+column and a direct `text_url`. Hadith works are marked with the `_HADITH`
+tag. There is no need to crawl the per-century year-range repos individually.
+
+Conversion: OpenITI texts are in **mARkdown** format (a `#META#` header block
+followed by a body with structural markers). The helper script
+`openiti_convert.py` in hadith-db converts a mARkdown file into the
+`category|num|text` `ar.txt` format:
+
+- `#META#` header → author fields (`AuthorNAME` / `AuthorAKA` / `AuthorDIED`)
+- `# | N ( title )` → `book||title`
+- `### | ( title )` / `### | title` → `chapter||title` (nested sections)
+- `# N text` (+ `~~` continuations) → `hadith|N|text`
+- strips page markers (`PageVxxPyyy`), manuscript sigla (`msNNN`), and
+  mARkdown tags (`@QB@`, `@QE@`, etc.)
+
+```bash
+python3 openiti_convert.py <markdown_file> -n "<arabic collection name>" -o data/books/<short_name>/ar.txt
+# optional: --autonumber  (for books that lack per-hadith numbers in the source)
+```
+
+Steps to add a book:
+
+1. Run `openiti_convert.py` to produce `data/books/{short_name}/ar.txt`.
+2. Add a `collections.json` entry with `short_name`, `ar`, `en`,
+   `languages: ["ar"]`, and an `author` object (from the script's stderr output).
+   Add the `short_name` to a category in `collections.json`.
+3. Run `python3 convert.py` to regenerate `metadata.json` (+ empty
+   `gradings.json`; OpenITI has no gradings).
+4. Verify with the frontend via the `static/db` symlink (see the frontend
+   README's "Testing DB changes locally").
+
+Caveats:
+
+- Only books whose source carries **per-hadith numbering** (`# N`) convert
+  cleanly. Books that separate the number from the text, or lack numbering,
+  need bespoke handling or `--autonumber` and should be reviewed individually.
+- `convert.py` reads each language file once and pre-indexes records by book;
+  this matters because some OpenITI collections have thousands of "books"
+  (e.g. al-Mu'jam al-Kabir has ~5,000 sections) which previously made metadata
+  generation extremely slow.
 
 ## Supported Languages
 

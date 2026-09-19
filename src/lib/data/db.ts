@@ -28,6 +28,12 @@ interface HadithRecord {
 	num_book?: number;
 }
 
+export interface Author {
+	name?: string;
+	aka?: string;
+	died?: string;
+}
+
 export interface Metadata {
 	collection: string;
 	languages: string[];
@@ -36,6 +42,32 @@ export interface Metadata {
 	offsets: { [lang: string]: number[] };
 	collection_info: { [lang: string]: string };
 	collection_intro: { [lang: string]: string };
+	author?: Author;
+}
+
+/**
+ * Resolve a collection's display name from its `collection_info` map.
+ *
+ * Not every collection provides a name in every language. Arabic-only
+ * collections (e.g. those ingested from OpenITI) frequently only have an `ar`
+ * entry. This resolver walks a sensible fallback chain so callers never end up
+ * showing an empty string or the raw short name when a real name exists:
+ *
+ *   preferred languages (in order) → en → ar → shortName
+ */
+export function resolveCollectionName(
+	collectionInfo: { [lang: string]: string } | undefined,
+	preferredLangs: string[],
+	shortName: string
+): string {
+	if (collectionInfo) {
+		for (const lang of preferredLangs) {
+			if (collectionInfo[lang]) return collectionInfo[lang];
+		}
+		if (collectionInfo.en) return collectionInfo.en;
+		if (collectionInfo.ar) return collectionInfo.ar;
+	}
+	return shortName;
 }
 
 // Cache

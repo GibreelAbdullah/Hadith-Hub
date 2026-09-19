@@ -1,4 +1,4 @@
-import { getCollections, getMetadata, getGradings, fetchLines, type Metadata } from "$lib/data/db";
+import { getCollections, getMetadata, getGradings, fetchLines, resolveCollectionName, type Metadata } from "$lib/data/db";
 import { browser } from "$app/environment";
 import { getSelectedLanguages } from "$lib/functions/language";
 
@@ -32,7 +32,7 @@ export async function getBooks(collection: string, _langs?: string[]): Promise<a
 
   // Collection row first
   const results: any[] = [];
-  const collLangValues = langs.map((l) => meta.collection_info[l] || "");
+  const collLangValues = langs.map((l) => resolveCollectionName(meta.collection_info, [l], collection));
   results.push([null, meta.languages, null, "collection", ...collLangValues]);
 
   // Book rows from metadata (no text fetch needed)
@@ -114,7 +114,7 @@ export async function getHadithChunked(params: Record<string, string>): Promise<
   };
 
   // Build collection row from metadata
-  const collLangValues = langs.map((l) => meta.collection_info[l] || "");
+  const collLangValues = langs.map((l) => resolveCollectionName(meta.collection_info, [l], collection));
   const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
 
   // Fetch gradings once
@@ -160,7 +160,7 @@ async function getHadithInBook(collection: string, bookNumber: string, langs: st
     })
   );
 
-  const collLangValues = langs.map((l) => meta.collection_info[l] || "");
+  const collLangValues = langs.map((l) => resolveCollectionName(meta.collection_info, [l], collection));
   const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
 
   const gradings = await getGradings(collection);
@@ -223,7 +223,7 @@ export async function getSingleHadith(collection: string, hadithNumber: string, 
   );
 
   // Build collection row from metadata
-  const collLangValues = langs.map((l) => meta.collection_info[l] || "");
+  const collLangValues = langs.map((l) => resolveCollectionName(meta.collection_info, [l], collection));
   const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
 
   const gradings = await getGradings(collection);

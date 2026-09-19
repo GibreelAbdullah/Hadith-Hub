@@ -85,7 +85,18 @@
 					{#each data as row}
 						<tr class="data">
 							{#each row as cell}
-								<td>{@html cell}</td>
+								<td>
+									{#if typeof cell === 'string' && (cell.startsWith('http://') || cell.startsWith('https://'))}
+										<a
+											class="anchor"
+											href={cell}
+											target="_blank"
+											rel="noopener noreferrer">{cell}</a
+										>
+									{:else}
+										{@html cell}
+									{/if}
+								</td>
 							{/each}
 						</tr>
 					{/each}
