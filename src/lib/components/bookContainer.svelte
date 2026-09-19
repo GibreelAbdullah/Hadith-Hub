@@ -66,18 +66,18 @@
 									<li class="crumb-separator" aria-hidden="true">&rsaquo;</li>
 									<li class="crumb">{data[4]}</li>
 								</ol>
-								{#if author?.name}
-									<div
-										class="text-sm opacity-80 mt-1"
-										dir={getDirForText(author.name, 'ar')}
-										lang="ar"
-										style={getFontStyleForText(author.name, 'ar', $settingsStore)}
-									>
-										{author.name}{#if author.died}<span class="opacity-70"> ({author.died} هـ)</span>{/if}
-									</div>
-								{/if}
 							</div>
 						</div>
+						{#if author?.name}
+							<div
+								class="text-sm opacity-80 mt-2 px-3 text-center"
+								dir={getDirForText(author.name, 'ar')}
+								lang="ar"
+								style={getFontStyleForText(author.name, 'ar', $settingsStore)}
+							>
+								{author.name}{#if author.died}<span class="opacity-70"> ({author.died} هـ)</span>{/if}
+							</div>
+						{/if}
 					</div>
 				{:else if data[3] == 'book'}
 					<a class="card p-4 text-center relative flex flex-col h-full" href="{base}/{bookURL}/{data[0]}?lang={languageStore.value.toString()}">
