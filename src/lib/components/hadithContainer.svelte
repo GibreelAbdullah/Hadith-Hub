@@ -66,10 +66,10 @@
 				</div>
 			</div>
 		{/if}
-	{:else if data[5] == 'book'}{:else if ['chapter', 'chapter_intro'].includes(data[5])}
+	{:else if data[5] == 'book'}{:else if ['chapter', 'chapter_intro', 'book_intro'].includes(data[5])}
 		<div class="p-4">
 			<div
-				class="px-4 card max-w-360 m-auto {data[5] == 'chapter' ? '!preset-tonal-primary' : '!preset-tonal-tertiary'}"
+				class="px-4 card max-w-360 m-auto {data[5] == 'chapter' ? '!preset-tonal-primary' : '!bg-tertiary-500/5'}"
 			>
 				<div class="hadithGroup font-medium grid">
 					{#each { length: langCount } as _, i}
