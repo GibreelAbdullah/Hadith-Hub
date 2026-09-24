@@ -76,6 +76,7 @@
 	<div class="mt-6 pt-4 border-t border-surface-300-600">
 		<a
 			href="https://hadithhub.com/dictionary/HansWehrDictionary/?lang=ar"
+			data-sveltekit-reload
 			class="flex items-center gap-2 px-3 py-2 rounded-md hover:preset-tonal-primary transition-colors text-sm"
 		>
 			<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
