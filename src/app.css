@@ -99,6 +99,16 @@ body {
   word-wrap: normal;
 }
 
+/* More-transparent tertiary tonal preset (used for book/chapter intros).
+   Skeleton's `preset-tonal-tertiary` is a composite class, so Tailwind's
+   `/60` opacity modifier does not apply to it. This custom preset mixes the
+   tertiary color with `transparent` to control opacity directly — here ~40%
+   opacity (i.e. ~60% transparent). Tune the percentage to taste. */
+@utility preset-tonal-tertiary-soft {
+  background: color-mix(in oklab, var(--color-tertiary-500) 40%, transparent);
+  color: var(--color-tertiary-950-50);
+}
+
 /* Custom hadith markup tags */
 qbl, b3d {
   text-wrap: auto;

@@ -71,4 +71,18 @@
 			{/if}
 		</a>
 	</div>
+
+	<!-- Hans Wehr Dictionary link -->
+	<div class="mt-6 pt-4 border-t border-surface-300-600">
+		<a
+			href="https://hadithhub.com/dictionary/HansWehrDictionary/?lang=ar"
+			class="flex items-center gap-2 px-3 py-2 rounded-md hover:preset-tonal-primary transition-colors text-sm"
+		>
+			<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+				<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+			</svg>
+			<span>Hans Wehr Dictionary</span>
+		</a>
+	</div>
 </aside>
