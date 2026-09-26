@@ -78,6 +78,16 @@
 								{author.name}{#if author.died}<span class="opacity-70"> ({author.died} هـ)</span>{/if}
 							</div>
 						{/if}
+						{#if author?.compiler?.name}
+							<div
+								class="text-xs opacity-70 mt-1 px-3 text-center"
+								dir={getDirForText(author.compiler.name, 'ar')}
+								lang="ar"
+								style={getFontStyleForText(author.compiler.name, 'ar', $settingsStore)}
+							>
+								<span class="opacity-70">جمعه: </span>{author.compiler.name}{#if author.compiler.died}<span class="opacity-70"> ({author.compiler.died} هـ)</span>{/if}
+							</div>
+						{/if}
 					</div>
 				{:else if data[3] == 'book'}
 					<a class="card p-4 text-center relative flex flex-col h-full" href="{base}/{bookURL}/{data[0]}?lang={languageStore.value.toString()}">

@@ -32,6 +32,7 @@ export interface Author {
 	name?: string;
 	aka?: string;
 	died?: string;
+	compiler?: Author;
 }
 
 export interface Metadata {
