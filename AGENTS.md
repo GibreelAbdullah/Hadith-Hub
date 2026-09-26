@@ -178,6 +178,17 @@ text files; it is passed through from the collection's entry in
 header (see `bookContainer.svelte`). Collections without author data simply
 omit the field.
 
+The `author` object may also carry an optional nested `compiler` object (same
+`name` / `aka` / `died` shape) for collections that were **assembled by a
+later scholar rather than the named author**. For example, Musnad al-Shafi'i
+carries the imam al-Shafi'i (d. 204) as `author` but was compiled by Abu
+al-'Abbas al-Asamm (d. 346) from al-Rabi' ibn Sulayman's transmission — so
+al-Asamm is stored under `author.compiler`. The frontend renders the compiler
+on a second line under the author with the Arabic label "جمعه:" (see
+`bookContainer.svelte`); the `Author` interface in `src/lib/data/db.ts` has a
+recursive optional `compiler?: Author` field. Omit `compiler` when the author
+is the actual compiler.
+
 
 ## Key Technical Patterns
 
@@ -334,9 +345,14 @@ Steps to add a book:
 2. Add a `collections.json` entry with `short_name`, `ar`, `en`,
    `languages: ["ar"]`, and an `author` object (from the script's stderr output).
    Add the `short_name` to a category in `collections.json`.
-3. Run `python3 convert.py` to regenerate `metadata.json` (+ empty
+3. Add a row to `data/references.json` — a flat array of
+   `[book_en_name, language, source_url]` triples rendered verbatim on the
+   `/references` page (no keying to `short_name`; the name is free-form). For
+   OpenITI/Shamela books use the Shamela book URL, e.g.
+   `["Musnad al-Shafi'i", "Arabic", "https://shamela.ws/book/9344"]`.
+4. Run `python3 convert.py` to regenerate `metadata.json` (+ empty
    `gradings.json`; OpenITI has no gradings).
-4. Verify with the frontend via the `static/db` symlink (see the frontend
+5. Verify with the frontend via the `static/db` symlink (see the frontend
    README's "Testing DB changes locally").
 
 Caveats:
@@ -344,6 +360,22 @@ Caveats:
 - Only books whose source carries **per-hadith numbering** (`# N`) convert
   cleanly. Books that separate the number from the text, or lack numbering,
   need bespoke handling or `--autonumber` and should be reviewed individually.
+  Existing bespoke converters (documented in `openiti_sources/SOURCES.md`):
+  `jami_saghir_convert.py`, `tabarani_kabir_convert.py`,
+  `shuab_iman_convert.py`, and `shafii_convert.py`. The last handles Musnad
+  al-Shafi'i (Shamela0009344), whose source has **no** per-hadith numbers
+  (each hadith is a plain `#` isnad block) and is bracketed by a biographical
+  preface and a scribal colophon (`تم كتاب المسند …`) that `--autonumber`
+  would wrongly number as hadith; the bespoke script skips both and numbers
+  the body sequentially. Reuse `openiti_convert.py`'s cleaning helpers when
+  writing new bespoke converters.
+- **`convert.py` skips collections whose `.txt` files are unchanged** (it
+  hashes the txt files and compares to `data/.convert_hashes.json`). Because
+  the `author`/`compiler` block is read from `collections.json` at process
+  time, editing *only* `collections.json` (e.g. adding a compiler or moving a
+  collection between categories) will **not** trigger regeneration. Force it
+  by deleting that collection's `metadata.json` (regenerated when missing,
+  regardless of hash) then re-running `python3 convert.py`.
 - `convert.py` reads each language file once and pre-indexes records by book;
   this matters because some OpenITI collections have thousands of "books"
   (e.g. al-Mu'jam al-Kabir has ~5,000 sections) which previously made metadata
