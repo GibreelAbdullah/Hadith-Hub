@@ -34,9 +34,17 @@ jobs:
           VITE_META_BASE_URL: '/db'
         run: npm run build
 
-      - name: Clone hadith-db data for search index
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Clone hadith-db data and generate metadata
         run: |
           git clone --depth 1 https://github.com/GibreelAbdullah/hadith-db.git /tmp/hadith-db
+          # metadata.json is no longer committed in hadith-db; regenerate it
+          # from the text sources so the frontend serves it same-origin.
+          python3 /tmp/hadith-db/convert.py
           rm -rf static/db
           cp -r /tmp/hadith-db/data static/db
 
