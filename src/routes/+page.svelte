@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CollectionContainer from '$lib/components/collectionContainer.svelte';
 	import MetaTags from '$lib/components/common/MetaTags.svelte';
+	import RecentlyRead from '$lib/components/RecentlyRead.svelte';
 	import { getCollectionPromise } from '$lib/functions/utilsV2';
   	const collectionPromise = getCollectionPromise();
 </script>
@@ -11,5 +12,6 @@
 />
 
 <main>
+	<RecentlyRead />
 	<CollectionContainer collectionPromise={collectionPromise} />
 </main>

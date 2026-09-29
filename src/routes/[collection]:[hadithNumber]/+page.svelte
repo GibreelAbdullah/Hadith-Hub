@@ -4,14 +4,14 @@
 	import { languageStore } from '$lib/functions/store.svelte';
 	import HadithContainer from '$lib/components/hadithContainer.svelte';
 	import MetaTags from '$lib/components/common/MetaTags.svelte';
-	import { getSingleHadith } from '$lib/functions/utilsV2';
+	import { getSingleHadithChunked } from '$lib/functions/utilsV2';
 	import { getMetadata, resolveCollectionName } from '$lib/data/db';
 	import HadithPlaceholder from '$lib/components/hadithPlaceholder.svelte';
 	import UnavailableLanguagesNotice from '$lib/components/common/UnavailableLanguagesNotice.svelte';
 
 	let title = `${$page.params.collection}:${$page.params.hadithNumber} | HadithHub`;
 
-	const getHadithData = $derived(getSingleHadith(
+	const getHadithData = $derived(getSingleHadithChunked(
 		$page.params.collection!,
 		$page.params.hadithNumber!,
 		languageStore.value.length ? languageStore.value : ["ar", "en"]
@@ -42,8 +42,8 @@
 			</div>
 		</div>
 		<HadithPlaceholder />
-	{:then dataList}
-		{#if dataList.length === 0}
+	{:then loader}
+		{#if loader.initialData.length === 0}
 			{#await getMetadata($page.params.collection!) then meta}
 			<div class="card p-4 m-4 max-w-[90rem] mx-auto text-center">
 				<div class="py-8">
@@ -58,13 +58,16 @@
 			</div>
 			{/await}
 		{:else}
-			{#await getMetadata($page.params.collection!) then meta}
-				{@const unavailable = languageStore.value.filter(l => !(meta?.languages || []).includes(l))}
-				<UnavailableLanguagesNotice unavailableLanguages={unavailable} />
-				{#if unavailable.length < languageStore.value.length}
-					<HadithContainer dataListRecord={dataList} availableLanguages={meta?.languages || []} />
-				{/if}
-			{/await}
+			<UnavailableLanguagesNotice unavailableLanguages={loader.unavailableLanguages} />
+			{#if loader.availableLanguages.length > 0}
+				<HadithContainer
+					dataListRecord={loader.initialData}
+					availableLanguages={loader.availableLanguages}
+					loadMore={loader.loadMore}
+					hasMore={loader.hasMore}
+					manualLoadMore={true}
+				/>
+			{/if}
 		{/if}
 	{:catch _data}
 		<div class="card p-4 m-4">
