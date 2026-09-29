@@ -1,10 +1,15 @@
-# Hadith Hub - Technical Documentation for AI Agents
+# Hadith Hub (Frontend) - Technical Documentation for AI Agents
+
+> **This file covers the frontend (SvelteKit web app) only.** The hadith data,
+> its formats, ingestion scripts (`convert.py`, OpenITI/mARkdown), and the data
+> deployment pipeline live in the **hadith-db** repo. See
+> `../hadith-db/AGENTS.md` for the data-layer documentation.
 
 ## Project Overview
 
 Hadith Hub (hadithhub.com) is an open-source website for reading and studying Hadith (prophetic traditions) in multiple languages. It consists of two repositories:
 
-- **Frontend**: [Hadith-Hub](https://github.com/GibreelAbdullah/Hadith-Hub) — The SvelteKit web application
+- **Frontend**: [Hadith-Hub](https://github.com/GibreelAbdullah/Hadith-Hub) — The SvelteKit web application (**this repo**)
 - **Data**: [hadith-db](https://github.com/GibreelAbdullah/hadith-db) — All hadith data, metadata, and static content
 
 ## Tech Stack
@@ -33,11 +38,12 @@ The app is built as a **single-page application** (SPA):
 
 ### Data Layer (No Backend)
 
-There is no backend server. All data is static:
-- Hadith text stored as `.txt` files (one line per hadith, pipe-delimited fields)
-- Metadata stored as `.json` files (book structure, offsets for byte-range fetches)
-- Content (about page, blog posts) stored as `.html` files
-- Data is served via GitHub Pages from the `hadith-db` repository
+There is no backend server. All data is static and lives in the **hadith-db**
+repo (see `../hadith-db/AGENTS.md` for the full data format). From the
+frontend's perspective:
+- Hadith text is fetched from `.txt` files via HTTP `Range` requests
+- Metadata (`metadata.json`) describes book structure and byte offsets
+- Content (about page, blog posts) is fetched as `.html` files
 
 **Key URLs:**
 - Production data: `https://gibreelabdullah.github.io/hadith-db/data`
@@ -85,6 +91,7 @@ Hadith-Hub/
 │       │   ├── store.svelte.ts    # Language store (Svelte 5 runes)
 │       │   ├── settingsStore.ts   # Settings/theme/font store
 │       │   ├── notesStore.svelte.ts # Notes store (Svelte 5 runes, LZW compressed localStorage)
+│       │   ├── recentStore.svelte.ts # Recently Read store (Svelte 5 runes, LZW compressed localStorage)
 │       │   ├── drawerState.svelte.ts
 │       │   ├── searchModalState.svelte.ts
 │       │   └── language.ts        # Language utilities
@@ -99,6 +106,7 @@ Hadith-Hub/
 │       │   ├── collectionContainer.svelte
 │       │   ├── bookContainer.svelte
 │       │   ├── hadithContainer.svelte
+│       │   ├── RecentlyRead.svelte    # Home-page "Recently Read" strip
 │       │   └── searchModal.svelte
 │       └── searchModalComponents/
 ├── static/
@@ -114,83 +122,11 @@ Hadith-Hub/
 └── Dockerfile
 ```
 
-## Data Repository Structure (hadith-db)
+## Consuming the Data (hadith-db)
 
-```
-hadith-db/data/
-├── collections.json               # List of all collections and languages
-├── references.json                # Source references table
-├── gradeTranslations.json         # Grading label translations
-├── about.html                     # About page content
-├── blogs/
-│   ├── blogs.json                 # Blog manifest (slug, title, description, date, author)
-│   └── *.html                     # Individual blog post HTML files
-├── muhaddith/                     # Scholar/muhaddith biographical data
-│   └── *.min.json
-└── books/
-    └── {collection}/
-        ├── metadata.json          # Book structure, byte offsets, collection info
-        ├── gradings.json          # Hadith authenticity gradings
-        ├── ar.txt                 # Arabic text
-        ├── en.txt                 # English text
-        └── {lang}.txt             # Other language texts
-```
-
-### Text File Format
-
-Each `.txt` file contains one hadith per line in the format:
-```
-category|number|hadith_text
-```
-- `category`: Section/category identifier
-- `number`: Hadith number within the book
-- `hadith_text`: The hadith text (newlines escaped as `\n`)
-
-### Metadata JSON Format
-
-Each collection's `metadata.json` contains:
-```json
-{
-  "collection": "bukhari",
-  "languages": ["ar", "en", "bn", "fr", "id", "ru", "ta", "tr", "ur"],
-  "collection_info": { "en": "Sahih al-Bukhari", "ar": "صحيح البخاري" },
-  "collection_intro": { "en": "...", "ar": "..." },
-  "author": { "name": "محمد بن إسماعيل البخاري", "aka": "البخاري", "died": "256" },
-  "books": [
-    { "number": "1", "ar": "بدء الوحي", "en": "Revelation", "hadith_start": 0, "hadith_end": 6 }
-  ],
-  "records": [
-    { "line": 0, "cat": "chapter_name", "book": "1", "chapter": "1", "num": "1", "num_book": 1 }
-  ],
-  "offsets": {
-    "en": [0, 245, 1023, ...],
-    "ar": [0, 312, 987, ...]
-  }
-}
-```
-
-The `offsets` object provides byte offsets for each line, enabling HTTP Range requests to fetch individual hadiths without downloading entire files.
-
-The optional `author` object (`name` / `aka` / `died`, all Arabic where
-applicable) holds the collection's compiler. It is **not** derived from the
-text files; it is passed through from the collection's entry in
-`collections.json` by `convert.py`. The frontend surfaces it in the collection
-header (see `bookContainer.svelte`). Collections without author data simply
-omit the field.
-
-The `author` object may also carry an optional nested `compiler` object (same
-`name` / `aka` / `died` shape) for collections that were **assembled by a
-later scholar rather than the named author**. For example, Musnad al-Shafi'i
-carries the imam al-Shafi'i (d. 204) as `author` but was compiled by Abu
-al-'Abbas al-Asamm (d. 346) from al-Rabi' ibn Sulayman's transmission — so
-al-Asamm is stored under `author.compiler`. The frontend renders the compiler
-on a second line under the author with the Arabic label "جمعه:" (see
-`bookContainer.svelte`); the `Author` interface in `src/lib/data/db.ts` has a
-recursive optional `compiler?: Author` field. Omit `compiler` when the author
-is the actual compiler.
-
-
-## Key Technical Patterns
+The frontend reads hadith data produced by the **hadith-db** repo. Only the
+consumption contract is documented here; for how the data is produced and its
+authoring formats, see `../hadith-db/AGENTS.md`.
 
 ### Data Fetching with Byte-Range Requests
 
@@ -201,20 +137,41 @@ The app uses HTTP `Range` headers to fetch specific hadiths from large text file
 fetch(url, { headers: { Range: `bytes=${startByte}-${endByte}` } })
 ```
 
+The byte offsets for each line come from the `offsets` object in each
+collection's `metadata.json`.
+
+### Metadata the frontend relies on
+
+- `collections.json` — list of all collections and their languages
+- `{collection}/metadata.json` — book structure, `records`, and per-line byte
+  `offsets` used for range fetches
+- `{collection}/gradings.json` — authenticity gradings (fetched cross-origin
+  from the hadith-db GitHub Pages)
+- `references.json`, `gradeTranslations.json`, `about.html`, `blogs/blogs.json`
+
+The optional `author` object in `metadata.json` (`name` / `aka` / `died`, plus
+an optional nested `compiler` of the same shape) is surfaced in the collection
+header by `bookContainer.svelte`. The `Author` interface in
+`src/lib/data/db.ts` has a recursive optional `compiler?: Author` field, and
+the compiler is rendered on a second line with the Arabic label "جمعه:".
+
+## Key Technical Patterns
+
 ### State Management
 
 - **Language selection**: Stored in URL query params (`?lang=en,ar`) and synced to a Svelte 5 rune store
 - **Theme**: Stored in localStorage via Skeleton's theme system
 - **Settings**: Custom font families and sizes via settingsStore (localStorage)
 - **Notes**: User notes stored in localStorage with LZW compression via notesStore (Svelte 5 runes)
+- **Recently Read**: Last 5 books read (with resume position) stored in localStorage with LZW compression via recentStore (Svelte 5 runes)
 - **UI state**: Drawer and search modal managed by `.svelte.ts` rune stores
 
 ### Routing
 
-- `/` — Collection list (home)
+- `/` — Collection list (home). Shows a "Recently Read" strip above the collections when history exists
 - `/[collection]` — Books within a collection
-- `/[collection]/[bookNumber]` — Hadiths within a book
-- `/[collection]:[hadithNumber]` — Direct link to a specific hadith
+- `/[collection]/[bookNumber]` — Hadiths within a book (auto-loads all chunks silently)
+- `/[collection]:[hadithNumber]` — Direct link to a specific hadith. Opens on that hadith with a "Load More" button that appends following hadiths in the book (downward only); shows "Reached end of the book" at the end. Also the resume target for Recently Read
 - `/about` — About page (HTML from data repo)
 - `/references` — References table (JSON from data repo)
 - `/blogs` — Blog listing (JSON from data repo)
@@ -272,6 +229,48 @@ interface Note {
 - `getCollectionDisplayName(shortName)` — Returns the display name for a collection in the user's selected language (with fallback to en → ar → shortName)
 - `getCollectionDisplayInfo(shortName)` — Returns `{ name, lang }` so callers can apply language-appropriate font styling
 
+### Recently Read
+
+A client-side feature that tracks the last few books the user was reading and
+lets them resume where they left off. No backend is required.
+
+**Architecture:**
+- Store: `src/lib/functions/recentStore.svelte.ts` (Svelte 5 runes with `$state`, same LZW/localStorage pattern as notesStore)
+- localStorage key: `hadithHub_recent`
+- Dedup key is **collection + book**: revisiting a book updates that entry's hadith position + timestamp and moves it to the front. The list is capped at the **last 5 books** (`MAX_ENTRIES`), so it is "last 5 books you were reading, each remembering where you left off" — not last 5 hadiths.
+- `record({ collectionShortName, bookNumber, hadithNum, hadithNumberInBook })` upserts by collection+book; a no-op guard skips redundant writes when the same hadith is already at the front.
+- Deliberately disposable: **no delete / clear-UI / export / import** (unlike Notes). Cleared with the browser cache.
+
+**Recording (in `hadithContainer.svelte`):**
+- A single `IntersectionObserver` per container tracks which hadith cards are on-screen (candidate set); final selection uses `getBoundingClientRect`.
+- The recorded hadith is the one crossing a **"reading line"** near the top of the viewport (`READING_LINE = 0.33`) — the card whose top is at/above the line and whose bottom is still below it. This deliberately does **not** use "fully visible": a hadith taller than the viewport is never fully visible and would otherwise never be recorded (its shorter predecessor would win).
+- A rAF-throttled `scroll` listener recomputes the reading-line owner, because a card taller than the viewport fires no intersection events while scrolling through its middle.
+- Writes are debounced ~1000ms so the hadith the user settles on is recorded, not every card scrolled past.
+- Hadith cards are wrapped in a `[data-hadith-card]` element carrying `data-hadith-num` / `data-hadith-num-book` for the observer to read.
+
+**Resume:**
+- Recent entries navigate to `/[collection]:[hadithNumber]?lang=...` (the direct-hadith route), which already renders a single hadith — so resume opens directly on it with no scroll-into-view/jitter.
+- The user's **current** language is kept on resume (any stored language is ignored, by design).
+
+**Components:**
+- `src/lib/components/RecentlyRead.svelte` — Home-page strip of small buttons (collection display name + `:hadithNum`, e.g. `Sahih Al Bukhari:53`). Language-aware names + fonts via `getCollectionDisplayInfo()` / `getFontStyleForText`. **Hidden entirely when empty.**
+- `src/lib/components/hadithContainer.svelte` — Hosts the IntersectionObserver recording, the book-crumb link fix, and the manual "Load More" button.
+
+**Related change — hadith-route reading continuity:**
+- The breadcrumb book crumb on the hadith route is now a real link to `/[collection]/[bookNumber]` (previously plain text that looked clickable).
+- The hadith route uses `getSingleHadithChunked()` (in `utilsV2.ts`) and passes `manualLoadMore={true}` to `HadithContainer`, adding a **"Load More" button** that appends following hadiths within the same book (downward only — no upward load, avoiding scroll-compensation). At the end it shows **"Reached end of the book"**. The book route (`/[collection]/[bookNumber]`) still auto-loads all chunks silently (`manualLoadMore` defaults to `false`).
+
+**Recent entry data structure:**
+```typescript
+interface RecentEntry {
+  collectionShortName: string; // e.g., "bukhari"
+  bookNumber: string;          // book number within the collection
+  hadithNum: string;           // hadith number in collection (used for resume URL)
+  hadithNumberInBook: string;  // hadith number within its book (informational)
+  updatedAt: string;           // ISO date string
+}
+```
+
 ## Development
 
 ### Prerequisites
@@ -311,84 +310,9 @@ Deployment is automated via GitHub Actions (`.github/workflows/deploy.yml`):
 
 When data in `hadith-db` changes, it triggers a `repository_dispatch` event to rebuild and redeploy the frontend. The hadith text files are served directly from GitHub Pages of the `hadith-db` repo (cross-origin), while metadata is bundled with the frontend build (same-origin).
 
-**`metadata.json` is a build artifact, not version-controlled.** It is
-git-ignored in `hadith-db` and regenerated by `convert.py` during the frontend
-deploy (see step 3 above). This eliminates the merge conflicts that arose when
-generated metadata was committed. `gradings.json` **is** still committed in
-`hadith-db` because the frontend fetches it cross-origin from that repo's
-GitHub Pages. Locally, `convert.py` still writes `metadata.json` into the
-working tree (git ignores it) so the `static/db` symlink serves it for dev.
-
-## Adding Arabic Collections from OpenITI
-
-Additional Arabic-only collections can be ingested from the
-[OpenITI corpus](https://github.com/OpenITI) (Open Islamicate Texts Initiative).
-This is done in the **hadith-db** repo, not the frontend.
-
-Discovery: OpenITI publishes a master metadata TSV
-(`kitab_metadata_for_DLME_latest_release.tsv` in the
-`OpenITI/kitab-metadata-automation` repo) listing every text with a `tags`
-column and a direct `text_url`. Hadith works are marked with the `_HADITH`
-tag. There is no need to crawl the per-century year-range repos individually.
-
-Conversion: OpenITI texts are in **mARkdown** format (a `#META#` header block
-followed by a body with structural markers). The helper script
-`openiti_convert.py` in hadith-db converts a mARkdown file into the
-`category|num|text` `ar.txt` format:
-
-- `#META#` header → author fields (`AuthorNAME` / `AuthorAKA` / `AuthorDIED`)
-- `# | N ( title )` → `book||title`
-- `### | ( title )` / `### | title` → `chapter||title` (nested sections)
-- `# N text` (+ `~~` continuations) → `hadith|N|text`
-- strips page markers (`PageVxxPyyy`), manuscript sigla (`msNNN`), and
-  mARkdown tags (`@QB@`, `@QE@`, etc.)
-
-```bash
-python3 openiti_convert.py <markdown_file> -n "<arabic collection name>" -o data/books/<short_name>/ar.txt
-# optional: --autonumber  (for books that lack per-hadith numbers in the source)
-```
-
-Steps to add a book:
-
-1. Run `openiti_convert.py` to produce `data/books/{short_name}/ar.txt`.
-2. Add a `collections.json` entry with `short_name`, `ar`, `en`,
-   `languages: ["ar"]`, and an `author` object (from the script's stderr output).
-   Add the `short_name` to a category in `collections.json`.
-3. Add a row to `data/references.json` — a flat array of
-   `[book_en_name, language, source_url]` triples rendered verbatim on the
-   `/references` page (no keying to `short_name`; the name is free-form). For
-   OpenITI/Shamela books use the Shamela book URL, e.g.
-   `["Musnad al-Shafi'i", "Arabic", "https://shamela.ws/book/9344"]`.
-4. Run `python3 convert.py` to regenerate `metadata.json` (+ empty
-   `gradings.json`; OpenITI has no gradings).
-5. Verify with the frontend via the `static/db` symlink (see the frontend
-   README's "Testing DB changes locally").
-
-Caveats:
-
-- Only books whose source carries **per-hadith numbering** (`# N`) convert
-  cleanly. Books that separate the number from the text, or lack numbering,
-  need bespoke handling or `--autonumber` and should be reviewed individually.
-  Existing bespoke converters (documented in `openiti_sources/SOURCES.md`):
-  `jami_saghir_convert.py`, `tabarani_kabir_convert.py`,
-  `shuab_iman_convert.py`, and `shafii_convert.py`. The last handles Musnad
-  al-Shafi'i (Shamela0009344), whose source has **no** per-hadith numbers
-  (each hadith is a plain `#` isnad block) and is bracketed by a biographical
-  preface and a scribal colophon (`تم كتاب المسند …`) that `--autonumber`
-  would wrongly number as hadith; the bespoke script skips both and numbers
-  the body sequentially. Reuse `openiti_convert.py`'s cleaning helpers when
-  writing new bespoke converters.
-- **`convert.py` skips collections whose `.txt` files are unchanged** (it
-  hashes the txt files and compares to `data/.convert_hashes.json`). Because
-  the `author`/`compiler` block is read from `collections.json` at process
-  time, editing *only* `collections.json` (e.g. adding a compiler or moving a
-  collection between categories) will **not** trigger regeneration. Force it
-  by deleting that collection's `metadata.json` (regenerated when missing,
-  regardless of hash) then re-running `python3 convert.py`.
-- `convert.py` reads each language file once and pre-indexes records by book;
-  this matters because some OpenITI collections have thousands of "books"
-  (e.g. al-Mu'jam al-Kabir has ~5,000 sections) which previously made metadata
-  generation extremely slow.
+For details on how `metadata.json` is generated (it is a build artifact, not
+version-controlled) and how `gradings.json` is handled, see
+`../hadith-db/AGENTS.md`.
 
 ## Supported Languages
 

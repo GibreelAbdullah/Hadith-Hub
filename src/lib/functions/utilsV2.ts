@@ -236,6 +236,119 @@ export async function getSingleHadith(collection: string, hadithNumber: string, 
   return [collRow, ...dataRows];
 }
 
+/**
+ * Single-hadith view with "Load More below" support.
+ *
+ * The initial data matches getSingleHadith (collection row + book + the
+ * chapter immediately preceding the target hadith + the hadith itself), so the
+ * page opens on exactly one hadith. `loadMore` then appends the following
+ * records within the *same book* in chunks, letting the user keep reading
+ * downward without leaving the page. Only downward loading is supported
+ * (no scroll-compensation needed).
+ */
+export async function getSingleHadithChunked(
+  collection: string,
+  hadithNumber: string,
+  langs: string[]
+): Promise<ChunkedHadithLoader> {
+  const empty: ChunkedHadithLoader = {
+    initialData: [], availableLanguages: langs, unavailableLanguages: [],
+    totalRecords: 0, loadedCount: 0, loadMore: async () => [], hasMore: () => false,
+  };
+
+  const meta = await getMetadata(collection);
+  if (!meta) return empty;
+
+  const availableLangs = langs.filter((l) => meta.offsets[l]);
+
+  const hadithRec = meta.records.find(
+    (r) => r.cat === "hadith" && r.num?.split(",").includes(hadithNumber)
+  );
+  if (!hadithRec) return empty;
+
+  const hadithLine = hadithRec.line;
+
+  // Preceding chapter (+ its intro) for context above the hadith.
+  const precedingChapterRec = [...meta.records]
+    .filter((r) => r.cat === "chapter" && r.line < hadithLine && r.book === hadithRec.book)
+    .sort((a, b) => b.line - a.line)[0];
+
+  const precedingChapter = precedingChapterRec
+    ? meta.records.filter(
+        (r) =>
+          r.line === precedingChapterRec.line ||
+          (r.cat === "chapter_intro" &&
+            r.line > precedingChapterRec.line &&
+            r.line < hadithLine &&
+            r.book === hadithRec.book)
+      )
+    : [];
+
+  const initialRecords = meta.records.filter(
+    (r) =>
+      (r.cat === "book" && r.book === hadithRec.book) ||
+      (r.cat === "book_intro" && r.book === hadithRec.book) ||
+      precedingChapter.some((p) => p.line === r.line) ||
+      (r.cat === "hadith" && r.num?.split(",").includes(hadithNumber))
+  );
+
+  // All records after the target hadith within the same book (for Load More).
+  const followingRecords = meta.records.filter(
+    (r) => r.book === hadithRec.book && r.line > hadithLine
+  );
+
+  const collLangValues = availableLangs.map((l) =>
+    resolveCollectionName(meta.collection_info, [l], collection)
+  );
+  const collRow = [collection, null, null, null, null, "collection", null, ...collLangValues];
+
+  const gradings = await getGradings(collection);
+
+  async function buildRows(records: Metadata["records"]): Promise<any[]> {
+    if (!records.length) return [];
+    const lines = records.map((r) => r.line);
+    const textByLang: { [lang: string]: string[] } = {};
+    await Promise.all(
+      availableLangs.map(async (lang) => {
+        if (!meta!.offsets[lang]) return;
+        const texts: string[] = [];
+        for (const line of lines) {
+          const t = await fetchLines(collection, lang, line, line, meta!);
+          texts.push(t[0] || "");
+        }
+        textByLang[lang] = texts;
+      })
+    );
+    return records.map((rec, idx) => {
+      const langValues = availableLangs.map((l) => textByLang[l]?.[idx] || "");
+      const grades = rec.cat === "hadith" && rec.num ? gradings[rec.num] || null : null;
+      return [collection, rec.num || null, rec.book || null, rec.num_book || null, rec.chapter || null, rec.cat, grades, ...langValues];
+    });
+  }
+
+  const initialRows = await buildRows(initialRecords);
+
+  const LOAD_CHUNK = 10;
+  let loadedFollowing = 0;
+
+  return {
+    initialData: [collRow, ...initialRows],
+    availableLanguages: availableLangs,
+    unavailableLanguages: langs.filter((l) => !meta.offsets[l]),
+    totalRecords: initialRecords.length + followingRecords.length,
+    loadedCount: initialRecords.length,
+    hasMore: () => loadedFollowing < followingRecords.length,
+    loadMore: async () => {
+      const start = loadedFollowing;
+      const end = Math.min(start + LOAD_CHUNK, followingRecords.length);
+      if (start >= end) return [];
+      const rows = await buildRows(followingRecords.slice(start, end));
+      loadedFollowing = end;
+      return rows;
+    },
+  };
+}
+
 // Helpers
 export async function getLanguageFullName(languageShortName: string[]) {
   const languageObject = await languagePromise;
