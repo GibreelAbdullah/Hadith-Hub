@@ -26,6 +26,16 @@
 	let hasNotes = $derived(notesStore.hasNotes(collectionShortName, hadithNumberInCollection));
 	let noteCount = $derived(notesStore.getNotesForHadith(collectionShortName, hadithNumberInCollection).length);
 
+	// For compound hadith numbers (e.g. "107,108"), the permalink route only
+	// resolves the first number, so link to that (e.g. "107").
+	let linkHadithNumber = $derived(
+		hadithNumberInCollection
+			.replace('<span style="color:red;">', '')
+			.replace('</span>', '')
+			.split(',')[0]
+			.trim()
+	);
+
 	let linkLang = $derived.by(() => {
 		const langs = [...languageStore.value];
 		if (displayLang) {
@@ -55,9 +65,7 @@
 			'/' +
 			collectionShortName +
 			':' +
-			hadithNumberInCollection
-				.replace('<span style="color:red;">', '')
-				.replace('</span>', '') +
+			linkHadithNumber +
 			'?lang=' +
 			linkLang;
 		navigator.clipboard.writeText(link).then(() => {
@@ -198,9 +206,7 @@
 						'/' +
 						collectionShortName +
 						':' +
-						hadithNumberInCollection
-							.replace('<span style="color:red;">', '')
-							.replace('</span>', '') +
+						linkHadithNumber +
 						'?lang=' +
 						linkLang}
 					target="_blank"
