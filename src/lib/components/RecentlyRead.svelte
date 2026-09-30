@@ -55,11 +55,13 @@
 {#if resolved.length > 0}
 	<section class="max-w-360 m-auto px-4 pt-4" aria-label="Recently read">
 		<h2 class="text-sm font-semibold text-surface-600-400 mb-2 px-1">Recently Read</h2>
-		<div class="flex flex-wrap gap-2">
+		<div
+			class="flex flex-nowrap overflow-x-auto gap-2 pb-1 -mx-1 px-1 sm:flex-wrap sm:overflow-visible sm:mx-0 sm:px-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+		>
 			{#each resolved as entry}
 				<a
 					href={entry.href}
-					class="btn btn-sm preset-tonal-primary inline-flex items-center gap-1"
+					class="btn btn-sm preset-tonal-primary inline-flex items-center gap-1 shrink-0 whitespace-nowrap sm:shrink"
 					style={entry.style}
 				>
 					<span dir={entry.dir}>{entry.label}</span>
