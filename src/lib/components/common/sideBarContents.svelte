@@ -75,7 +75,7 @@
 	<!-- Hans Wehr Dictionary link -->
 	<div class="mt-6 pt-4 border-t border-surface-300-600">
 		<a
-			href="https://hadithhub.com/dictionary/HansWehrDictionary/?lang=ar"
+			href="https://hanswehr.hadithhub.com/"
 			data-sveltekit-reload
 			class="flex items-center gap-2 px-3 py-2 rounded-md hover:preset-tonal-primary transition-colors text-sm"
 		>
