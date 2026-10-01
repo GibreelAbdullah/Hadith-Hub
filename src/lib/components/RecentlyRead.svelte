@@ -32,11 +32,14 @@
 		Promise.all(
 			list.map(async (e) => {
 				const info = await getCollectionDisplayInfo(e.collectionShortName);
-				const href = `${base}/${e.collectionShortName}:${e.hadithNum}?lang=${languageStore.value.toString()}`;
+				// Compound hadith numbers (e.g. "107,108") don't exist as a single
+				// resolvable hadith — use the first number for both the link and label.
+				const hadithNum = e.hadithNum.split(',')[0].trim();
+				const href = `${base}/${e.collectionShortName}:${hadithNum}?lang=${languageStore.value.toString()}`;
 				return {
 					href,
 					label: info.name,
-					hadithNum: e.hadithNum,
+					hadithNum,
 					lang: info.lang,
 					style: getFontStyleForText(info.name, info.lang, fontSettings),
 					dir: getDirForText(info.name, info.lang),
