@@ -8,16 +8,16 @@
 </script>
 
 <aside>
+	<span class="md:hidden block mb-4">
+		<SvgIcon class="!w-10" name="icon" />
+		<SvgIcon class="!w-40" name="hadithHub" />
+	</span>
 	<div class="text-primary-500 font-bold uppercase">Languages</div>
 	{#await languagePromise}
 		<div class="text-sm">
 			<div class="placeholder animate-pulse w-32"></div>
 		</div>
 	{:then languageList}
-		<span class="md:hidden">
-			<SvgIcon class="!w-10" name="icon" />
-			<SvgIcon class="!w-40" name="hadithHub" />
-		</span>
 		<ul class="p-4 pointer-events-auto space-y-1">
 			{#each languageList as languageObject}
 				{@const isSelected = languageStore.value.includes(languageObject[0])}
