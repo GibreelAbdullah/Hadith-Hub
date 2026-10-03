@@ -14,9 +14,10 @@
 	<AppBar.Toolbar class="grid-cols-[auto_1fr_auto]">
 		<AppBar.Lead class="flex items-center">
 			<LogoAndDrawer />
-			<SearchBar />
 		</AppBar.Lead>
-		<AppBar.Headline />
+		<AppBar.Headline class="flex justify-center">
+			<SearchBar />
+		</AppBar.Headline>
 		<AppBar.Trail>
 			<button
 				class="btn-icon hover:preset-tonal text-2xl z-60"

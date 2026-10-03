@@ -7,7 +7,7 @@
 	}
 </script>
 
-<button class="btn preset-tonal hover:preset-tonal-primary h-10 mx-4 items-center" onclick={openSearch}>
+<button class="btn preset-tonal hover:preset-tonal-primary h-10 items-center" onclick={openSearch}>
 	<span class="text-3xl leading-none" >⌕</span>
-	<span class="text-sm hidden md:inline-block badge">Search</span>
+	<span class="text-sm hidden sm:inline-block badge">Search</span>
 </button>
