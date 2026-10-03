@@ -19,7 +19,7 @@
 	let error: string | null = null;
 
 	onMount(async () => {
-		slug = $page.params.slug;
+		slug = $page.params.slug!;
 		try {
 			const metaResponse = await fetch(`${DATA_BASE_URL}/blogs/blogs.json`);
 			if (!metaResponse.ok) throw new Error('Failed to load blog metadata');

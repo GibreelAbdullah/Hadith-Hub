@@ -25,6 +25,6 @@
 
 <main>
 	{#key languageStore.value.toString()}
-		<BookContainer bookPromise={bookPromise} bookURL={$page.params.collection} {author} />
+		<BookContainer bookPromise={bookPromise} bookURL={$page.params.collection!} {author} />
 	{/key}
 </main>
